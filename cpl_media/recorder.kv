@@ -1,0 +1,121 @@
+#:import pix_fmts ffpyplayer.tools.pix_fmts
+
+<VideoRecordSettingsWidget>:
+    orientation: 'vertical'
+    spacing: '12dp'
+    size_hint_min_x: self.minimum_width
+    size_hint_y: None
+    height: self.minimum_height
+    disabled: self.recorder.record_state != 'none'
+    BoxLayout:
+        spacing: '5dp'
+        size_hint_min_x: self.minimum_width
+        size_hint_y: None
+        height: self.minimum_height
+        FlatLabel:
+            text: 'Pixel type:'
+            size: self.texture_size
+            size_hint: None, None
+            flat_color: app.theme.text_primary
+        ThemedSpinner:
+            id: pix_fmt
+            values: [''] + pix_fmts
+            text:  root.recorder.metadata_record.fmt if root.recorder.metadata_record else ''
+            size_hint_x: None
+            width: max(self.minimum_width, 50)
+            on_text: root.recorder._set_metadata_record(pix_fmt.text, int(input_w.text or 0), int(input_h.text or 0), int(rate.text or 0))
+        FlatLabel:
+            text: 'Width:'
+            size: self.texture_size
+            size_hint: None, None
+            flat_color: app.theme.text_primary
+        FlatSizedTextInput:
+            id: input_w
+            text: str(root.recorder.metadata_record.w) if root.recorder.metadata_record else ''
+            background_color: app.theme.primary_light
+            hint_text: 'width'
+            input_filter: 'int'
+            size_hint_x: None
+            width: '60dp'
+            on_text: root.recorder._set_metadata_record(pix_fmt.text, int(input_w.text or 0), int(input_h.text or 0), int(rate.text or 0))
+        FlatLabel:
+            text: 'Height:'
+            size: self.texture_size
+            size_hint: None, None
+            flat_color: app.theme.text_primary
+        FlatSizedTextInput:
+            id: input_h
+            text: str(root.recorder.metadata_record.h) if root.recorder.metadata_record else ''
+            background_color: app.theme.primary_light
+            hint_text: 'height'
+            input_filter: 'int'
+            size_hint_x: None
+            width: '60dp'
+            on_text: root.recorder._set_metadata_record(pix_fmt.text, int(input_w.text or 0), int(input_h.text or 0), int(rate.text or 0))
+        FlatLabel:
+            text: 'Rate:'
+            size: self.texture_size
+            size_hint: None, None
+            flat_color: app.theme.text_primary
+        FlatSizedTextInput:
+            id: rate
+            text: str(root.recorder.metadata_record.rate) if root.recorder.metadata_record else ''
+            background_color: app.theme.primary_light
+            hint_text: 'rate'
+            input_filter: 'int'
+            size_hint_x: None
+            width: '30dp'
+            on_text: root.recorder._set_metadata_record(pix_fmt.text, int(input_w.text or 0), int(input_h.text or 0), int(rate.text or 0))
+    BoxLayout:
+        spacing: '5dp'
+        size_hint_min_x: self.minimum_width
+        size_hint_y: None
+        height: self.minimum_height
+        FlatLabel:
+            text: 'Directory:'
+            size: self.texture_size
+            size_hint: None, None
+            flat_color: app.theme.text_primary
+        FlatSizedTextInput:
+            id: directory
+            text: root.recorder.record_directory
+            background_color: app.theme.primary_light
+            hint_text: 'directory'
+            on_text: root.recorder.record_directory = self.text
+        FlatImageButton:
+            scale_down_color: True
+            source: 'flat_folder.png'
+            flat_color: app.theme.accent
+            on_release:
+                app.filebrowser.dirselect = True
+                app.filebrowser.multiselect = False
+                app.filebrowser.callback = partial(root.set_filename, directory, is_dir=True)
+                app.filebrowser.open()
+        FlatLabel:
+            text: 'Filename:'
+            size: self.texture_size
+            size_hint: None, None
+            flat_color: app.theme.text_primary
+        FlatSizedTextInput:
+            text: root.recorder.record_fname
+            background_color: app.theme.primary_light
+            hint_text: 'filename'
+            on_text: root.recorder.record_fname = self.text
+        FlatLabel:
+            text: 'n:'
+            size: self.texture_size
+            size_hint: None, None
+            flat_color: app.theme.text_primary
+        FlatSizedTextInput:
+            text: str(root.recorder.record_fname_count)
+            background_color: app.theme.primary_light
+            hint_text: 'count'
+            input_filter: 'int'
+            size_hint_x: None
+            width: '30dp'
+            on_text: root.recorder.record_fname_count = int(self.text or 0)
+    FlatLabel:
+        text: root.recorder.record_filename
+        size: self.texture_size
+        size_hint: None, None
+        flat_color: app.theme.text_primary

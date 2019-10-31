@@ -1,0 +1,230 @@
+#:import partial functools.partial
+#:import formats_out ffpyplayer.tools.formats_out
+#:import formats_in ffpyplayer.tools.formats_in
+#:import pix_fmts ffpyplayer.tools.pix_fmts
+#:import codecs_dec ffpyplayer.tools.codecs_dec
+#:import codecs_enc ffpyplayer.tools.codecs_enc
+
+<FFmpegSettingsWidget>:
+    orientation: 'vertical'
+    spacing: '5dp'
+    size_hint_min_x: self.minimum_width
+    size_hint_y: None
+    height: self.minimum_height
+    disabled: self.player.play_state != 'none'
+    BoxLayout:
+        spacing: '5dp'
+        height: self.minimum_height
+        size_hint_y: None
+        size_hint_min_x: self.minimum_width
+        Widget
+        FlatImageToggleButton:
+            source: 'radiobox-marked.png' if self.state == 'down' else 'radiobox-blank.png'
+            flat_color: app.theme.accent
+            state: file_label.state
+            on_state: file_label.state = self.state
+        FlatToggleButton:
+            id: file_label
+            text: 'Video file'
+            bold: True
+            padding: '2dp', '2dp'
+            size_hint: None, None
+            size: self.texture_size
+            flat_background_color: app.theme.accent
+            state: 'down' if not root.player.use_dshow else 'normal'
+            on_state:
+                root.player.use_dshow = self.state != 'down'
+                screen_manager.current = 'dshow' if root.player.use_dshow else 'other'
+            center_texture: True
+        FlatImageToggleButton:
+            source: 'radiobox-marked.png' if self.state == 'down' else 'radiobox-blank.png'
+            flat_color: app.theme.accent
+            state: dshow_label.state
+            on_state: dshow_label.state = self.state
+        FlatToggleButton:
+            id: dshow_label
+            text: 'USB-cam'
+            bold: True
+            padding: '2dp', '2dp'
+            size_hint: None, None
+            size: self.texture_size
+            flat_background_color: app.theme.accent
+            state: 'down' if root.player.use_dshow else 'normal'
+            on_state:
+                root.player.use_dshow = self.state == 'down'
+                screen_manager.current = 'dshow' if root.player.use_dshow else 'other'
+            center_texture: True
+        Widget
+    ScreenManager:
+        id: screen_manager
+        size_hint_min_x: max(dshow.minimum_width, other.minimum_width)
+        size_hint_y: None
+        height: max(dshow.minimum_height, other.minimum_height)
+        Screen:
+            name: 'dshow'
+            BoxLayout:
+                id: dshow
+                orientation: 'vertical'
+                size_hint: None, None
+                size: self.minimum_size
+                padding: '5dp'
+                spacing: '5dp'
+                pos_hint: {'top': 1}
+                BoxLayout:
+                    size_hint: None, None
+                    size: self.minimum_size
+                    spacing: '5dp'
+                    FlatImageButton:
+                        scale_down_color: True
+                        source: 'flat_refresh.png'
+                        flat_color: app.theme.accent
+                        on_release: root.player.refresh_dshow()
+                    FlatLabel:
+                        text: 'Cameras:'
+                        size: self.texture_size
+                        size_hint: None, None
+                        flat_color: app.theme.text_primary
+                    ThemedSpinner:
+                        id: dshow_name
+                        values: list(root.player.dshow_names)
+                        text: root.player.play_filename if root.player.use_dshow else ''
+                        size_hint_x: None
+                        width: max(self.minimum_width, 50)
+                        on_text:
+                            root.player.play_filename = self.text
+                            root.player.update_dshow_file()
+                BoxLayout:
+                    size_hint: None, None
+                    size: self.minimum_size
+                    spacing: '5dp'
+                    FlatLabel:
+                        text: 'Cam options:'
+                        size: self.texture_size
+                        size_hint: None, None
+                        flat_color: app.theme.text_primary
+                    ThemedSpinner:
+                        id: dshow_opts
+                        values: list(root.player.dshow_opts[dshow_name.text]) if dshow_name.text else []
+                        text: root.player.dshow_opt if root.player.use_dshow else ''
+                        size_hint_x: None
+                        width: max(self.minimum_width, 50)
+                        on_text: root.player.dshow_opt = self.text
+                    FlatLabel:
+                        text: 'Rate:'
+                        size: self.texture_size
+                        size_hint: None, None
+                        flat_color: app.theme.text_primary
+                    FlatSizedTextInput:
+                        text: root.player.dshow_rate if root.player.dshow_rate else ''
+                        input_filter: 'float'
+                        hint_text: 'fps'
+                        size_hint_x: None
+                        width: '100dp'
+                        background_color: app.theme.primary_light
+                        on_text_validate: root.player.dshow_rate = float(self.text) if self.text else 0
+        Screen:
+            name: 'other'
+            GridLayout:
+                id: other
+                cols: 1
+                size_hint_min_x: self.minimum_width
+                size_hint_y: None
+                height: self.minimum_height
+                pos_hint: {'top': 1}
+                BoxLayout:
+                    spacing: '5dp'
+                    size_hint: None, None
+                    size: self.minimum_size
+                    FlatLabel:
+                        text: 'Media Format:'
+                        size: self.texture_size
+                        size_hint: None, None
+                        flat_color: app.theme.text_primary
+                    FlatSizedTextInput:
+                        text: root.player.file_fmt
+                        hint_text: 'custom'
+                        size_hint_x: None
+                        width: '100dp'
+                        background_color: app.theme.primary_light
+                        on_text_validate:
+                            if self.text not in formats_in: self.text = ''
+                            root.player.file_fmt = self.text
+                    FlatLabel:
+                        text: 'Video Codec:'
+                        size: self.texture_size
+                        size_hint: None, None
+                        flat_color: app.theme.text_primary
+                    FlatSizedTextInput:
+                        text: root.player.icodec
+                        hint_text: 'custom'
+                        size_hint_x: None
+                        width: '100dp'
+                        background_color: app.theme.primary_light
+                        on_text_validate:
+                            if self.text not in codecs_dec: self.text = ''
+                            root.player.icodec = self.text
+                BoxLayout:
+                    spacing: '5dp'
+                    size_hint_min_x: self.minimum_width
+                    size_hint_y: None
+                    height: self.minimum_height
+                    FlatLabel:
+                        text: 'Filename:'
+                        size: self.texture_size
+                        size_hint: None, None
+                        flat_color: app.theme.text_primary
+                    FlatSizedTextInput:
+                        id: filename
+                        text: root.player.play_filename if not root.player.use_dshow else ''
+                        background_color: app.theme.primary_light
+                        hint_text: 'filename'
+                        on_text: root.player.play_filename = self.text
+                    FlatImageButton:
+                        scale_down_color: True
+                        source: 'flat_folder.png'
+                        flat_color: app.theme.accent
+                        on_release:
+                            app.filebrowser.dirselect = False
+                            app.filebrowser.multiselect = False
+                            app.filebrowser.callback = partial(root.set_filename, filename, is_dir=False)
+                            app.filebrowser.open()
+    BoxLayout:
+        spacing: '5dp'
+        size_hint_min_x: self.minimum_width
+        size_hint_y: None
+        height: self.minimum_height
+        FlatLabel:
+            text: 'Pixel type:'
+            size: self.texture_size
+            size_hint: None, None
+            flat_color: app.theme.text_primary
+        ThemedSpinner:
+            id: pix_fmt
+            values: [''] + pix_fmts
+            text:  root.player.metadata_play.fmt if root.player.metadata_play else ''
+            size_hint_x: None
+            width: max(self.minimum_width, 50)
+            on_text: root.player._set_metadata_play(pix_fmt.text, int(input_w.text or 0), int(input_h.text or 0))
+        FlatLabel:
+            text: 'Width:'
+            size: self.texture_size
+            size_hint: None, None
+            flat_color: app.theme.text_primary
+        FlatSizedTextInput:
+            id: input_w
+            text: str(root.player.metadata_play.w) if root.player.metadata_play else ''
+            background_color: app.theme.primary_light
+            hint_text: 'width'
+            on_text: root.player._set_metadata_play(pix_fmt.text, int(input_w.text or 0), int(input_h.text or 0))
+        FlatLabel:
+            text: 'Height:'
+            size: self.texture_size
+            size_hint: None, None
+            flat_color: app.theme.text_primary
+        FlatSizedTextInput:
+            id: input_h
+            text: str(root.player.metadata_play.h) if root.player.metadata_play else ''
+            background_color: app.theme.primary_light
+            hint_text: 'height'
+            on_text: root.player._set_metadata_play(pix_fmt.text, int(input_w.text or 0), int(input_h.text or 0))
+

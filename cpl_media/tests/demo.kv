@@ -1,0 +1,82 @@
+<ConfigSelectButton@FlatToggleButton>:
+    allow_no_selection: False
+    bold: True
+    padding: '2dp', '5dp'
+    size_hint: None, None
+    size: self.texture_size
+    flat_background_color: app.theme.accent
+
+<RootAppWidget>:
+    orientation: 'vertical'
+    spacing: '5dp'
+    canvas:
+        Color:
+            rgba: app.theme.primary
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        id: config
+        size_hint: None, None
+        size: self.minimum_width, '34dp'
+        FlatImageToggleButton:
+            group: 'video_radio_btn'
+            source: 'radiobox-marked.png' if self.state == 'down' else 'radiobox-blank.png'
+            flat_color: app.theme.accent
+            state: ffmpeg.state
+            on_state: ffmpeg.state = self.state
+        ConfigSelectButton:
+            id: ffmpeg
+            group: 'video_radio_text_btn'
+            text: 'Webcam/file'
+            state: 'down'
+        FlatImageButton:
+            on_kv_post: self.more_widget = Factory.FFmpegSettingsDropdown()
+            scale_down_color: True
+            source: 'flat_dots_vertical.png'
+            flat_color: app.theme.accent
+            on_release: self.more_widget.open(config)
+        FlatImageToggleButton:
+            group: 'video_radio_btn'
+            source: 'radiobox-marked.png' if self.state == 'down' else 'radiobox-blank.png'
+            flat_color: app.theme.accent
+            state: ptgray.state
+            on_state: ptgray.state = self.state
+        ConfigSelectButton:
+            id: ptgray
+            group: 'video_radio_text_btn'
+            text: 'PTGray'
+        FlatImageButton:
+            on_kv_post: self.more_widget = Factory.PTGraySettingsDropdown()
+            scale_down_color: True
+            source: 'flat_dots_vertical.png'
+            flat_color: app.theme.accent
+            on_release: self.more_widget.open(config)
+    VideoRecordSettingsWidget
+    Widget
+
+
+<FFmpegSettingsDropdown@FlatDropDown>:
+    flat_color: app.theme.primary_text
+    flat_border_color: app.theme.divider
+    do_scroll: False, False
+    FlatSplitter:
+        size_hint: None, None
+        height: self.minimum_height
+        min_size: self.minimum_width
+        sizable_from: 'right'
+        flat_color: app.theme.accent
+        on_kv_post: self.add_widget(app.ffmpeg_settings)
+
+
+<PTGraySettingsDropdown@FlatDropDown>:
+    flat_color: app.theme.primary_text
+    flat_border_color: app.theme.divider
+    do_scroll: False, False
+    FlatSplitter:
+        size_hint: None, None
+        height: self.minimum_height
+        min_size: self.minimum_width
+        sizable_from: 'right'
+        flat_color: app.theme.accent
+        on_kv_post: self.add_widget(app.ptgray_settings)
