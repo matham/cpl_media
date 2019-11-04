@@ -1,10 +1,19 @@
-<ConfigSelectButton@FlatToggleButton>:
+#:import pretty_space base_kivy_app.utils.pretty_space
+
+<ConfigSelectLabelButton@FlatToggleButton>:
+    disabled: app.player.play_state != 'none'
     allow_no_selection: False
     bold: True
     padding: '2dp', '5dp'
     size_hint: None, None
     size: self.texture_size
     flat_background_color: app.theme.accent
+
+<ConfigSelectIconButton@FlatImageToggleButton>:
+    disabled: app.player.play_state != 'none'
+    group: 'video_radio_btn'
+    source: 'radiobox-marked.png' if self.state == 'down' else 'radiobox-blank.png'
+    flat_color: app.theme.accent
 
 <RootAppWidget>:
     orientation: 'vertical'
@@ -19,13 +28,12 @@
         id: config
         size_hint: None, None
         size: self.minimum_width, '34dp'
-        FlatImageToggleButton:
-            group: 'video_radio_btn'
-            source: 'radiobox-marked.png' if self.state == 'down' else 'radiobox-blank.png'
-            flat_color: app.theme.accent
+        ConfigSelectIconButton:
             state: ffmpeg.state
-            on_state: ffmpeg.state = self.state
-        ConfigSelectButton:
+            on_state:
+                ffmpeg.state = self.state
+                if self.state == 'down': app.player = app.ffmpeg_player
+        ConfigSelectLabelButton:
             id: ffmpeg
             group: 'video_radio_text_btn'
             text: 'Webcam/file'
@@ -36,13 +44,13 @@
             source: 'flat_dots_vertical.png'
             flat_color: app.theme.accent
             on_release: self.more_widget.open(config)
-        FlatImageToggleButton:
-            group: 'video_radio_btn'
-            source: 'radiobox-marked.png' if self.state == 'down' else 'radiobox-blank.png'
-            flat_color: app.theme.accent
+            disabled: ffmpeg.state != 'down'
+        ConfigSelectIconButton:
             state: ptgray.state
-            on_state: ptgray.state = self.state
-        ConfigSelectButton:
+            on_state:
+                ptgray.state = self.state
+                if self.state == 'down': app.player = app.ptgray_player
+        ConfigSelectLabelButton:
             id: ptgray
             group: 'video_radio_text_btn'
             text: 'PTGray'
@@ -52,8 +60,62 @@
             source: 'flat_dots_vertical.png'
             flat_color: app.theme.accent
             on_release: self.more_widget.open(config)
+            disabled: ptgray.state != 'down'
+        ConfigSelectIconButton:
+            state: thor.state
+            on_state:
+                thor.state = self.state
+                if self.state == 'down': app.player = app.thor_player
+        ConfigSelectLabelButton:
+            id: thor
+            group: 'video_radio_text_btn'
+            text: 'Thor'
+        FlatImageButton:
+            on_kv_post: self.more_widget = Factory.ThorSettingsDropdown()
+            scale_down_color: True
+            source: 'flat_dots_vertical.png'
+            flat_color: app.theme.accent
+            on_release: self.more_widget.open(config)
+            disabled: thor.state != 'down'
     VideoRecordSettingsWidget
-    Widget
+    BoxLayout:
+        size_hint: None, None
+        size: self.minimum_width, '34dp'
+        padding: '5dp'
+        spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'Estimated FPS:'
+        ThemedSizedLabel:
+            text: str(int(app.player.real_rate))
+        ThemedSizedLabel:
+            text: 'Data rate:'
+        ThemedSizedLabel:
+            text: pretty_space(app.player.data_rate, is_rate=True)
+        FlatImageToggleButton:
+            source: 'flat_play.png' if self.state == 'normal' else 'flat_stop.png'
+            flat_color: app.theme.accent
+            disabled: not app.player.can_play or app.player.play_state == 'starting' or app.player.play_state == 'stopping'
+            state: 'down' if app.player.play_state == 'starting' or app.player.play_state == 'playing' else 'normal'
+            on_release: app.player.play() if self.state == 'down' else app.player.stop()
+        FlatImageToggleButton:
+            source: 'flat_record.png' if self.state == 'normal' else 'flat_stop.png'
+            flat_color: app.theme.accent
+            disabled: True
+    BufferImage:
+        on_kv_post: app.image_display = self
+        auto_bring_to_front: False
+        available_size: self.size
+
+        do_scale: True
+        do_translation: True, True
+        do_rotation: True
+
+        canvas.before:
+            Color:
+                rgba: [0, 0, 0, 1]
+            Rectangle:
+                pos: self.pos
+                size: self.size
 
 
 <FFmpegSettingsDropdown@FlatDropDown>:
@@ -80,3 +142,16 @@
         sizable_from: 'right'
         flat_color: app.theme.accent
         on_kv_post: self.add_widget(app.ptgray_settings)
+
+
+<ThorSettingsDropdown@FlatDropDown>:
+    flat_color: app.theme.primary_text
+    flat_border_color: app.theme.divider
+    do_scroll: False, False
+    FlatSplitter:
+        size_hint: None, None
+        height: self.minimum_height
+        min_size: self.minimum_width
+        sizable_from: 'right'
+        flat_color: app.theme.accent
+        on_kv_post: self.add_widget(app.thor_settings)

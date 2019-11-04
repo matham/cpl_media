@@ -6,10 +6,13 @@ Contains common base classes and tools.
 """
 
 from queue import Queue, Empty
+import sys
+import traceback
 
 from kivy.clock import Clock
 
 from cpl_media import error_guard
+import cpl_media
 
 __all__ = ('KivyMediaBase', )
 
@@ -57,3 +60,8 @@ class KivyMediaBase(object):
 
     def stop_all(self, join=False):
         pass
+
+    def exception(self, e):
+        cpl_media.error_callback(
+            e, exc_info=''.join(traceback.format_exception(*sys.exc_info())),
+            threaded=True)

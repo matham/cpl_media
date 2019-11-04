@@ -31,6 +31,11 @@
                 source: 'flat_refresh.png'
                 flat_color: app.theme.accent
                 on_release: root.player.ask_config('serials')
+            FlatLabel:
+                text: 'Serial #:'
+                size: self.texture_size
+                size_hint: None, None
+                flat_color: app.theme.text_primary
             ThemedSpinner:
                 size_hint_x: None
                 width: self.minimum_width
@@ -38,6 +43,11 @@
                 values: root.player.serials
                 text: str(root.player.serial) if root.player.serial else ''
                 on_text: root.player.serial = int(self.text) if self.text else 0
+            FlatLabel:
+                text: 'IP:'
+                size: self.texture_size
+                size_hint: None, None
+                flat_color: app.theme.text_primary
             ThemedSpinner:
                 size_hint_x: None
                 width: self.minimum_width
@@ -46,8 +56,8 @@
                 text: root.player.ip
                 on_text: root.player.ip = self.text
         GridLayout:
-            size_hint: 1, None
-            height: self.minimum_height
+            size_hint: None, None
+            size: self.minimum_size
             spacing: ['5dp']
             rows: 1
             disabled: root.player.play_state != 'none'
@@ -57,35 +67,36 @@
                 width: self.minimum_width
                 values: [''] + root.player.active_settings
                 on_text: root.bind_pt_setting(self.text)
-            FlatToggleButton:
+            LightThemedToggleButton:
                 text: 'Auto'
                 padding: '5dp', '5dp'
                 size_hint: None, None
                 size: self.texture_size
                 scale_down_color: True
-                flat_background_color: app.theme.accent
                 on_release: root.player.ask_cam_option_config(pt_settings_opt.text, 'auto', self.state == 'down')
                 state: 'down' if root.opt_settings and root.opt_settings['auto'] else 'normal'
                 disabled: opt_disable.state == 'down' or not pt_settings_opt.text
-            FlatButton:
+            LightThemedButton:
                 text: 'One push'
                 size_hint: None, None
                 size: self.texture_size
                 padding: '5dp', '5dp'
-                scale_down_color: True
-                flat_background_color: app.theme.accent
                 on_release: root.player.ask_cam_option_config(pt_settings_opt.text, 'one_push', True)
                 disabled: opt_disable.state == 'down' or not pt_settings_opt.text
-            FlatToggleButton:
+            LightThemedToggleButton:
                 id: opt_disable
                 text: 'Disable'
                 padding: '5dp', '5dp'
                 size_hint: None, None
                 size: self.texture_size
-                scale_down_color: True
-                flat_background_color: app.theme.accent
                 on_release: root.player.ask_cam_option_config(pt_settings_opt.text, 'controllable', self.state == 'normal')
                 state: 'down' if root.opt_settings and root.opt_settings['controllable'] else 'normal'
+                disabled: not pt_settings_opt.text
+            FlatImageButton:
+                scale_down_color: True
+                source: 'flat_refresh.png'
+                flat_color: app.theme.accent
+                on_release: root.player.ask_cam_option_config(pt_settings_opt.text, '', None)
                 disabled: not pt_settings_opt.text
             FlatLabel:
                 padding: '5dp', '5dp'
@@ -93,7 +104,7 @@
                 center_texture: True
                 size_hint: None, None
                 size: self.texture_size
-                text: '{:0.2f}'.format(root.opt_settings['min']) if 'min' in root.opt_settings else ''
+                text: 'min: {:0.2f}'.format(root.opt_settings['min']) if 'min' in root.opt_settings else ''
                 disabled: opt_disable.state == 'down' or not pt_settings_opt.text
             FlatSizedTextInput:
                 background_color: app.theme.primary_light
@@ -101,20 +112,16 @@
                 input_filter: 'float'
                 text: '{:0.2f}'.format(root.opt_settings['value']) if 'value' in root.opt_settings else ''
                 disabled: opt_disable.state == 'down' or not pt_settings_opt.text
+                size_hint_x: None
+                width: '60dp'
             FlatLabel:
                 padding: '5dp', '5dp'
                 flat_color: app.theme.text_primary
                 center_texture: True
                 size_hint: None, None
                 size: self.texture_size
-                text: '{:0.2f}'.format(root.opt_settings['max']) if 'max' in root.opt_settings else ''
+                text: 'max: {:0.2f}'.format(root.opt_settings['max']) if 'max' in root.opt_settings else ''
                 disabled: opt_disable.state == 'down' or not pt_settings_opt.text
-            FlatImageButton:
-                scale_down_color: True
-                source: 'flat_refresh.png'
-                flat_color: app.theme.accent
-                on_release: root.player.ask_cam_option_config(pt_settings_opt.text, '', None)
-                disabled: not pt_settings_opt.text
         FlatSlider:
             size_hint_y: None
             height: '25dp'

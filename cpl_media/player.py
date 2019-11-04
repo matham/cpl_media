@@ -5,8 +5,6 @@ Provides the base class for video players.
 """
 
 import logging
-import traceback
-import sys
 from threading import Thread
 from collections import namedtuple
 
@@ -24,7 +22,6 @@ from kivy.logger import Logger
 
 from cpl_media import error_guard
 from .common import KivyMediaBase
-import cpl_media
 
 __all__ = ('BasePlayer', 'VideoMetadata')
 
@@ -43,7 +40,7 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
     __settings_attrs__ = ('metadata_play', 'metadata_play_used')
 
     display_frame = None
-    """Called from second thread.
+    """Called from kivy thread.
     """
 
     display_trigger = None
@@ -52,15 +49,13 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
     """Called from second thread.
     """
 
-    error_callback = None
-
     play_thread = None
+
+    can_play = BooleanProperty(True)
 
     play_state = StringProperty('none')
     '''Can be one of none, starting, playing, stopping.
     '''
-
-    config_active = BooleanProperty(False)
 
     last_image = None
 
@@ -69,12 +64,14 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
     use_real_time = False
 
     metadata_play = ObjectProperty(None)
-    '''(internal) Describes the video metadata of the video player.
+    '''(internal) Describes the video metadata of the video player. This is
+    the requested format, or guess of the metadata
     '''
 
     metadata_play_used = ObjectProperty(None)
     '''(internal) Describes the video metadata of the video player that is
-    actually used by the player.
+    actually used by the player. This must be set before recorders may allow
+    playing the player. Depending on the metadata needed by the recorder.
     '''
 
     real_rate = NumericProperty(0)
@@ -150,10 +147,9 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
         """Called from main thread only, starts playing and sets play state to
         `starting`. Only called when :attr:`play_state` is `none`.
         """
-        if self.play_state != 'none' or self.config_active:
+        if self.play_state != 'none' or not self.can_play:
             raise TypeError(
-                'Asked to play while {} or configuring'.format(
-                    self.play_state))
+                'Asked to play while {} or disabled'.format(self.play_state))
 
         self.play_state = 'starting'
         self.ts_play = self.real_rate = 0.
@@ -210,14 +206,10 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
         self.image_queue = None
         self.play_state = 'none'
 
-    def exception(self, e):
-        (self.error_callback or cpl_media.error_callback)(
-            e, exc_info=
-            ''.join(traceback.format_exception(*sys.exc_info())))
-
     def play_thread_run(self):
         raise NotImplementedError
 
     def stop_all(self, join=False):
+        logging.info('cpl_media: Stopping all "{}"'.format(self))
         super(BasePlayer, self).stop_all(join=join)
         self.stop(join=join)

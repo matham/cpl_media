@@ -1,0 +1,254 @@
+
+
+<ThorCamSettingsWidget>:
+    orientation: 'vertical'
+    spacing: '3dp'
+    size_hint_min_x: self.minimum_width
+    size_hint_y: None
+    height: self.minimum_height
+    disabled: not self.player.is_available
+    BoxLayout:
+        size_hint: None, None
+        size: self.minimum_size
+        spacing: '5dp'
+        FlatImageButton:
+            disabled: root.player.cam_state != 'none'
+            scale_down_color: True
+            source: 'flat_refresh.png'
+            flat_color: app.theme.accent
+            on_release: root.player.refresh_cameras()
+            size_hint_y: None
+            height: '34dp'
+        ThemedSizedLabel:
+            text: 'Cameras:'
+        ThemedSpinner:
+            disabled: root.player.cam_state != 'none'
+            values: root.player.serials
+            text: root.player.serial
+            text_autoupdate: True
+            size_hint_x: None
+            width: max(self.minimum_width, dp(50))
+            on_text: root.player.serial = self.text
+        LightThemedToggleButton:
+            disabled: not root.player.serial or root.player.cam_state == 'opening' or root.player.cam_state == 'closing'
+            bold: True
+            padding: '2dp', '2dp'
+            size_hint: None, None
+            size: self.texture_size
+            text: 'Open camera' if self.state == 'normal' else 'Close camera'
+            state: 'down' if root.player.cam_state == 'opening' or root.player.cam_state == 'open' else 'normal'
+            on_release: root.player.open_camera(root.player.serial) if self.state == 'down' else root.player.close_camera()
+    BoxLayout:
+        size_hint: None, None
+        size: self.minimum_size
+        spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'Rate control:'
+        ThemedSpinner:
+            disabled: root.player.cam_state != 'open' or root.player.play_state != 'none'
+            text_autoupdate: True
+            size_hint_x: None
+            width: max(self.minimum_width, dp(50))
+            values: root.player.supported_freqs
+            text: root.player.freq
+            on_text: root.player.set_setting('freq', self.text)
+        ThemedSizedLabel:
+            text: 'Taps:'
+        ThemedSpinner:
+            disabled: root.player.cam_state != 'open' or root.player.play_state != 'none'
+            text_autoupdate: True
+            size_hint_x: None
+            width: max(self.minimum_width, dp(60))
+            values: root.player.supported_taps
+            text: root.player.taps
+            on_text: root.player.set_setting('taps', self.text)
+        ThemedSizedLabel:
+            text: 'Exposure [{}, {}]ms:'.format(*root.player.exposure_range)
+        FlatSizedTextInput:
+            disabled: root.player.cam_state != 'open'
+            size_hint_x: None
+            width: '50dp'
+            text: str(root.player.exposure_ms)
+            input_filter: 'float'
+            background_color: app.theme.primary_light
+            on_focus: if not self.focus: root.player.set_setting('exposure_ms', float(self.text or 0))
+    BoxLayout:
+        size_hint: None, None
+        size: self.minimum_size
+        spacing: '5dp'
+        ThemedSpinner:
+            disabled: root.player.cam_state != 'open' or root.player.play_state != 'none'
+            text_autoupdate: True
+            size_hint_x: None
+            width: max(self.minimum_width, dp(50))
+            values: root.player.supported_triggers
+            text: root.player.trigger_type
+            on_text: root.player.set_setting('trigger_type', self.text)
+        ThemedSizedLabel:
+            text: '# frames to trigger:'
+        FlatSizedTextInput:
+            disabled: root.player.cam_state != 'open' or root.player.play_state != 'none'
+            size_hint_x: None
+            width: '50dp'
+            text: str(root.player.trigger_count)
+            input_filter: 'int'
+            background_color: app.theme.primary_light
+            on_focus: if not self.focus: root.player.set_setting('trigger_count', int(self.text or 1))
+    BoxLayout:
+        size_hint: None, None
+        size: self.minimum_size
+        spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'Max Frame-queue size [1, {}):'.format(root.player.frame_queue_size)
+        FlatSizedTextInput:
+            disabled: root.player.cam_state != 'open' or root.player.play_state != 'none'
+            size_hint_x: None
+            width: '50dp'
+            text: str(root.player.frame_queue_size)
+            background_color: app.theme.primary_light
+            input_filter: 'int'
+            on_focus: if not self.focus: root.player.set_setting('frame_queue_size', int(self.text or 1))
+        ThemedSizedLabel:
+            text: 'Frames on queue: "{}"'.format(root.player.num_queued_frames)
+    BoxLayout:
+        size_hint: None, None
+        size: self.minimum_size
+        spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'Gain [{}, {}]:'.format(*root.player.gain_range)
+        FlatSizedTextInput:
+            disabled: root.player.cam_state != 'open' or not root.player.gain_range[1]
+            size_hint_x: None
+            width: '50dp'
+            text: str(root.player.gain)
+            background_color: app.theme.primary_light
+            input_filter: 'int'
+            on_focus: if not self.focus: root.player.set_setting('gain', int(self.text or 0))
+        ThemedSizedLabel:
+            text: 'BlackLevel [{}, {}]:'.format(*root.player.black_level_range)
+        FlatSizedTextInput:
+            disabled: root.player.cam_state != 'open' or not root.player.black_level_range[1]
+            size_hint_x: None
+            width: '50dp'
+            text: str(root.player.black_level)
+            background_color: app.theme.primary_light
+            input_filter: 'int'
+            on_focus: if not self.focus: root.player.set_setting('black_level', int(self.text or 0))
+    BoxLayout:
+        size_hint: None, None
+        size: self.minimum_size
+        spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'X binning [{}, {}]:'.format(*root.player.binning_x_range)
+        FlatSizedTextInput:
+            disabled: root.player.cam_state != 'open' or root.player.play_state != 'none' or not root.player.binning_x_range[1]
+            size_hint_x: None
+            width: '50dp'
+            text: str(root.player.binning_x)
+            background_color: app.theme.primary_light
+            input_filter: 'int'
+            on_focus: if not self.focus: root.player.set_setting('binning_x', int(self.text or 0))
+        ThemedSizedLabel:
+            text: 'X-offset [0, {}]:'.format(root.player.sensor_size[0] - 1)
+        FlatSizedTextInput:
+            disabled: root.player.cam_state != 'open' or root.player.play_state != 'none' or not root.player.sensor_size[0]
+            size_hint_x: None
+            width: '50dp'
+            text: str(root.player.roi_x)
+            background_color: app.theme.primary_light
+            input_filter: 'int'
+            on_focus: if not self.focus: root.player.set_setting('roi_x', int(self.text or 0))
+        ThemedSizedLabel:
+            text: 'Width [1, {}]:'.format(root.player.sensor_size[0] - root.player.roi_x)
+        FlatSizedTextInput:
+            disabled: root.player.cam_state != 'open' or root.player.play_state != 'none' or not root.player.sensor_size[0]
+            size_hint_x: None
+            width: '50dp'
+            text: str(root.player.roi_width)
+            background_color: app.theme.primary_light
+            input_filter: 'int'
+            on_focus: if not self.focus: root.player.set_setting('roi_width', int(self.text or 0))
+    BoxLayout:
+        size_hint: None, None
+        size: self.minimum_size
+        spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'Y binning [{}, {}]:'.format(*root.player.binning_y_range)
+        FlatSizedTextInput:
+            disabled: root.player.cam_state != 'open' or root.player.play_state != 'none' or not root.player.binning_y_range[1]
+            size_hint_x: None
+            width: '50dp'
+            text: str(root.player.binning_y)
+            background_color: app.theme.primary_light
+            input_filter: 'int'
+            on_focus: if not self.focus: root.player.set_setting('binning_y', int(self.text or 0))
+        ThemedSizedLabel:
+            text: 'Y-offset [0, {}]:'.format(root.player.sensor_size[1] - 1)
+        FlatSizedTextInput:
+            disabled: root.player.cam_state != 'open' or root.player.play_state != 'none' or not root.player.sensor_size[1]
+            size_hint_x: None
+            width: '50dp'
+            text: str(root.player.roi_y)
+            background_color: app.theme.primary_light
+            input_filter: 'int'
+            on_focus: if not self.focus: root.player.set_setting('roi_y', int(self.text or 0))
+        ThemedSizedLabel:
+            text: 'Height [1, {}]:'.format(root.player.sensor_size[1] - root.player.roi_y)
+        FlatSizedTextInput:
+            disabled: root.player.cam_state != 'open' or root.player.play_state != 'none' or not root.player.sensor_size[1]
+            size_hint_x: None
+            width: '50dp'
+            text: str(root.player.roi_height)
+            background_color: app.theme.primary_light
+            input_filter: 'int'
+            on_focus: if not self.focus: root.player.set_setting('roi_height', int(self.text or 0))
+    GridLayout:
+        disabled: root.player.cam_state != 'open'
+        rows: 1
+        size_hint_y: None
+        height: self.minimum_height
+        size_hint_min_x: '100dp'
+        spacing: '5dp'
+        padding: '10dp'
+        FlatSlider:
+            id: thor_r_slider
+            size_hint_y: None
+            height: '30dp'
+            on_release: root.player.set_setting('color_gain', [thor_r_slider.value, thor_g_slider.value, thor_b_slider.value])
+            min: 0.
+            max: 1.
+            value: root.player.color_gain[0]
+            canvas.before:
+                Color:
+                    rgba: 1, 0, 0, 1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+        FlatSlider:
+            id: thor_g_slider
+            size_hint_y: None
+            height: '30dp'
+            on_release: root.player.set_setting('color_gain', [thor_r_slider.value, thor_g_slider.value, thor_b_slider.value])
+            min: 0.
+            max: 1.
+            value: root.player.color_gain[1]
+            canvas.before:
+                Color:
+                    rgba: 0, 1, 0, 1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+        FlatSlider:
+            id: thor_b_slider
+            size_hint_y: None
+            height: '30dp'
+            on_release: root.player.set_setting('color_gain', [thor_r_slider.value, thor_g_slider.value, thor_b_slider.value])
+            min: 0.
+            max: 1.
+            value: root.player.color_gain[2]
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 1, 1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos

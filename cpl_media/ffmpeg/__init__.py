@@ -183,7 +183,8 @@ class FFmpegPlayer(BasePlayer):
     @error_guard
     def player_callback(self, mode, value):
         if mode.endswith('error'):
-            raise Exception('FFmpeg Player: {}, {}'.format(mode, value))
+            raise Exception(
+                'FFmpeg Player: internal error "{}", "{}"'.format(mode, value))
 
     def play_thread_run(self):
         process_frame = self.process_frame
@@ -231,7 +232,7 @@ class FFmpegPlayer(BasePlayer):
         # wait for media to init pixel fmt
         src_fmt = ''
         s = clock()
-        while self.play_state == 'starting' and clock() - s < 30.:
+        while self.play_state == 'starting' and clock() - s < 5.:
             src_fmt = ffplayer.get_metadata().get('src_pix_fmt')
             if src_fmt:
                 break
@@ -259,7 +260,7 @@ class FFmpegPlayer(BasePlayer):
         img = None
         s = clock()
         ivl_start = None
-        while self.play_state == 'starting' and clock() - s < 30.:
+        while self.play_state == 'starting' and clock() - s < 5.:
             img, val = ffplayer.get_frame()
             if val == 'eof':
                 try:

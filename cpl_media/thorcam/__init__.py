@@ -20,7 +20,10 @@ from cpl_media.player import BasePlayer, VideoMetadata
 from cpl_media import error_guard
 import cpl_media
 
-from thorcam.camera import ThorCamClient
+try:
+    from thorcam.camera import ThorCamClient
+except ImportError:
+    ThorCamClient = object
 
 
 __all__ = ('ThorCamPlayer', 'ThorCamSettingsWidget')
@@ -36,7 +39,8 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
         'binning_y_range', 'binning_y', 'sensor_size', 'roi_x', 'roi_y',
         'roi_width', 'roi_height', 'gain_range', 'gain', 'black_level_range',
         'black_level', 'frame_queue_size', 'supported_triggers',
-        'trigger_type', 'trigger_count', 'num_queued_frames', 'color_gain')
+        'trigger_type', 'trigger_count', 'num_queued_frames', 'color_gain',
+        'serial', 'serials')
 
     supported_freqs = ListProperty(['20 MHz', ])
 
@@ -94,7 +98,11 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
     """The list of cameras serial number available.
     """
 
+    serial = StringProperty('')
+
     to_kivy_queue = None
+
+    is_available = BooleanProperty(ThorCamClient is not object)
 
     cam_state = StringProperty('none')
     """Can be one of none, opening, open, closing.
@@ -102,10 +110,11 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
 
     _frame_count = 0
 
-    _ivl_start = None
+    _ivl_start = 0
 
     def __init__(self, **kwargs):
         super(ThorCamPlayer, self).__init__(**kwargs)
+        self.can_play = False
         self._kivy_trigger = Clock.create_trigger(self.process_in_kivy_thread)
         self.to_kivy_queue = Queue()
         self.start_cam_process()
@@ -133,16 +142,16 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
                 elif msg == 'cam_open':
                     assert self.cam_state == 'opening'
                     self.cam_state = 'open'
+                    self.can_play = True
                 elif msg == 'cam_closed':
                     assert self.cam_state == 'closing'
                     self.cam_state = 'none'
+                    self.can_play = False
                 elif msg == 'image':
                     self._handle_image_received(value)
                 elif msg == 'playing':
                     if value:
                         assert self.play_state == 'starting'
-
-                        self._ivl_start = None
                     else:
                         assert self.play_state == 'stopping'
                         self._complete_stop()
@@ -157,31 +166,26 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
                 break
 
     def _handle_image_received(self, value):
+        """Runs in the kivy thread.
+        """
         t = clock()
         if self.play_state == 'starting':
-            # first time getting image
-            if self._ivl_start is None:
-                self._ivl_start = clock()
+            self._frame_count = 0
+            self.ts_play = self._ivl_start = t
 
-            # wait for 2 secs to estimate fps of cam
-            if t - self._ivl_start >= 2.:
-                self.real_rate = self._frame_count / (t - self._ivl_start)
-                self._frame_count = 0
-
-                self.ts_play = self._ivl_start = t
-                img = value[0]
-                self.metadata_play_used = VideoMetadata(
-                    img.get_pixel_format(), *img.get_size(),
-                    2 * int(self.real_rate))
-                self._complete_start()
-
-            self._frame_count += 1
+            img = value[0]
+            self.metadata_play_used = VideoMetadata(
+                img.get_pixel_format(), *img.get_size(), 0)
+            self._complete_start()
 
         if self.play_state != 'playing':
             return
 
         if t - self._ivl_start >= 1.:
-            self.real_rate = self._frame_count / (t - self._ivl_start)
+            r = self.real_rate = self._frame_count / (t - self._ivl_start)
+            if not self.metadata_play_used.rate:
+                self.metadata_play_used = VideoMetadata(
+                    *self.metadata_play_used[:3], int(2 * r))
             self._frame_count = 0
             self._ivl_start = t
 
@@ -205,6 +209,7 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
             raise TypeError('Can only close camera if it has been opened')
         self.stop()
         self.cam_state = 'closing'
+        self.can_play = False
         self.send_camera_request('close_cam', None)
 
     def refresh_cameras(self):
@@ -217,6 +222,7 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
 
         self.start_cam_process()
         super(ThorCamPlayer, self).play()
+        self.metadata_play_used = VideoMetadata('', 0, 0, 0)
         self.send_camera_request('play')
 
     def stop(self, *largs, join=False):
@@ -264,4 +270,4 @@ class ThorCamSettingsWidget(BoxLayout):
         text_wid.text = f
 
 
-Builder.load_file(join(dirname(__file__), 'thormcam_player.kv'))
+Builder.load_file(join(dirname(__file__), 'thorcam_player.kv'))

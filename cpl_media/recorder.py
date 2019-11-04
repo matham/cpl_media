@@ -41,8 +41,6 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
 
     record_thread = None
 
-    error_callback = None
-
     record_state = StringProperty('none')
     '''Can be one of none, starting, recording, stopping.
     
@@ -157,28 +155,6 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
         writer.write_frame(img=img, pts=0, stream=0)
         writer.close()
 
-    def compute_recording_opts(self, ifmt=None, iw=None, ih=None):
-        play_used = self.player.metadata_play_used
-        ifmt = ifmt or play_used.fmt
-        iw = iw or play_used.w
-        ih = ih or play_used.h
-        irate = play_used.rate
-
-        ifmt = ifmt or 'yuv420p'
-        iw = iw or 640
-        ih = ih or 480
-        irate = irate or 30.
-
-        ofmt, ow, oh, orate = self.metadata_record
-        ofmt = ofmt or ifmt
-        ow = ow or iw
-        oh = oh or ih
-        if self.estimate_record_rate:
-            orate = orate or self.player.real_rate
-        orate = orate or irate
-
-        return (ifmt, iw, ih, irate), (ofmt, ow, oh, orate)
-
     @error_guard
     def record(self, player: BasePlayer):
         """Called from main thread only, starts recording and sets record state
@@ -242,11 +218,6 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
         self.image_queue = None
         self.record_state = 'none'
 
-    def exception(self, e):
-        (self.error_callback or cpl_media.error_callback)(
-            e, exc_info=
-            ''.join(traceback.format_exception(*sys.exc_info())))
-
     def record_thread_run(self, *largs):
         raise NotImplementedError
 
@@ -257,6 +228,9 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
 
 class VideoRecorder(BaseRecorder):
     """Records videos to disk.
+
+    Cannot start recording until the player fps is known. Otherwise, an error
+    is raised.
     """
 
     __settings_attrs__ = (
@@ -290,6 +264,28 @@ class VideoRecorder(BaseRecorder):
         self.fbind('record_fname_count', self._update_record_fname)
         self._update_record_fname()
 
+    def compute_recording_opts(self, ifmt=None, iw=None, ih=None):
+        play_used = self.metadata_player
+        ifmt = ifmt or play_used.fmt
+        iw = iw or play_used.w
+        ih = ih or play_used.h
+        irate = play_used.rate
+
+        ifmt = ifmt or 'yuv420p'
+        iw = iw or 640
+        ih = ih or 480
+        assert irate
+
+        ofmt, ow, oh, orate = self.metadata_record
+        ofmt = ofmt or ifmt
+        ow = ow or iw
+        oh = oh or ih
+        if self.estimate_record_rate:
+            orate = orate or self.player.real_rate
+        orate = orate or irate
+
+        return (ifmt, iw, ih, irate), (ofmt, ow, oh, orate)
+
     def _set_metadata_record(self, fmt, w, h, rate):
         self.metadata_record = VideoMetadata(fmt, w, h, rate)
 
@@ -297,6 +293,14 @@ class VideoRecorder(BaseRecorder):
         self.record_filename = join(
             self.record_directory,
             self.record_fname.replace('{}', str(self.record_fname_count)))
+
+    @error_guard
+    def record(self, player: BasePlayer):
+        if not player.metadata_play_used or not player.metadata_play_used.rate:
+            raise TypeError(
+                'Can only record from player once the fps is known')
+
+        super(VideoRecorder, self).record(player=player)
 
     def _start_recording(self):
         thread = self.record_thread = Thread(

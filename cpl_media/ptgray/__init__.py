@@ -61,6 +61,8 @@ class PTGrayPlayer(BasePlayer):
 
     cam_config_opts = DictProperty({})
     '''The configuration options used to configure the camera after opening.
+    This are internal and can only be set by the internal thread once
+    initially set by config.
     '''
 
     active_settings = ListProperty([])
@@ -85,6 +87,8 @@ class PTGrayPlayer(BasePlayer):
     config_queue = None
 
     config_active_queue = ListProperty([])
+
+    config_active = BooleanProperty(False)
 
     _camera = None
 
@@ -138,6 +142,7 @@ class PTGrayPlayer(BasePlayer):
         queue = self.config_queue
         if queue is not None:
             self.config_active = True
+            self.can_play = False
             self.config_active_queue.append(item)
             queue.put_nowait(item)
 
@@ -160,6 +165,7 @@ class PTGrayPlayer(BasePlayer):
         self.config_active_queue.remove(item)
         if not self.config_active_queue:
             self.config_active = False
+            self.can_play = True
 
     def get_active_settings(self):
         settings = []
@@ -279,6 +285,12 @@ class PTGrayPlayer(BasePlayer):
                             self.write_cam_options_config(c)
                         self.read_gige_opts(c)
                         self.read_cam_options_config(c)
+
+                        if self.cam_config_opts['fmt'] not in \
+                            self.ffmpeg_pix_map or \
+                                self.cam_config_opts['fmt'] == 'yuv411':
+                            self.cam_config_opts['fmt'] = 'rgb'
+                            self.write_gige_opts(c, self.cam_config_opts)
                         c.disconnect()
                         c = None
                 elif item == 'serial':
@@ -315,6 +327,12 @@ class PTGrayPlayer(BasePlayer):
                         c.connect()
                         self.read_gige_opts(c)
                         self.read_cam_options_config(c)
+
+                        if self.cam_config_opts['fmt'] not in \
+                            self.ffmpeg_pix_map or \
+                                self.cam_config_opts['fmt'] == 'yuv411':
+                            self.cam_config_opts['fmt'] = 'rgb'
+                            self.write_gige_opts(c, self.cam_config_opts)
                         c.disconnect()
                         c = None
 
