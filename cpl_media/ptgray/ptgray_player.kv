@@ -6,7 +6,7 @@
     size_hint_min_x: self.minimum_width
     size_hint_y: None
     height: self.minimum_height
-    disabled: self.player.play_state != 'none' or not self.player.is_available
+    disabled: not self.player.is_available
     BoxLayout:
         orientation: 'vertical'
         size_hint_y: None
@@ -40,7 +40,7 @@
                 size_hint_x: None
                 width: self.minimum_width
                 text_autoupdate: True
-                values: root.player.serials
+                values: [str(val) for val in root.player.serials]
                 text: str(root.player.serial) if root.player.serial else ''
                 on_text: root.player.serial = int(self.text) if self.text else 0
             FlatLabel:
@@ -60,7 +60,6 @@
             size: self.minimum_size
             spacing: ['5dp']
             rows: 1
-            disabled: root.player.play_state != 'none'
             ThemedSpinner:
                 id: pt_settings_opt
                 size_hint_x: None
@@ -90,7 +89,7 @@
                 size_hint: None, None
                 size: self.texture_size
                 on_release: root.player.ask_cam_option_config(pt_settings_opt.text, 'controllable', self.state == 'normal')
-                state: 'down' if root.opt_settings and root.opt_settings['controllable'] else 'normal'
+                state: 'normal' if root.opt_settings and root.opt_settings['controllable'] else 'down'
                 disabled: not pt_settings_opt.text
             FlatImageButton:
                 scale_down_color: True

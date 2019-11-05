@@ -129,14 +129,14 @@ class PTGrayPlayer(BasePlayer):
 
     @error_guard
     def stop_config(self, *largs, join=False):
-        self.ask_config('eof')
+        self.ask_config('eof', ignore_play=True)
         if join and self.config_thread:
             self.config_thread.join()
             self.config_thread = None
 
     @error_guard
-    def ask_config(self, item):
-        if self.play_state != 'none':
+    def ask_config(self, item, ignore_play=False):
+        if not ignore_play and self.play_state != 'none':
             raise TypeError('Cannot configure while playing')
 
         queue = self.config_queue
@@ -144,11 +144,12 @@ class PTGrayPlayer(BasePlayer):
             self.config_active = True
             self.can_play = False
             self.config_active_queue.append(item)
-            queue.put_nowait(item)
+            queue.put(item)
 
     def ask_cam_option_config(self, setting, name, value):
         if not name or getattr(self, setting)[name] != value:
-            self.ask_config(('option', (setting, name, value)))
+            self.ask_config(
+                ('option', (setting, name, value)), ignore_play=True)
 
     def finish_ask_config(self, item, *largs, **kwargs):
         if isinstance(item, tuple) and item[0] == 'option':
@@ -418,15 +419,14 @@ class PTGrayPlayer(BasePlayer):
         finally:
             self._camera = None
 
-        try:
-            c.disconnect()
-        except:
-            pass
-        Clock.schedule_once(self._complete_stop)
+            try:
+                c.disconnect()
+            finally:
+                Clock.schedule_once(self._complete_stop)
 
     def stop_all(self, join=False):
-        super(PTGrayPlayer, self).stop_all(join=join)
         self.stop_config(join=join)
+        super(PTGrayPlayer, self).stop_all(join=join)
 
 
 class PTGraySettingsWidget(BoxLayout):

@@ -32,6 +32,21 @@ class DemoApp(BaseKivyApp):
 
     image_display = None
 
+    @classmethod
+    def get_config_classes(cls):
+        d = super(DemoApp, cls).get_config_classes()
+        d['ffmpeg'] = FFmpegPlayer
+        d['ptgray'] = PTGrayPlayer
+        d['thor'] = ThorCamPlayer
+        return d
+
+    def get_app_config_classes(self):
+        d = super(DemoApp, self).get_app_config_classes()
+        d['ffmpeg'] = self.ffmpeg_player
+        d['ptgray'] = self.ptgray_player
+        d['thor'] = self.thor_player
+        return d
+
     def build(self):
         self.ffmpeg_settings = FFmpegSettingsWidget()
         self.player = self.ffmpeg_player = self.ffmpeg_settings.player
@@ -39,6 +54,9 @@ class DemoApp(BaseKivyApp):
         self.ptgray_player = self.ptgray_settings.player
         self.thor_settings = ThorCamSettingsWidget()
         self.thor_player = self.thor_settings.player
+
+        self.load_app_settings_from_file()
+        self.apply_app_settings()
 
         self.ffmpeg_player.display_frame = self._display_frame
         self.ptgray_player.display_frame = self._display_frame
@@ -55,6 +73,7 @@ class DemoApp(BaseKivyApp):
                 self.ffmpeg_player, self.thor_player, self.ptgray_player):
             if player is not None:
                 player.stop_all(join=True)
+        self.dump_app_settings_to_file()
 
 
 if __name__ == '__main__':

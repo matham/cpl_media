@@ -195,7 +195,7 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
                 self.record_thread.join()
             return False
 
-        self.image_queue.put_nowait('eof')
+        self.image_queue.put('eof')
         self.record_state = 'stopping'
         if join:
             self.record_thread.join()
@@ -316,7 +316,7 @@ class VideoRecorder(BaseRecorder):
         queue = self.image_queue
         recorder = None
         t0 = None
-        put = queue.put_nowait
+        put = queue.put
 
         while self.record_state != 'stopping':
             item = queue.get()

@@ -54,7 +54,7 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
 
     exposure_range = ListProperty([0, 100])
 
-    exposure_ms = NumericProperty(5)
+    exposure_ms = NumericProperty(0)
 
     binning_x_range = ListProperty([0, 0])
 
@@ -122,7 +122,7 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
     @error_guard
     def received_camera_response(self, msg, value):
         if msg == 'image':
-            value = self.create_image_from_msg(*value)
+            value = self.create_image_from_msg(value)
         self.to_kivy_queue.put((msg, value))
         self._kivy_trigger()
 
@@ -139,14 +139,19 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
                 if msg == 'exception':
                     e, exec_info = value
                     cpl_media.error_callback(e, exc_info=exec_info)
+                    if self.cam_state == 'open':
+                        self.close_camera()
                 elif msg == 'cam_open':
                     assert self.cam_state == 'opening'
                     self.cam_state = 'open'
                     self.can_play = True
                 elif msg == 'cam_closed':
+                    # either remote sent exception, or we asked to stop
                     assert self.cam_state == 'closing'
                     self.cam_state = 'none'
                     self.can_play = False
+                    if self.play_state != 'none':
+                        self._complete_stop()
                 elif msg == 'image':
                     self._handle_image_received(value)
                 elif msg == 'playing':
@@ -156,6 +161,13 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
                         assert self.play_state == 'stopping'
                         self._complete_stop()
                 elif msg == 'settings':
+                    # maintain the last settings
+                    old_vals = {key: getattr(self, key) for key in self.settings}
+                    for key, val in value.items():
+                        setattr(self, key, val)
+                        if key in old_vals and old_vals[key] != val:
+                            self.set_setting(key, old_vals[key])
+                elif msg == 'setting':
                     for key, val in value.items():
                         setattr(self, key, val)
                 elif msg == 'serials':

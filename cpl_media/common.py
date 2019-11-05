@@ -41,10 +41,10 @@ class KivyMediaBase(object):
 
                 if msg == 'setattr':
                     prop, val = value
-                    setattr(self, prop, value)
+                    setattr(self, prop, val)
                 elif msg == 'increment':
                     prop, val = value
-                    setattr(self, prop, getattr(self, prop) + value)
+                    setattr(self, prop, getattr(self, prop) + val)
                 else:
                     print('Got unknown KivyMediaBase message', msg, value)
             except Empty:
