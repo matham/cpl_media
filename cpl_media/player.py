@@ -59,7 +59,7 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
 
     last_image = None
 
-    last_image_t = 0
+    last_image_metadata = {'t': 0}
 
     use_real_time = False
 
@@ -114,17 +114,17 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
         if self.display_frame is not None:
             self.display_frame(self.last_image)
 
-    def process_frame(self, frame, t):
+    def process_frame(self, frame, metadata):
         """Called from second thread
 
         :param frame:
-        :param t:
+        :param metadata:
         :return:
         """
         self.last_image = frame
-        self.last_image_t = t
+        self.last_image_metadata = metadata
         for callback in self.frame_callbacks:
-            callback((frame, t))
+            callback((frame, metadata))
         self.display_trigger()
 
     def get_settings_attrs(self, attrs):
@@ -136,7 +136,7 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
                 d[key] = getattr(self, key)
         return d
 
-    def apply_settings(self, settings):
+    def apply_config_settings(self, settings):
         for k, v in settings.items():
             if k in ('metadata_play', 'metadata_play_used'):
                 v = VideoMetadata(*v)

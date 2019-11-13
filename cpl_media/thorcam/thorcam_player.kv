@@ -9,8 +9,11 @@
     disabled: not self.player.is_available
     BoxLayout:
         size_hint: None, None
-        size: self.minimum_width, '34dp'
+        size: self.minimum_size
         spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'Cameras:'
+            padding_y: '5dp'
         FlatImageButton:
             disabled: root.player.cam_state != 'none'
             scale_down_color: True
@@ -19,9 +22,6 @@
             on_release: root.player.refresh_cameras()
             size_hint_y: None
             height: '34dp'
-        ThemedSizedLabel:
-            text: 'Cameras:'
-            padding_y: '5dp'
         ThemedSpinner:
             disabled: root.player.cam_state != 'none'
             values: root.player.serials
@@ -77,6 +77,8 @@
         size_hint: None, None
         size: self.minimum_size
         spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'Triggering:'
         ThemedSpinner:
             disabled: root.player.cam_state != 'open' or root.player.play_state != 'none'
             text_autoupdate: True

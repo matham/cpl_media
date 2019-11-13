@@ -28,7 +28,8 @@ from cpl_media import error_guard
 from .common import KivyMediaBase
 import cpl_media
 
-__all__ = ('BaseRecorder', 'VideoRecorder', 'VideoRecordSettingsWidget')
+__all__ = ('BaseRecorder', 'ImageFileRecorder', 'VideoRecorder',
+           'ImageFileRecordSettingsWidget', 'VideoRecordSettingsWidget')
 
 
 class BaseRecorder(EventDispatcher, KivyMediaBase):
@@ -56,6 +57,8 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
     '''
 
     image_queue = None
+
+    can_record = BooleanProperty(True)
 
     metadata_player = ObjectProperty(None)
     '''Describes the video metadata of the video recorder.
@@ -89,6 +92,12 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
     """MB/s.
     """
 
+    recorder_summery = StringProperty('')
+
+    elapsed_record_time = NumericProperty(0)
+
+    _elapsed_record_trigger = None
+
     def __init__(self, **kwargs):
         self.metadata_record_used = VideoMetadata('', 0, 0, 0)
         self.metadata_player = VideoMetadata(
@@ -97,10 +106,17 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
             *kwargs.pop('metadata_record', ('', 0, 0, 0)))
         super(BaseRecorder, self).__init__(**kwargs)
 
+        self._elapsed_record_trigger = Clock.create_trigger(
+            self._update_elapsed_record, .2, True)
+
         self.fbind('metadata_player', self._update_data_rate)
         self.fbind('metadata_record', self._update_data_rate)
         self.fbind('metadata_record_used', self._update_data_rate)
         self._update_data_rate()
+
+    def _update_elapsed_record(self, *largs):
+        if self.ts_record:
+            self.elapsed_record_time = clock() - self.ts_record
 
     def _update_data_rate(self, *largs):
         fmt = self.metadata_record_used.fmt
@@ -128,7 +144,7 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
                 d[key] = getattr(self, key)
         return d
 
-    def apply_settings(self, settings):
+    def apply_config_settings(self, settings):
         for k, v in settings.items():
             if k == 'metadata_record':
                 v = VideoMetadata(*v)
@@ -152,8 +168,9 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
         out_opts = {'pix_fmt_in': fmt, 'width_in': w, 'height_in': h,
                     'frame_rate': (30, 1), 'codec': codec}
         writer = MediaWriter(fname, [out_opts], lib_opts=lib_opts)
-        writer.write_frame(img=img, pts=0, stream=0)
+        size = writer.write_frame(img=img, pts=0, stream=0)
         writer.close()
+        return size
 
     @error_guard
     def record(self, player: BasePlayer):
@@ -197,6 +214,7 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
 
         self.image_queue.put('eof')
         self.record_state = 'stopping'
+        self._elapsed_record_trigger.cancel()
         if join:
             self.record_thread.join()
         return True
@@ -210,6 +228,7 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
         assert self.record_state != 'recording'
         if self.record_state == 'starting':  # not stopping
             self.record_state = 'recording'
+        self._elapsed_record_trigger()
 
     def _complete_stop(self, *largs):
         assert self.record_state != 'none'
@@ -226,6 +245,121 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
         self.stop(join=join)
 
 
+class ImageFileRecorder(BaseRecorder):
+    """Records images as files to disk.
+    """
+
+    __settings_attrs__ = (
+        'record_directory', 'record_prefix', 'compression', 'extension')
+
+    record_directory = StringProperty(expanduser('~'))
+    '''The directory into which videos should be saved.
+    '''
+
+    record_prefix = StringProperty('image_')
+    '''The prefix to the filename of the images being saved.
+    '''
+
+    extension = StringProperty('tiff')
+
+    compression = StringProperty('raw')
+    """Can be one of ``'raw', 'lzw', 'zip'``
+    """
+
+    def __init__(self, **kwargs):
+        super(ImageFileRecorder, self).__init__(**kwargs)
+
+        self.fbind('record_directory', self._update_summary)
+        self.fbind('record_prefix', self._update_summary)
+        self.fbind('extension', self._update_summary)
+        self._update_summary()
+
+    def _update_summary(self, *largs):
+        self.recorder_summery = 'FFmpeg "{}*.{}"'.format(
+            join(self.record_directory, self.record_prefix), self.extension)
+
+    def send_image_to_recorder(self, image):
+        if self.image_queue is None:
+            return
+
+        self.image_queue.put(image)
+
+    @error_guard
+    def record(self, player: BasePlayer):
+        if not player.metadata_play_used or not player.metadata_play_used.rate:
+            raise TypeError(
+                'Can only record from player once the fps is known')
+
+        super(ImageFileRecorder, self).record(player=player)
+        self.player.frame_callbacks.append(self.send_image_to_recorder)
+
+    @error_guard
+    def stop(self, *largs, join=False):
+        if super(ImageFileRecorder, self).stop(join=join):
+            self.player.frame_callbacks.remove(self.send_image_to_recorder)
+
+    def _start_recording(self):
+        thread = self.record_thread = Thread(
+            target=self.record_thread_run, name='Record image thread',
+            args=(self.record_directory, self.record_prefix, self.compression,
+                  self.extension))
+        thread.start()
+
+    def _complete_stop(self, *largs):
+        super(ImageFileRecorder, self)._complete_stop()
+        if self.send_image_to_recorder in self.player.frame_callbacks:
+            self.player.frame_callbacks.remove(self.send_image_to_recorder)
+
+    def record_thread_run(
+            self, record_directory, record_prefix, compression, extension):
+        queue = self.image_queue
+        last_img = None
+
+        while self.record_state != 'stopping':
+            item = queue.get()
+            if item == 'eof':
+                break
+            image, metadata = item
+
+            try:
+                if last_img is None:
+                    self.setattr_in_kivy_thread('ts_record', clock())
+                    self.setattr_in_kivy_thread(
+                        'metadata_record_used', self.player.metadata_play_used)
+                    Clock.schedule_once(self._complete_start)
+                    last_img = image
+
+                suffix = 't={}'.format(metadata['t'])
+                if 'count' in metadata:
+                    suffix += '_count={}'.format(metadata['count'])
+                ext = '.' + extension
+                filename = join(record_directory, record_prefix + suffix + ext)
+                counter = 0
+                while exists(filename):
+                    counter += 1
+                    filename = join(
+                        record_directory,
+                        record_prefix + suffix + '-{}'.format(counter) + ext)
+
+                if extension == 'tiff':
+                    lib_opts = {
+                        'compression_algo': 'deflate' if compression == 'zip'
+                        else compression}
+                else:
+                    lib_opts = {}
+
+                size = self.save_image(
+                    filename, image, codec=extension,
+                    pix_fmt=image.get_pixel_format(), lib_opts=lib_opts)
+                self.increment_in_kivy_thread('size_recorded', size)
+                self.increment_in_kivy_thread('frames_recorded')
+            except Exception as e:
+                self.exception(e)
+                self.increment_in_kivy_thread('frames_skipped')
+
+        Clock.schedule_once(self._complete_stop)
+
+
 class VideoRecorder(BaseRecorder):
     """Records videos to disk.
 
@@ -240,7 +374,7 @@ class VideoRecorder(BaseRecorder):
     '''The directory into which videos should be saved.
     '''
 
-    record_fname = StringProperty('video{}.avi')
+    record_fname = StringProperty('video{}.mkv')
     '''The filename to be used to record the next video.
 
     If ``{}`` is present in the filename, it'll be replaced with the value of
@@ -263,6 +397,12 @@ class VideoRecorder(BaseRecorder):
         self.fbind('record_fname', self._update_record_fname)
         self.fbind('record_fname_count', self._update_record_fname)
         self._update_record_fname()
+
+        self.fbind('record_filename', self._update_summary)
+        self._update_summary()
+
+    def _update_summary(self, *largs):
+        self.recorder_summery = 'FFmpeg "{}"'.format(self.record_filename)
 
     def compute_recording_opts(self, ifmt=None, iw=None, ih=None):
         play_used = self.metadata_player
@@ -294,6 +434,12 @@ class VideoRecorder(BaseRecorder):
             self.record_directory,
             self.record_fname.replace('{}', str(self.record_fname_count)))
 
+    def send_image_to_recorder(self, image):
+        if self.image_queue is None:
+            return
+
+        self.image_queue.put(image)
+
     @error_guard
     def record(self, player: BasePlayer):
         if not player.metadata_play_used or not player.metadata_play_used.rate:
@@ -301,6 +447,12 @@ class VideoRecorder(BaseRecorder):
                 'Can only record from player once the fps is known')
 
         super(VideoRecorder, self).record(player=player)
+        self.player.frame_callbacks.append(self.send_image_to_recorder)
+
+    @error_guard
+    def stop(self, *largs, join=False):
+        if super(VideoRecorder, self).stop(join=join):
+            self.player.frame_callbacks.remove(self.send_image_to_recorder)
 
     def _start_recording(self):
         thread = self.record_thread = Thread(
@@ -311,33 +463,34 @@ class VideoRecorder(BaseRecorder):
     def _complete_stop(self, *largs):
         super(VideoRecorder, self)._complete_stop()
         self.record_fname_count += 1
+        if self.send_image_to_recorder in self.player.frame_callbacks:
+            self.player.frame_callbacks.remove(self.send_image_to_recorder)
 
     def record_thread_run(self, filename):
         queue = self.image_queue
         recorder = None
         t0 = None
-        put = queue.put
+        last_t = None
 
         while self.record_state != 'stopping':
             item = queue.get()
             if item == 'eof':
                 break
-            img, t = item
+            img, metadata = item
 
             if recorder is None:
                 try:
                     self.setattr_in_kivy_thread('ts_record', clock())
-                    t0 = t
+                    t0 = metadata['t']
                     iw, ih = img.get_size()
                     ipix_fmt = img.get_pixel_format()
 
                     (ifmt, iw, ih, irate), (opix_fmt, ow, oh, orate) = \
                         self.compute_recording_opts(ipix_fmt, iw, ih)
 
-                    Clock.schedule_once(
-                        lambda *largs: setattr(
-                            self, 'metadata_record_used',
-                            VideoMetadata(opix_fmt, ow, oh, orate)), 0)
+                    self.setattr_in_kivy_thread(
+                        'metadata_record_used',
+                        VideoMetadata(opix_fmt, ow, oh, orate))
 
                     orate = Fraction(orate)
                     if orate >= 1.:
@@ -347,6 +500,7 @@ class VideoRecorder(BaseRecorder):
                     else:
                         orate = orate.limit_denominator(2 ** 30 - 1)
                         orate = (orate.numerator, orate.denominator)
+                    print('rate is ', orate, self.player.metadata_play_used, self.metadata_record_used)
 
                     stream = {
                         'pix_fmt_in': ipix_fmt, 'pix_fmt_out': opix_fmt,
@@ -355,19 +509,20 @@ class VideoRecorder(BaseRecorder):
                         'frame_rate': orate}
 
                     recorder = MediaWriter(filename, [stream])
-                    self.player.frame_callbacks.append(put)
                 except Exception as e:
                     self.exception(e)
-                    if put in self.player.frame_callbacks:
-                        self.player.frame_callbacks.remove(put)
                     Clock.schedule_once(self._complete_stop)
                     return
 
                 Clock.schedule_once(self._complete_start)
 
             try:
+                if last_t is not None:
+                    print(metadata['t'], metadata['t'] - last_t)
+                last_t = metadata['t']
                 self.setattr_in_kivy_thread(
-                    'size_recorded', recorder.write_frame(img, t - t0))
+                    'size_recorded',
+                    recorder.write_frame(img, metadata['t'] - t0))
                 self.increment_in_kivy_thread('frames_recorded')
             except Exception as e:
                 self.exception(e)
@@ -379,9 +534,39 @@ class VideoRecorder(BaseRecorder):
             except Exception as e:
                 self.exception(e)
 
-        if put in self.player.frame_callbacks:
-            self.player.frame_callbacks.remove(put)
         Clock.schedule_once(self._complete_stop)
+
+
+class ImageFileRecordSettingsWidget(BoxLayout):
+
+    recorder: ImageFileRecorder = None
+
+    def __init__(self, recorder=None, **kwargs):
+        if recorder is None:
+            recorder = ImageFileRecorder()
+        self.recorder = recorder
+        super(ImageFileRecordSettingsWidget, self).__init__(**kwargs)
+
+    def set_filename(self, text_wid, path, selection, filename, is_dir=True):
+        '''Called by the GUI to set the filename.
+        '''
+        if not selection:
+            if exists(join(path, filename)):
+                f = abspath(join(path, filename))
+                if is_dir and not isdir(f):
+                    f = dirname(f)
+            elif is_dir and exists(path):
+                f = abspath(path)
+            else:
+                text_wid.text = ''
+                return
+        else:
+            f = abspath(join(path, selection[0]))
+            if is_dir and not isdir(f):
+                f = dirname(f)
+
+        self.recorder.record_directory = f
+        text_wid.text = f
 
 
 class VideoRecordSettingsWidget(BoxLayout):

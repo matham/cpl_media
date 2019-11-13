@@ -60,12 +60,14 @@
             size: self.minimum_size
             spacing: ['5dp']
             rows: 1
+            disabled: root.player.play_state != 'playing'
             ThemedSpinner:
                 id: pt_settings_opt
                 size_hint_x: None
                 width: self.minimum_width
                 values: [''] + root.player.active_settings
                 on_text: root.bind_pt_setting(self.text)
+                disabled: root.player.config_active
             LightThemedToggleButton:
                 text: 'Auto'
                 padding: '5dp', '5dp'

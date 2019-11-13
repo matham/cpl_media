@@ -12,6 +12,7 @@ from time import perf_counter as clock
 import socket
 import sys
 from queue import Queue, Empty
+from os.path import splitext, join, exists, isdir, abspath, dirname
 import traceback
 import select
 
@@ -20,13 +21,15 @@ from ffpyplayer.pic import Image, SWScale
 from kivy.logger import Logger
 from kivy.properties import StringProperty, NumericProperty, BooleanProperty
 from kivy.clock import Clock
+from kivy.uix.boxlayout import BoxLayout
+from kivy.lang import Builder
 
 from cpl_media import error_guard
 from cpl_media.player import BasePlayer, VideoMetadata
 import cpl_media
 from .server import RemoteData
 
-__all__ = ('RemoteVideoPlayer', )
+__all__ = ('RemoteVideoPlayer', 'ClientPlayerSettingsWidget')
 
 
 class RemoteVideoPlayer(BasePlayer, RemoteData):
@@ -57,6 +60,13 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
         super(RemoteVideoPlayer, self).__init__(**kwargs)
         self._kivy_trigger = Clock.create_trigger(self.process_in_kivy_thread)
 
+        self.fbind('server', self._update_summary)
+        self.fbind('port', self._update_summary)
+        self._update_summary()
+
+    def _update_summary(self, *largs):
+        self.player_summery = 'Network "{}:{}"'.format(self.server, self.port)
+
     def listener_run(self, from_kivy_queue, to_kivy_queue):
         trigger = self._kivy_trigger
         timeout = self.timeout
@@ -79,7 +89,10 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
                 r, _, _ = select.select([sock], [], [], timeout)
                 if r:
                     msg_len, msg_buff, msg, value = self.read_msg(
-                        sock, to_kivy_queue, trigger, msg_len, msg_buff)
+                        sock, msg_len, msg_buff)
+                    if msg is not None:
+                        to_kivy_queue.put((msg, value))
+                        trigger()
 
                 try:
                     while True:
@@ -94,7 +107,7 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
         except Exception as e:
             exc_info = ''.join(traceback.format_exception(*sys.exc_info()))
             to_kivy_queue.put(
-                ('exception', (str(e), exc_info)))
+                ('exception_exit', (str(e), exc_info)))
             trigger()
         finally:
             Logger.info('RemoteVideoPlayer: closing socket')
@@ -125,6 +138,12 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
                 if msg == 'exception':
                     e, exec_info = value
                     cpl_media.error_callback(e, exc_info=exec_info)
+                elif msg == 'exception_exit':
+                    e, exec_info = value
+                    cpl_media.error_callback(e, exc_info=exec_info)
+                    self.stop_all()
+                    if self.play_state != 'none':
+                        self._complete_stop()
                 elif msg == 'started_recording':
                     if self.play_state == 'starting':
                         self.ts_play = self._ivl_start = clock()
@@ -134,6 +153,8 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
                         self._complete_start()
                 elif msg == 'stopped_recording':
                     self.stop()
+                elif msg == 'stopped_playing':
+                    self._complete_stop()
                 elif msg == 'image':
                     if self.play_state != 'playing':
                         continue
@@ -153,7 +174,7 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
                     img = Image(
                         plane_buffers=plane_buffers, pix_fmt=pix_fmt,
                         size=size, linesize=linesize)
-                    self.process_frame(sws.scale(img), metadata['t'])
+                    self.process_frame(sws.scale(img), metadata)
                 else:
                     print('Got unknown RemoteVideoPlayer message', msg, value)
             except Empty:
@@ -185,7 +206,6 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
     def stop(self, *largs, join=False):
         if super(RemoteVideoPlayer, self).stop(join=join):
             self.send_message_to_server('stopped_playing', None)
-            self._complete_stop()
 
     def play_thread_run(self):
         pass
@@ -193,3 +213,17 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
     def stop_all(self, join=False):
         super(RemoteVideoPlayer, self).stop_all(join=join)
         self.stop_listener(join=join)
+
+
+class ClientPlayerSettingsWidget(BoxLayout):
+
+    player: RemoteVideoPlayer = None
+
+    def __init__(self, player=None, **kwargs):
+        if player is None:
+            player = RemoteVideoPlayer()
+        self.player = player
+        super(ClientPlayerSettingsWidget, self).__init__(**kwargs)
+
+
+Builder.load_file(join(dirname(__file__), 'client_player.kv'))

@@ -38,7 +38,8 @@ class FFmpegPlayer(BasePlayer):
 
     __settings_attrs__ = (
         'play_filename', 'file_fmt', 'icodec',
-        'dshow_true_filename', 'dshow_opt', 'use_dshow', 'dshow_rate')
+        'dshow_true_filename', 'dshow_opt', 'use_dshow', 'dshow_rate',
+        'dshow_filename')
 
     play_filename = StringProperty('')
     '''The filename of the media being played. Can be e.g. a url etc.
@@ -57,6 +58,8 @@ class FFmpegPlayer(BasePlayer):
 
     dshow_rate = NumericProperty(0)
 
+    dshow_filename = StringProperty('')
+
     dshow_true_filename = StringProperty('')
     '''The real and complete filename of the direct show (webcam) device.
     '''
@@ -74,19 +77,10 @@ class FFmpegPlayer(BasePlayer):
         '([0-9]+)X([0-9]+) (.+), ([0-9\\.]+)(?: - ([0-9\\.]+))? fps')
 
     def __init__(self, **kw):
-        play_filename = kw.get('play_filename')
-        use_dshow = kw.get('use_dshow')
-        dshow_true_filename = kw.get('dshow_true_filename')
-        dshow_opt = kw.get('dshow_opt')
-
-        if (use_dshow and play_filename and dshow_true_filename and
-                dshow_opt):
-            self.dshow_names = {play_filename: dshow_true_filename}
-            self.dshow_opts = {play_filename:
-                               {dshow_opt: self.parse_dshow_opt(dshow_opt)}}
         super(FFmpegPlayer, self).__init__(**kw)
 
         self.fbind('play_filename', self._update_summary)
+        self.fbind('dshow_filename', self._update_summary)
         self.fbind('file_fmt', self._update_summary)
         self.fbind('use_dshow', self._update_summary)
         self._update_summary()
@@ -95,15 +89,37 @@ class FFmpegPlayer(BasePlayer):
         self.metadata_play = VideoMetadata(fmt, w, h, 0)
 
     def _update_summary(self, *largs):
-        fname = self.play_filename
-        if not self.file_fmt and not self.use_dshow:
-            fname = splitext(fname)[0]
+        name = self.dshow_filename if self.use_dshow else self.play_filename
+        self.player_summery = 'FFmpeg "{}"'.format(name)
 
-        if len(fname) > 8:
-            name = fname[:4] + '...' + fname[-4:]
-        else:
-            name = fname
-        self.player_summery = 'FFMpeg-{}'.format(name)
+    def apply_config_settings(self, settings: dict):
+        # this must be set after everything so we can loop up its opts in dict
+        dshow_filename = settings.pop('dshow_filename', self.dshow_filename)
+        super(FFmpegPlayer, self).apply_config_settings(settings)
+
+        try:
+            if self.dshow_opt:
+                self._parse_dshow_opt(self.dshow_opt)
+        except Exception:
+            self.dshow_opt = ''
+
+        if not self.dshow_true_filename or not dshow_filename or not \
+                self.dshow_opt:
+            dshow_filename = self.dshow_true_filename = ''
+            self.dshow_opt = ''
+
+        if dshow_filename:
+            if dshow_filename not in self.dshow_names:
+                self.dshow_names[dshow_filename] = \
+                    self.dshow_true_filename
+
+            if dshow_filename not in self.dshow_opts:
+                self.dshow_opts[dshow_filename] = {}
+
+            self.dshow_opts[dshow_filename][self.dshow_opt] = \
+                self._parse_dshow_opt(self.dshow_opt)
+
+        self.dshow_filename = dshow_filename
 
     @error_guard
     def refresh_dshow(self):
@@ -137,27 +153,27 @@ class FFmpegPlayer(BasePlayer):
 
         self.dshow_opts = video2
         self.dshow_names = names2
-        if self.play_filename not in names2:
+        if self.dshow_filename not in names2:
             if not names2:
-                self.play_filename = ''
+                self.dshow_filename = ''
                 self.dshow_true_filename = ''
             else:
-                self.play_filename = list(names2.keys())[0]
-                self.dshow_true_filename = names2[self.play_filename]
+                self.dshow_filename = list(names2.keys())[0]
+                self.dshow_true_filename = names2[self.dshow_filename]
         self.update_dshow_file()
 
     @error_guard
     def update_dshow_file(self):
-        if not self.use_dshow or not self.play_filename:
+        if not self.use_dshow or not self.dshow_filename:
             self.dshow_opt = ''
             self.dshow_true_filename = ''
             return
 
-        assert self.play_filename in self.dshow_opts
-        self.dshow_true_filename = self.dshow_names[self.play_filename]
-        if self.dshow_opt in self.dshow_opts[self.play_filename]:
+        assert self.dshow_filename in self.dshow_opts
+        self.dshow_true_filename = self.dshow_names[self.dshow_filename]
+        if self.dshow_opt in self.dshow_opts[self.dshow_filename]:
             return
-        opts = list(self.dshow_opts[self.play_filename].keys())
+        opts = list(self.dshow_opts[self.dshow_filename].keys())
         if not opts:
             self.dshow_opt = ''
         else:
@@ -165,6 +181,9 @@ class FFmpegPlayer(BasePlayer):
 
     @error_guard
     def parse_dshow_opt(self, opt):
+        return self._parse_dshow_opt(opt)
+
+    def _parse_dshow_opt(self, opt):
         m = re.match(self.dshow_opt_pat, opt)
         if m is None:
             raise ValueError('{} not a valid option'.format(opt))
@@ -187,6 +206,14 @@ class FFmpegPlayer(BasePlayer):
                 'FFmpeg Player: internal error "{}", "{}"'.format(mode, value))
 
     def play_thread_run(self):
+        try:
+            self._play_thread_run()
+        except Exception as e:
+            self.exception(e)
+        finally:
+            Clock.schedule_once(self._complete_stop)
+
+    def _play_thread_run(self):
         process_frame = self.process_frame
         ff_opts = {'sync': 'video', 'an': True, 'sn': True, 'paused': True}
 
@@ -220,14 +247,9 @@ class FFmpegPlayer(BasePlayer):
         if use_dshow:
             fname = 'video={}'.format(self.dshow_true_filename)
 
-        try:
-            ffplayer = MediaPlayer(
-                fname, callback=self.player_callback, ff_opts=ff_opts,
-                lib_opts=lib_opts)
-        except Exception as e:
-            self.exception(e)
-            Clock.schedule_once(self._complete_stop)
-            return
+        ffplayer = MediaPlayer(
+            fname, callback=self.player_callback, ff_opts=ff_opts,
+            lib_opts=lib_opts)
 
         # wait for media to init pixel fmt
         src_fmt = ''
@@ -239,12 +261,7 @@ class FFmpegPlayer(BasePlayer):
             time.sleep(0.01)
 
         if not src_fmt:
-            try:
-                raise ValueError("Player failed, couldn't get pixel type")
-            except Exception as e:
-                self.exception(e)
-                Clock.schedule_once(self._complete_stop)
-                return
+            raise ValueError("Player failed, couldn't get pixel type")
 
         # if ipix_fmt:
         #     src_fmt = ipix_fmt
@@ -263,12 +280,7 @@ class FFmpegPlayer(BasePlayer):
         while self.play_state == 'starting' and clock() - s < 5.:
             img, val = ffplayer.get_frame()
             if val == 'eof':
-                try:
-                    raise ValueError("Player failed, reached eof")
-                except Exception as e:
-                    self.exception(e)
-                    Clock.schedule_once(self._complete_stop)
-                    return
+                raise ValueError("Player failed, reached eof")
 
             if img:
                 ivl_start = clock()
@@ -277,20 +289,10 @@ class FFmpegPlayer(BasePlayer):
 
         rate = ffplayer.get_metadata().get('frame_rate')
         if rate == (0, 0) or not rate or not rate[1]:
-            try:
-                raise ValueError("Player failed, couldn't read frame rate")
-            except Exception as e:
-                self.exception(e)
-                Clock.schedule_once(self._complete_stop)
-                return
+            raise ValueError("Player failed, couldn't read frame rate")
 
         if not img:
-            try:
-                raise ValueError("Player failed, couldn't read frame")
-            except Exception as e:
-                self.exception(e)
-                Clock.schedule_once(self._complete_stop)
-                return
+            raise ValueError("Player failed, couldn't read frame")
 
         # ready to start
         rate = rate[0] / float(rate[1])
@@ -304,43 +306,42 @@ class FFmpegPlayer(BasePlayer):
         Clock.schedule_once(self._complete_start)
 
         # started
-        process_frame(img[0], ivl_start if use_rt else img[1])
+        process_frame(img[0], {'t': ivl_start if use_rt else img[1]})
 
         min_sleep = 1 / (rate * 8.)
         self.setattr_in_kivy_thread('ts_play', ivl_start)
         self.setattr_in_kivy_thread('frames_played', 1)
         count = 1
 
-        try:
-            while self.play_state != 'stopping':
-                img, val = ffplayer.get_frame()
-                ivl_end = clock()
+        while self.play_state != 'stopping':
+            img, val = ffplayer.get_frame()
+            ivl_end = clock()
 
-                if ivl_end - ivl_start >= 1.:
-                    real_rate = count / (ivl_end - ivl_start)
-                    self.setattr_in_kivy_thread('real_rate', real_rate)
-                    count = 0
-                    ivl_start = ivl_end
+            if ivl_end - ivl_start >= 1.:
+                real_rate = count / (ivl_end - ivl_start)
+                self.setattr_in_kivy_thread('real_rate', real_rate)
+                count = 0
+                ivl_start = ivl_end
 
-                if val == 'paused':
-                    raise ValueError("Player {} got {}".format(self, val))
-                if val == 'eof':
-                    break
+            if val == 'paused':
+                raise ValueError("Player {} got {}".format(self, val))
+            if val == 'eof':
+                break
 
-                if not img:
-                    time.sleep(min(val, min_sleep) if val else min_sleep)
-                    continue
-                elif val:
-                    time.sleep(min(val, min_sleep))
+            if not img:
+                time.sleep(min(val, min_sleep) if val else min_sleep)
+                continue
+            elif val:
+                ts = clock()
+                leftover = val
+                while leftover > min_sleep and \
+                        self.play_state != 'stopping':
+                    time.sleep(min_sleep)
+                    leftover = max(val - (clock() - ts), 0)
 
-                count += 1
-                self.increment_in_kivy_thread('frames_played')
-                process_frame(img[0], ivl_end if use_rt else img[1])
-
-        except Exception as e:
-            self.exception(e)
-
-        Clock.schedule_once(self._complete_stop)
+            count += 1
+            self.increment_in_kivy_thread('frames_played')
+            process_frame(img[0], {'t': ivl_end if use_rt else img[1]})
 
 
 class FFmpegSettingsWidget(BoxLayout):

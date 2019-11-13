@@ -1,0 +1,56 @@
+
+
+<RemoteRecordSettingsWidget>:
+    orientation: 'vertical'
+    spacing: '3dp'
+    size_hint_min_x: self.minimum_width
+    size_hint_y: None
+    height: self.minimum_height
+    BoxLayout:
+        size_hint_y: None
+        height: self.minimum_height
+        size_hint_min_x: self.minimum_width
+        spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'Server:'
+            padding_y: '5dp'
+        FlatSizedTextInput:
+            disabled: root.recorder.server_active
+            size_hint_min_x: '100dp'
+            text: root.recorder.server
+            background_color: app.theme.primary_light
+            on_focus: if not self.focus: root.recorder.server = self.text
+    BoxLayout:
+        size_hint: None, None
+        size: self.minimum_size
+        spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'Port:'
+            padding_y: '5dp'
+        FlatSizedTextInput:
+            disabled: root.recorder.server_active
+            size_hint_x: None
+            width: '100dp'
+            text: str(root.recorder.port)
+            input_filter: 'int'
+            background_color: app.theme.primary_light
+            on_focus: if not self.focus: root.recorder.port = int(self.text or 0)
+        ThemedSizedLabel:
+            text: 'Max # queued frames:'
+            padding_y: '5dp'
+        FlatSizedTextInput:
+            disabled: root.recorder.server_active
+            size_hint_x: None
+            width: '100dp'
+            text: str(root.recorder.max_images_buffered)
+            input_filter: 'int'
+            background_color: app.theme.primary_light
+            on_focus: if not self.focus: root.recorder.max_images_buffered = int(self.text or 5)
+        LightThemedToggleButton:
+            bold: True
+            padding: '2dp', '2dp'
+            size_hint: None, None
+            size: self.texture_size
+            text: 'Start server' if self.state == 'normal' else 'Stop server'
+            state: 'down' if root.recorder.server_active else 'normal'
+            on_release: root.recorder.start_server() if self.state == 'down' else root.recorder.stop_server()

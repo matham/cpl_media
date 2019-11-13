@@ -85,11 +85,11 @@
                     ThemedSpinner:
                         id: dshow_name
                         values: list(root.player.dshow_names)
-                        text: root.player.play_filename if root.player.use_dshow else ''
+                        text: root.player.dshow_filename
                         size_hint_x: None
                         width: max(self.minimum_width, 50)
                         on_text:
-                            root.player.play_filename = self.text
+                            root.player.dshow_filename = self.text
                             root.player.update_dshow_file()
                 BoxLayout:
                     size_hint: None, None
@@ -103,7 +103,7 @@
                     ThemedSpinner:
                         id: dshow_opts
                         values: list(root.player.dshow_opts[dshow_name.text]) if dshow_name.text else []
-                        text: root.player.dshow_opt if root.player.use_dshow else ''
+                        text: root.player.dshow_opt
                         size_hint_x: None
                         width: max(self.minimum_width, 50)
                         on_text: root.player.dshow_opt = self.text
@@ -141,7 +141,7 @@
                         flat_color: app.theme.text_primary
                     FlatSizedTextInput:
                         id: filename
-                        text: root.player.play_filename if not root.player.use_dshow else ''
+                        text: root.player.play_filename
                         background_color: app.theme.primary_light
                         hint_text: 'filename'
                         on_text: root.player.play_filename = self.text

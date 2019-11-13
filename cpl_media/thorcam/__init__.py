@@ -119,6 +119,12 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
         self.to_kivy_queue = Queue()
         self.start_cam_process()
 
+        self.fbind('serial', self._update_summary)
+        self._update_summary()
+
+    def _update_summary(self, *largs):
+        self.player_summery = 'Thor "{}"'.format(self.serial)
+
     @error_guard
     def received_camera_response(self, msg, value):
         if msg == 'image':
@@ -206,7 +212,7 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
 
         img, count, queued_count, t_img = value
         self.num_queued_frames = queued_count
-        self.process_frame(img, t_img)
+        self.process_frame(img, {'t': t_img, 'count': count})
 
     @error_guard
     def open_camera(self, serial):

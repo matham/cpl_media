@@ -14,6 +14,7 @@ import struct
 from time import clock
 from queue import Queue, Empty
 import traceback
+from os.path import splitext, join, exists, isdir, abspath, dirname
 import select
 
 from kivy.properties import ObjectProperty, NumericProperty, StringProperty, \
@@ -21,6 +22,8 @@ from kivy.properties import ObjectProperty, NumericProperty, StringProperty, \
 from kivy.lang import Builder
 from kivy.logger import Logger
 from kivy.clock import Clock
+from kivy.uix.boxlayout import BoxLayout
+from kivy.lang import Builder
 
 from base_kivy_app.utils import yaml_dumps, yaml_loads
 
@@ -28,7 +31,7 @@ from cpl_media import error_guard
 from cpl_media.recorder import BaseRecorder
 import cpl_media
 
-__all__ = ('RemoteVideoRecorder', 'RemoteData')
+__all__ = ('RemoteVideoRecorder', 'RemoteData', 'RemoteRecordSettingsWidget')
 
 
 class EndConnection(Exception):
@@ -80,7 +83,7 @@ class RemoteData(object):
             assert not bin_n
         return msg, value
 
-    def read_msg(self, sock, to_kivy_queue, trigger, msg_len, msg_buff):
+    def read_msg(self, sock, msg_len, msg_buff):
         # still reading msg size
         msg = value = None
         if not msg_len:
@@ -103,8 +106,6 @@ class RemoteData(object):
             msg_buff += data
             if len(msg_buff) == total:
                 msg, value = self.decode_data(msg_buff, msg_len)
-                to_kivy_queue.put((msg, value))
-                trigger()
 
                 msg_len = ()
                 msg_buff = b''
@@ -162,9 +163,19 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
 
     _server_recording = None  # keeps track of whether we are recording rn
 
+    _first_image_while_playing = False
+
     def __init__(self, **kwargs):
         super(RemoteVideoRecorder, self).__init__(**kwargs)
         self._kivy_trigger = Clock.create_trigger(self.process_in_kivy_thread)
+
+        self.fbind('server', self._update_summary)
+        self.fbind('port', self._update_summary)
+        self._update_summary()
+
+    def _update_summary(self, *largs):
+        self.recorder_summery = 'Network "{}:{}"'.format(
+            self.server, self.port)
 
     def server_run(self, from_kivy_queue, to_kivy_queue):
         trigger = self._kivy_trigger
@@ -187,8 +198,8 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
                 if not r:
                     try:
                         while True:
-                            msg, value = from_kivy_queue.get_nowait()
-                            if msg == 'eof':
+                            if 'eof' == self._server_message_from_queue(
+                                    None, from_kivy_queue):
                                 return
                     except Empty:
                         pass
@@ -203,9 +214,12 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
                         r, _, _ = select.select([connection], [], [], timeout)
                         if r:
                             msg_len, msg_buff, msg, value = self.read_msg(
-                                connection, to_kivy_queue,
-                                trigger, msg_len, msg_buff)
-                            self._server_message_from_client(connection, msg)
+                                connection, msg_len, msg_buff)
+                            if msg is not None:
+                                if not self._server_message_from_client(
+                                        connection, msg, value):
+                                    to_kivy_queue.put((msg, value))
+                                    trigger()
 
                         try:
                             while True:
@@ -219,9 +233,12 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
                 finally:
                     Logger.info(
                         'RemoteVideoRecorder: closing client connection')
-                    connection.close()
                     self._server_client_playing = False
                     self._server_client_requested_playing = False
+                    try:
+                        connection.close()
+                    except Exception:
+                        pass
         except Exception as e:
             exc_info = ''.join(traceback.format_exception(*sys.exc_info()))
             to_kivy_queue.put(
@@ -231,7 +248,7 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
             Logger.info('closing socket')
             sock.close()
 
-    def _server_message_from_client(self, connection, msg):
+    def _server_message_from_client(self, connection, msg, value):
         try:
             if msg == 'started_playing':
                 if self._server_client_playing or \
@@ -245,12 +262,17 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
                                   self._server_recording)
                 else:
                     self._server_client_requested_playing = True
+                return True
             elif msg == 'stopped_playing':
                 self._server_client_requested_playing = False
                 self._server_client_playing = False
+                self.send_msg(connection, 'stopped_playing', None)
+                return True
         except Exception as e:
             exc_info = ''.join(traceback.format_exception(*sys.exc_info()))
             self.send_msg(connection, 'exception', (str(e), exc_info))
+            return True
+        return False
 
     def _server_message_from_queue(self, connection, from_kivy_queue):
         msg, value = from_kivy_queue.get_nowait()
@@ -258,14 +280,27 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
             return 'eof'
 
         if msg == 'image':
+            if self._first_image_while_playing:
+                self.setattr_in_kivy_thread('ts_record', clock())
+                self._first_image_while_playing = False
+
             if self._server_client_playing:
+                assert connection is not None
+                self.increment_in_kivy_thread(
+                    'size_recorded', sum(value[0].get_buffer_size()))
+                self.increment_in_kivy_thread('frames_recorded')
+
                 self.send_msg(connection, msg, value)
+            else:
+                self.increment_in_kivy_thread('frames_skipped')
         elif msg == 'started_recording':
             self._server_recording = recording = tuple(value)
             # cannot be playing as it should at most be in requested_playing
             assert not self._server_client_playing
+            self._first_image_while_playing = True
 
             if self._server_client_requested_playing:
+                assert connection is not None
                 self._server_client_requested_playing = False
                 self._server_client_playing = True
                 self.send_msg(connection, 'started_recording', recording)
@@ -274,10 +309,11 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
             self._server_recording = None
             if self._server_client_requested_playing or \
                     self._server_client_playing:
+                assert connection is not None
                 self.send_msg(connection, 'stopped_recording', None)
                 self._server_client_requested_playing = False
                 self._server_client_playing = False
-        else:
+        elif connection is not None:
             self.send_msg(connection, msg, value)
 
     @error_guard
@@ -291,14 +327,11 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
     def send_image_to_client(self, image):
         if self.from_kivy_queue is None:
             return
-        image, t = image
+        image, metadata = image
 
         if not self.max_images_buffered or \
                 self.from_kivy_queue.qsize() < self.max_images_buffered:
-            self.from_kivy_queue.put(('image', (image, {'t': t})))
-            self.increment_in_kivy_thread(
-                'size_recorded', sum(image.get_buffer_size()))
-            self.increment_in_kivy_thread('frames_recorded')
+            self.from_kivy_queue.put(('image', (image, metadata)))
         else:
             self.increment_in_kivy_thread('frames_skipped')
 
@@ -351,14 +384,14 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
         self.start_server()
         super(RemoteVideoRecorder, self).record(*largs, **kwargs)
 
-        self.metadata_record_used = self.player.metadata_play_used
-        self.ts_record = clock()
+        self.metadata_record_used = self.metadata_player
         self.player.frame_callbacks.append(self.send_image_to_client)
         self.from_kivy_queue.put(
             ('started_recording', self.metadata_record_used))
 
         self._complete_start()
 
+    @error_guard
     def stop(self, *largs, join=False):
         if super(RemoteVideoRecorder, self).stop(join=join):
             self.player.frame_callbacks.remove(self.send_image_to_client)
@@ -371,3 +404,17 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
 
     def record_thread_run(self, *largs):
         pass
+
+
+class RemoteRecordSettingsWidget(BoxLayout):
+
+    recorder: RemoteVideoRecorder = None
+
+    def __init__(self, recorder=None, **kwargs):
+        if recorder is None:
+            recorder = RemoteVideoRecorder()
+        self.recorder = recorder
+        super(RemoteRecordSettingsWidget, self).__init__(**kwargs)
+
+
+Builder.load_file(join(dirname(__file__), 'server_recorder.kv'))

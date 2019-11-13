@@ -1,0 +1,45 @@
+
+
+<ClientPlayerSettingsWidget>:
+    orientation: 'vertical'
+    spacing: '3dp'
+    size_hint_min_x: self.minimum_width
+    size_hint_y: None
+    height: self.minimum_height
+    BoxLayout:
+        size_hint_y: None
+        height: self.minimum_height
+        size_hint_min_x: self.minimum_width
+        spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'Server:'
+            padding_y: '5dp'
+        FlatSizedTextInput:
+            disabled: root.player.client_active
+            size_hint_min_x: '100dp'
+            text: root.player.server
+            background_color: app.theme.primary_light
+            on_focus: if not self.focus: root.player.server = self.text
+    BoxLayout:
+        size_hint: None, None
+        size: self.minimum_size
+        spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'Port:'
+            padding_y: '5dp'
+        FlatSizedTextInput:
+            disabled: root.player.client_active
+            size_hint_x: None
+            width: '100dp'
+            text: str(root.player.port)
+            input_filter: 'int'
+            background_color: app.theme.primary_light
+            on_focus: if not self.focus: root.player.port = int(self.text or 0)
+        LightThemedToggleButton:
+            bold: True
+            padding: '2dp', '2dp'
+            size_hint: None, None
+            size: self.texture_size
+            text: 'Open connection' if self.state == 'normal' else 'Close connection'
+            state: 'down' if root.player.client_active else 'normal'
+            on_release: root.player.start_listener() if self.state == 'down' else root.player.stop_listener()

@@ -113,11 +113,18 @@ class PTGrayPlayer(BasePlayer):
         self.fbind('serial', do_serial)
 
         def do_ip(*largs):
-            self.player_summery = 'PT-{}'.format(self.ip)
             self.ask_config('serial')
 
         self.fbind('ip', do_ip)
         do_ip()
+
+        self.fbind('ip', self._update_summary)
+        self.fbind('serial', self._update_summary)
+        self._update_summary()
+
+    def _update_summary(self, *largs):
+        name = str(self.serial or self.ip)
+        self.player_summery = 'PTGray "{}"'.format(name)
 
     def start_config(self, *largs):
         self.config_queue = Queue()
@@ -413,7 +420,7 @@ class PTGrayPlayer(BasePlayer):
                         plane_buffers=[image['buffer']], pix_fmt=ff_fmt,
                         size=(image['cols'], image['rows']))
 
-                process_frame(img, ivl_end)
+                process_frame(img, {'t': ivl_end})
         except Exception as e:
             self.exception(e)
         finally:

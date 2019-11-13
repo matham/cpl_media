@@ -1,7 +1,40 @@
 #:import pretty_space base_kivy_app.utils.pretty_space
+#:import pretty_time base_kivy_app.utils.pretty_time
+
+<RootAppWidget>:
+    orientation: 'vertical'
+    canvas:
+        Color:
+            rgba: app.theme.primary
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    PlayerMetadata:
+        padding: 0, '5dp', 0, '5dp'
+    PlayerSelection:
+        padding: '5dp', 0, 0, '10dp'
+    RecordSelection
+    BufferImage:
+        on_kv_post: app.image_display = self
+        auto_bring_to_front: False
+        available_size: self.size
+        on_size: if self.img is not None: self.update_img(self.img)
+
+        do_scale: True
+        do_translation: True, True
+        do_rotation: True
+
+        canvas.before:
+            Color:
+                rgba: [0, 0, 0, 1]
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
 
 <ConfigSelectLabelButton@FlatToggleButton>:
     disabled: app.player.play_state != 'none'
+    group: 'video_radio_text_btn'
     allow_no_selection: False
     bold: True
     padding: '2dp', '5dp'
@@ -15,107 +48,85 @@
     source: 'radiobox-marked.png' if self.state == 'down' else 'radiobox-blank.png'
     flat_color: app.theme.accent
 
-<RootAppWidget>:
-    orientation: 'vertical'
-    spacing: '5dp'
-    canvas:
-        Color:
-            rgba: app.theme.primary
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    BoxLayout:
-        id: config
-        size_hint: None, None
-        size: self.minimum_width, '34dp'
-        ConfigSelectIconButton:
-            state: ffmpeg.state
-            on_state:
-                ffmpeg.state = self.state
-                if self.state == 'down': app.player = app.ffmpeg_player
-        ConfigSelectLabelButton:
-            id: ffmpeg
-            group: 'video_radio_text_btn'
-            text: 'Webcam/file'
-            state: 'down'
-        FlatImageButton:
-            on_kv_post: self.more_widget = Factory.FFmpegSettingsDropdown()
-            scale_down_color: True
-            source: 'flat_dots_vertical.png'
-            flat_color: app.theme.accent
-            on_release: self.more_widget.open(config)
-            disabled: ffmpeg.state != 'down'
-        ConfigSelectIconButton:
-            state: ptgray.state
-            on_state:
-                ptgray.state = self.state
-                if self.state == 'down': app.player = app.ptgray_player
-        ConfigSelectLabelButton:
-            id: ptgray
-            group: 'video_radio_text_btn'
-            text: 'PTGray'
-        FlatImageButton:
-            on_kv_post: self.more_widget = Factory.PTGraySettingsDropdown()
-            scale_down_color: True
-            source: 'flat_dots_vertical.png'
-            flat_color: app.theme.accent
-            on_release: self.more_widget.open(config)
-            disabled: ptgray.state != 'down'
-        ConfigSelectIconButton:
-            state: thor.state
-            on_state:
-                thor.state = self.state
-                if self.state == 'down': app.player = app.thor_player
-        ConfigSelectLabelButton:
-            id: thor
-            group: 'video_radio_text_btn'
-            text: 'Thor'
-        FlatImageButton:
-            on_kv_post: self.more_widget = Factory.ThorSettingsDropdown()
-            scale_down_color: True
-            source: 'flat_dots_vertical.png'
-            flat_color: app.theme.accent
-            on_release: self.more_widget.open(config)
-            disabled: thor.state != 'down'
-    VideoRecordSettingsWidget
-    BoxLayout:
-        size_hint: None, None
-        size: self.minimum_width, '34dp'
-        padding: '5dp'
-        spacing: '5dp'
-        ThemedSizedLabel:
-            text: 'Estimated FPS:'
-        ThemedSizedLabel:
-            text: str(int(app.player.real_rate))
-        ThemedSizedLabel:
-            text: 'Data rate:'
-        ThemedSizedLabel:
-            text: pretty_space(app.player.data_rate, is_rate=True)
-        FlatImageToggleButton:
-            source: 'flat_play.png' if self.state == 'normal' else 'flat_stop.png'
-            flat_color: app.theme.accent
-            disabled: not app.player.can_play or app.player.play_state == 'starting' or app.player.play_state == 'stopping'
-            state: 'down' if app.player.play_state == 'starting' or app.player.play_state == 'playing' else 'normal'
-            on_release: app.player.play() if self.state == 'down' else app.player.stop()
-        FlatImageToggleButton:
-            source: 'flat_record.png' if self.state == 'normal' else 'flat_stop.png'
-            flat_color: app.theme.accent
-            disabled: True
-    BufferImage:
-        on_kv_post: app.image_display = self
-        auto_bring_to_front: False
-        available_size: self.size
 
-        do_scale: True
-        do_translation: True, True
-        do_rotation: True
-
-        canvas.before:
-            Color:
-                rgba: [0, 0, 0, 1]
-            Rectangle:
-                pos: self.pos
-                size: self.size
+<PlayerSelection@BoxLayout>:
+    size_hint: None, None
+    size: self.minimum_width, '34dp'
+    ConfigSelectIconButton:
+        state: ffmpeg.state
+        on_state:
+            ffmpeg.state = self.state
+            if self.state == 'down': app.player = app.ffmpeg_player
+            if self.state == 'down': app.player_name = 'ffmpeg'
+    ConfigSelectLabelButton:
+        id: ffmpeg
+        text: 'Webcam/file'
+        state: 'down' if app.player_name == 'ffmpeg' else 'normal'
+    FlatImageButton:
+        on_kv_post: self.more_widget = Factory.FFmpegSettingsDropdown()
+        scale_down_color: True
+        source: 'flat_dots_vertical.png'
+        flat_color: app.theme.accent
+        on_release: self.more_widget.open(root)
+        disabled: ffmpeg.state != 'down'
+    ConfigSelectIconButton:
+        state: ptgray.state
+        on_state:
+            ptgray.state = self.state
+            if self.state == 'down': app.player = app.ptgray_player
+            if self.state == 'down': app.player_name = 'ptgray'
+    ConfigSelectLabelButton:
+        id: ptgray
+        text: 'PTGray'
+        state: 'down' if app.player_name == 'ptgray' else 'normal'
+    FlatImageButton:
+        on_kv_post: self.more_widget = Factory.PTGraySettingsDropdown()
+        scale_down_color: True
+        source: 'flat_dots_vertical.png'
+        flat_color: app.theme.accent
+        on_release: self.more_widget.open(root)
+        disabled: ptgray.state != 'down'
+    ConfigSelectIconButton:
+        state: thor.state
+        on_state:
+            thor.state = self.state
+            if self.state == 'down': app.player = app.thor_player
+            if self.state == 'down': app.player_name = 'thor'
+    ConfigSelectLabelButton:
+        id: thor
+        text: 'Thor'
+        state: 'down' if app.player_name == 'thor' else 'normal'
+    FlatImageButton:
+        on_kv_post: self.more_widget = Factory.ThorSettingsDropdown()
+        scale_down_color: True
+        source: 'flat_dots_vertical.png'
+        flat_color: app.theme.accent
+        on_release: self.more_widget.open(root)
+        disabled: thor.state != 'down'
+    ConfigSelectIconButton:
+        state: client_player.state
+        on_state:
+            client_player.state = self.state
+            if self.state == 'down': app.player = app.client_player
+            if self.state == 'down': app.player_name = 'client'
+    ConfigSelectLabelButton:
+        id: client_player
+        text: 'Network'
+        state: 'down' if app.player_name == 'client' else 'normal'
+    FlatImageButton:
+        on_kv_post: self.more_widget = Factory.ClientPlayerSettingsDropdown()
+        scale_down_color: True
+        source: 'flat_dots_vertical.png'
+        flat_color: app.theme.accent
+        on_release: self.more_widget.open(root)
+        disabled: client_player.state != 'down'
+    FlatImageToggleButton:
+        source: 'flat_play.png' if self.state == 'normal' else 'flat_stop.png'
+        flat_color: app.theme.accent
+        disabled: not app.player.can_play or app.player.play_state == 'stopping'
+        state: 'down' if app.player.play_state == 'starting' or app.player.play_state == 'playing' else 'normal'
+        on_state: if self.state == 'normal': app.stop_recording()
+        on_release: app.player.play() if self.state == 'down' else app.player.stop()
 
 
 <FFmpegSettingsDropdown@FlatDropDown>:
@@ -155,3 +166,152 @@
         sizable_from: 'right'
         flat_color: app.theme.accent
         on_kv_post: self.add_widget(app.thor_settings)
+
+
+<ClientPlayerSettingsDropdown@FlatDropDown>:
+    flat_color: app.theme.primary_text
+    flat_border_color: app.theme.divider
+    do_scroll: False, False
+    FlatSplitter:
+        size_hint: None, None
+        height: self.minimum_height
+        min_size: self.minimum_width
+        sizable_from: 'right'
+        flat_color: app.theme.accent
+        on_kv_post: self.add_widget(app.client_player_settings)
+
+
+<PlayerMetadata@BoxLayout>:
+    size_hint_y: None
+    height: self.minimum_height
+    size_hint_min_x: self.minimum_width
+    spacing: '5dp'
+    ThemedSizedLabel:
+        text: 'Player:'
+        padding_x: '10dp'
+        bold: True
+    ThemedSizedLabel:
+        text: 'Estimated FPS: {}.'.format(int(app.player.real_rate))
+    ThemedSizedLabel:
+        text: 'Data rate: {}.'.format(pretty_space(app.player.data_rate, is_rate=True))
+    ThemedLabel:
+        text: app.player.player_summery
+        shorten: True
+        text_size: self.size
+
+
+<RecordButton@FlatImageToggleButton>:
+    recorder: None
+    source: 'flat_record.png' if self.state == 'normal' else 'flat_stop.png'
+    flat_color: app.theme.accent
+    not_playing: app.player.play_state != 'playing' or not app.player.metadata_play_used or not getattr(app.player.metadata_play_used, 'rate')
+    on_release: self.recorder.record(app.player) if self.state == 'down' else self.recorder.stop()
+
+
+<RecordSelection@GridLayout>:
+    size_hint_y: None
+    height: self.minimum_height
+    cols: 4
+    spacing: '5dp'
+    padding: '5dp', 0, 0, '5dp'
+    ThemedSizedLabel:
+        text: 'Image files: {}'.format(pretty_time(app.image_file_recorder.elapsed_record_time))
+        bold: True
+    RecordButton:
+        recorder: app.image_file_recorder
+        disabled: self.not_playing or not app.image_file_recorder.can_record or app.image_file_recorder.record_state == 'stopping'
+        state: 'down' if app.image_file_recorder.record_state in ('starting', 'recording') else 'normal'
+    FlatImageButton:
+        on_kv_post: self.more_widget = Factory.ImageFileRecorderSettingsDropdown()
+        scale_down_color: True
+        source: 'flat_dots_vertical.png'
+        flat_color: app.theme.accent
+        on_release: self.more_widget.open(root)
+    RecorderMetadata:
+        recorder: app.image_file_recorder
+    ThemedSizedLabel:
+        text: 'Video file: {}'.format(pretty_time(app.video_recorder.elapsed_record_time))
+        bold: True
+    RecordButton:
+        recorder: app.video_recorder
+        disabled: self.not_playing or not app.video_recorder.can_record or app.video_recorder.record_state == 'stopping'
+        state: 'down' if app.video_recorder.record_state in ('starting', 'recording') else 'normal'
+    FlatImageButton:
+        on_kv_post: self.more_widget = Factory.VideoRecorderSettingsDropdown()
+        scale_down_color: True
+        source: 'flat_dots_vertical.png'
+        flat_color: app.theme.accent
+        on_release: self.more_widget.open(root)
+    RecorderMetadata:
+        recorder: app.video_recorder
+    ThemedSizedLabel:
+        text: 'Network: {}'.format(pretty_time(app.server_recorder.elapsed_record_time))
+        bold: True
+    RecordButton:
+        recorder: app.server_recorder
+        disabled: self.not_playing or not app.server_recorder.can_record or app.server_recorder.record_state == 'stopping'
+        state: 'down' if app.server_recorder.record_state in ('starting', 'recording') else 'normal'
+    FlatImageButton:
+        on_kv_post: self.more_widget = Factory.ServerRecorderSettingsDropdown()
+        scale_down_color: True
+        source: 'flat_dots_vertical.png'
+        flat_color: app.theme.accent
+        on_release: self.more_widget.open(root)
+    RecorderMetadata:
+        recorder: app.server_recorder
+
+
+<ImageFileRecorderSettingsDropdown@FlatDropDown>:
+    flat_color: app.theme.primary_text
+    flat_border_color: app.theme.divider
+    do_scroll: False, False
+    FlatSplitter:
+        size_hint: None, None
+        height: self.minimum_height
+        min_size: self.minimum_width
+        sizable_from: 'right'
+        flat_color: app.theme.accent
+        on_kv_post: self.add_widget(app.image_file_recorder_settings)
+
+
+<VideoRecorderSettingsDropdown@FlatDropDown>:
+    flat_color: app.theme.primary_text
+    flat_border_color: app.theme.divider
+    do_scroll: False, False
+    FlatSplitter:
+        size_hint: None, None
+        height: self.minimum_height
+        min_size: self.minimum_width
+        sizable_from: 'right'
+        flat_color: app.theme.accent
+        on_kv_post: self.add_widget(app.video_recorder_settings)
+
+
+<ServerRecorderSettingsDropdown@FlatDropDown>:
+    flat_color: app.theme.primary_text
+    flat_border_color: app.theme.divider
+    do_scroll: False, False
+    FlatSplitter:
+        size_hint: None, None
+        height: self.minimum_height
+        min_size: self.minimum_width
+        sizable_from: 'right'
+        flat_color: app.theme.accent
+        on_kv_post: self.add_widget(app.server_recorder_settings)
+
+
+<RecorderMetadata>:
+    size_hint_y: None
+    height: self.minimum_height
+    size_hint_min_x: self.minimum_width
+    spacing: '5dp'
+    ThemedSizedLabel:
+        text: 'Size: {}.'.format(pretty_space(root.recorder.size_recorded) if root.recorder else '')
+    ThemedSizedLabel:
+        text: 'Data rate: {}.'.format(pretty_space(root.recorder.data_rate, is_rate=True) if root.recorder else '')
+    ThemedSizedLabel:
+        text: 'Skipped: {}.'.format(root.recorder.frames_skipped if root.recorder else '')
+    ThemedLabel:
+        text: root.recorder.recorder_summery if root.recorder else ''
+        shorten: True
+        text_size: self.size
