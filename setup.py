@@ -35,7 +35,7 @@ setup(
     install_requires=['base_kivy_app', 'ffpyplayer', 'kivy'],
     extras_require={
         'dev': ['pytest>=3.6', 'pytest-cov', 'flake8', 'sphinx-rtd-theme',
-                'coveralls'],
+                'coveralls', 'trio', 'pytest-trio'],
     },
     package_data={'cpl_media': ['*.kv']},
     project_urls={
