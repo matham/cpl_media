@@ -29,7 +29,7 @@ try:
     from pyflycap2.interface import GUI, Camera, CameraContext
 except ImportError as err:
     GUI = Camera = CameraContext = None
-    Logger.debug('cpl_media: Could not import pyflycap2: '.format(err))
+    Logger.debug('cpl_media: Could not import pyflycap2: {}'.format(err))
 
 __all__ = ('PTGrayPlayer', 'PTGraySettingsWidget')
 
@@ -162,11 +162,19 @@ class PTGrayPlayer(BasePlayer):
         if isinstance(item, tuple) and item[0] == 'option':
             setting, _, _ = item[1]
             getattr(self, setting).update(kwargs['values'])
+            set_rate = setting in ('frame_rate', 'metadata_play_used')
         else:
             for k, v in kwargs.items():
                 setattr(self, k, v)
+            set_rate = 'frame_rate' in kwargs or 'metadata_play_used' in kwargs
 
         self.active_settings = self.get_active_settings()
+
+        if set_rate:
+            fmt, w, h, r = self.metadata_play_used
+            if 'max' in self.frame_rate:
+                r = max(r, self.frame_rate['max'])
+                self.metadata_play_used = VideoMetadata(fmt, w, h, r)
 
     @error_guard
     def _remove_config_item(self, item, *largs):
@@ -376,7 +384,6 @@ class PTGrayPlayer(BasePlayer):
             # use_rt = self.use_real_time
             count = 0
             ivl_start = 0
-            rate = self.metadata_play_used.rate
 
             c.start_capture()
             while self.play_state != 'stopping':

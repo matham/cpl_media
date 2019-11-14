@@ -14,6 +14,7 @@ from kivy.properties import (
     ObjectProperty, ListProperty, StringProperty, BooleanProperty,
     DictProperty, AliasProperty, OptionProperty, ConfigParserProperty)
 from kivy.uix.boxlayout import BoxLayout
+from kivy.logger import Logger
 from kivy.lang import Builder
 
 from cpl_media.player import BasePlayer, VideoMetadata
@@ -22,8 +23,9 @@ import cpl_media
 
 try:
     from thorcam.camera import ThorCamClient
-except ImportError:
+except ImportError as err:
     ThorCamClient = object
+    Logger.debug('cpl_media: Could not import thorcam: {}'.format(err))
 
 
 __all__ = ('ThorCamPlayer', 'ThorCamSettingsWidget')

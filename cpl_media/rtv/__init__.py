@@ -1,42 +1,67 @@
 """RTV24 based player
 ======================
 
-This player can play Point Gray ethernet cameras.
+This player can play RTV24 camera feeds.
 """
+from time import perf_counter as clock
+import sys
+import itertools
+from os.path import splitext, join, exists, isdir, abspath, dirname, isfile
+
+from ffpyplayer.pic import Image
+
+from kivy.clock import Clock
 from kivy.properties import (
-    NumericProperty, ReferenceListProperty,
-    ObjectProperty, ListProperty, StringProperty, BooleanProperty,
-    DictProperty, AliasProperty, OptionProperty, ConfigParserProperty)
+    NumericProperty, StringProperty, BooleanProperty)
+from kivy.uix.boxlayout import BoxLayout
+from kivy.logger import Logger
+from kivy.lang import Builder
+
+from cpl_media.player import BasePlayer, VideoMetadata
+from cpl_media import error_guard
 
 from cpl_media.player import BasePlayer
 
 try:
+    import pybarst
     from pybarst.core.server import BarstServer
     from pybarst.rtv import RTVChannel
-except ImportError:
+except ImportError as err:
     RTVChannel = BarstServer = None
-    Logger.debug('cpl_media: Could not import pybarst: '.format(e))
+    Logger.debug('cpl_media: Could not import pybarst: {}'.format(err))
+
+__all__ = ('RTVPlayer', 'RTVSettingsWidget')
 
 
 class RTVPlayer(BasePlayer):
-    '''Wrapper for RTV based player.
-    '''
+    """Wrapper for RTV based player.
+    """
 
     __settings_attrs__ = ('remote_computer_name', 'pipe_name', 'port',
-                          'video_fmt')
+                          'video_fmt', 'pixel_fmt')
 
     video_fmts = {
         'full_NTSC': (640, 480), 'full_PAL': (768, 576),
         'CIF_NTSC': (320, 240), 'CIF_PAL': (384, 288),
         'QCIF_NTSC': (160, 120), 'QCIF_PAL': (192, 144)
     }
+    """The video size formats supported by the player.
+    """
+
+    video_fmts_inverse = {v: k for k, v in video_fmts.items()}
+
+    image_fmts = {
+        'rgb16': 'rgb565le', 'gray': 'gray', 'rgb15': 'rgb555le',
+        'rgb24': 'rgb24', 'rgb32': 'rgba'}
+    """The pixel formats from RTV -> ffmpeg, supported by the cameras.
+    """
 
     remote_computer_name = StringProperty('')
     '''The name of the computer running Barst, if it's a remote computer.
     Otherwise it's the empty string.
     '''
 
-    pipe_name = StringProperty('filers_rtv')
+    pipe_name = StringProperty('RTVPlayer')
     '''The internal name used to communicate with Barst. When running remotely,
     the name is used to discover Barst.
     '''
@@ -45,79 +70,104 @@ class RTVPlayer(BasePlayer):
     '''The RTV port on the card to use.
     '''
 
+    pixel_fmt = StringProperty('gray')
+    '''The pixel format of the images being played.
+
+    It can be one of the keys in :attr:`image_fmts`.
+    '''
+
     video_fmt = StringProperty('full_NTSC')
     '''The video format of the video being played.
 
-    It can be one of the keys in::
-
-        {'full_NTSC': (640, 480), 'full_PAL': (768, 576),
-        'CIF_NTSC': (320, 240), 'CIF_PAL': (384, 288),
-        'QCIF_NTSC': (160, 120), 'QCIF_PAL': (192, 144)}
+    It can be one of the keys in :attr:`video_fmts`.
     '''
 
-    channel = None
+    is_available = BooleanProperty(BarstServer is not None)
+
+    barst_server = None
 
     def __init__(self, **kwargs):
         super(RTVPlayer, self).__init__(**kwargs)
-        if BarstServer is None:
-            raise ImportError('Could not import pybasrt.')
 
-        self.metadata_play = self.metadata_play_used = \
-            VideoMetadata('gray', 0, 0, 0)
-        self.on_port()
+        self.fbind('remote_computer_name', self._update_summary)
+        self.fbind('pipe_name', self._update_summary)
+        self.fbind('port', self._update_summary)
+        self._update_summary()
 
-    def on_port(self, *largs):
-        self.player_summery = 'RTV-Port{}'.format(self.port)
+        self.fbind('video_fmt', self._update_metadata)
+        self.fbind('pixel_fmt', self._update_metadata)
+        self._update_metadata()
 
-    def play_thread_run(self):
-        files = (
-            r'C:\Program Files\Barst\Barst.exe',
-            r'C:\Program Files\Barst\Barst64.exe',
-            r'C:\Program Files (x86)\Barst\Barst.exe')
-        if hasattr(sys, '_MEIPASS'):
-            files = files + (join(sys._MEIPASS, 'Barst.exe'),
-                             join(sys._MEIPASS, 'Barst64.exe'))
-        barst_bin = None
-        for f in files:
-            f = abspath(f)
-            if isfile(f):
-                barst_bin = f
-                break
-
+    def _update_summary(self, *largs):
         local = not self.remote_computer_name
         name = self.remote_computer_name if not local else '.'
         pipe_name = self.pipe_name
-        full_name = r'\\{}\pipe\{}'.format(name, pipe_name)
 
+        self.player_summery = r'RTV "\\{}\pipe\{}:{}"'.format(
+            name, pipe_name, self.port)
+
+    def _update_metadata(self, *largs):
+        w, h = self.video_fmts[self.video_fmt]
+        pix_fmt = self.image_fmts[self.pixel_fmt]
+        self.metadata_play = self.metadata_play_used = VideoMetadata(
+            pix_fmt, w, h, 29.97)
+
+    def play_thread_run(self):
         try:
-            server = BarstServer(barst_path=barst_bin, pipe_name=full_name)
-            server.open_server()
-            img_fmt = self.metadata_play.fmt
+            process_frame = self.process_frame
+            paths = list(pybarst.dep_bins)
+            if hasattr(sys, '_MEIPASS'):
+                paths.append(sys._MEIPASS)
+
+            barst_bin = None
+            for p, f in itertools.product(paths, ('Barst64.exe', 'Barst.exe')):
+                fname = join(abspath(p), f)
+                if isfile(fname):
+                    barst_bin = fname
+                    break
+
+            local = not self.remote_computer_name
+            name = self.remote_computer_name if not local else '.'
+            pipe_name = self.pipe_name
+            full_name = r'\\{}\pipe\{}'.format(name, pipe_name)
+
+            img_fmt = self.pixel_fmt
+            ffmpeg_pix_fmt = self.image_fmts[img_fmt]
             w, h = self.video_fmts[self.video_fmt]
+            video_fmt = self.video_fmt
+            port = self.port
+            chan = None
+
+            if self.barst_server is None:
+                self.barst_server = BarstServer(
+                    barst_path=barst_bin, pipe_name=full_name)
+
+            server = self.barst_server
+            server.open_server()
+
             chan = RTVChannel(
-                chan=self.port, server=server, video_fmt=self.video_fmt,
+                chan=port, server=server, video_fmt=video_fmt,
                 frame_fmt=img_fmt, luma_filt=img_fmt == 'gray', lossless=True)
+
             chan.open_channel()
             try:
                 chan.close_channel_server()
-            except:
+            except Exception:
                 pass
             chan.open_channel()
             chan.set_state(True)
 
-            last_queue = None
-            put = None
             started = False
-            trigger = self.display_trigger
-            use_rt = self.use_real_time
+            # use_rt = self.use_real_time
             count = 0
+            ivl_start = 0
 
             while self.play_state != 'stopping':
                 ts, buf = chan.read()
                 if not started:
                     ivl_start = clock()
                     self.setattr_in_kivy_thread('ts_play', ivl_start)
-                    self.change_status('play', True)
+                    Clock.schedule_once(self._complete_start)
                     started = True
 
                 ivl_end = clock()
@@ -130,31 +180,37 @@ class RTVPlayer(BasePlayer):
                 count += 1
                 self.increment_in_kivy_thread('frames_played')
 
-                if last_queue is not self.image_queue:
-                    last_queue = self.image_queue
-                    if last_queue is not None:
-                        put = last_queue.put
-                        put(('rate', 29.97))
-                    else:
-                        put = None
-
-                img = Image(plane_buffers=[buf], pix_fmt=img_fmt, size=(w, h))
-                if put is not None:
-                    put((img, ivl_end if use_rt else ts))
-
-                self.last_image = img, ivl_end if use_rt else ts
-                trigger()
+                img = Image(
+                    plane_buffers=[buf], pix_fmt=ffmpeg_pix_fmt, size=(w, h))
+                process_frame(img, {'t': ts})
         except Exception as e:
-            self.change_status('play', False, e)
+            self.exception(e)
+        finally:
             try:
-                chan.close_channel_server()
-            except:
-                pass
-            return
+                if chan is not None:
+                    chan.close_channel_server()
+            finally:
+                Clock.schedule_once(self._complete_stop)
 
-        try:
-            chan.close_channel_server()
-        except:
-            pass
-        self.change_status('play', False)
+    @error_guard
+    def stop_all(self, join=False):
+        super(RTVPlayer, self).stop_all(join=join)
 
+        barst_server = self.barst_server
+        if barst_server is not None:
+            barst_server.close_server()
+            self.barst_server = None
+
+
+class RTVSettingsWidget(BoxLayout):
+
+    player: RTVPlayer = None
+
+    def __init__(self, player=None, **kwargs):
+        if player is None:
+            player = RTVPlayer()
+        self.player = player
+        super(RTVSettingsWidget, self).__init__(**kwargs)
+
+
+Builder.load_file(join(dirname(__file__), 'rtv_player.kv'))

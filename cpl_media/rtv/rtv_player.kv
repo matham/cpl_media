@@ -1,0 +1,63 @@
+
+
+<RTVSettingsWidget>:
+    orientation: 'vertical'
+    spacing: '3dp'
+    size_hint_min_x: self.minimum_width
+    size_hint_y: None
+    height: self.minimum_height
+    disabled: not self.player.is_available or self.player.play_state != 'none'
+    BoxLayout:
+        size_hint_y: None
+        height: self.minimum_height
+        size_hint_min_x: self.minimum_width
+        spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'Remote PC:'
+            padding_y: '5dp'
+        FlatSizedTextInput:
+            size_hint_min_x: '100dp'
+            text: root.player.remote_computer_name
+            background_color: app.theme.primary_light
+            hint_text: 'prajna'
+            on_focus: if not self.focus: root.player.remote_computer_name = self.text
+        ThemedSizedLabel:
+            text: 'Pipe:'
+            padding_y: '5dp'
+        FlatSizedTextInput:
+            size_hint_min_x: '100dp'
+            text: root.player.pipe_name
+            background_color: app.theme.primary_light
+            hint_text: 'RTVPlayer'
+            on_focus: if not self.focus: root.player.pipe_name = self.text
+        ThemedSizedLabel:
+            text: 'Camera #:'
+            padding_y: '5dp'
+        FlatSizedTextInput:
+            size_hint_min_x: '100dp'
+            text: str(root.player.port)
+            input_filter: 'int'
+            background_color: app.theme.primary_light
+            on_focus: if not self.focus: root.player.port = int(self.text or 0)
+    BoxLayout:
+        size_hint: None, None
+        size: self.minimum_size
+        spacing: '5dp'
+        ThemedSizedLabel:
+            text: 'Video format:'
+            padding_y: '5dp'
+        ThemedSpinner:
+            values: list(sorted(root.player.image_fmts))
+            text:  root.player.pixel_fmt
+            size_hint_x: None
+            width: max(self.minimum_width, 50)
+            on_text: root.player.pixel_fmt = self.text
+        ThemedSizedLabel:
+            text: 'Video size:'
+            padding_y: '5dp'
+        ThemedSpinner:
+            values: list(sorted(['{}x{}'.format(w, h) for w, h in root.player.video_fmts_inverse]))
+            text: '{}x{}'.format(*root.player.video_fmts[root.player.video_fmt])
+            size_hint_x: None
+            width: max(self.minimum_width, 50)
+            on_text: root.player.video_fmt = root.player.video_fmts_inverse[tuple(map(int, self.text.split('x')))]

@@ -120,6 +120,23 @@
         flat_color: app.theme.accent
         on_release: self.more_widget.open(root)
         disabled: client_player.state != 'down'
+    ConfigSelectIconButton:
+        state: rtv.state
+        on_state:
+            rtv.state = self.state
+            if self.state == 'down': app.player = app.rtv_player
+            if self.state == 'down': app.player_name = 'rtv'
+    ConfigSelectLabelButton:
+        id: rtv
+        text: 'RTV'
+        state: 'down' if app.player_name == 'rtv' else 'normal'
+    FlatImageButton:
+        on_kv_post: self.more_widget = Factory.RTVSettingsDropdown()
+        scale_down_color: True
+        source: 'flat_dots_vertical.png'
+        flat_color: app.theme.accent
+        on_release: self.more_widget.open(root)
+        disabled: rtv.state != 'down'
     FlatImageToggleButton:
         source: 'flat_play.png' if self.state == 'normal' else 'flat_stop.png'
         flat_color: app.theme.accent
@@ -179,6 +196,19 @@
         sizable_from: 'right'
         flat_color: app.theme.accent
         on_kv_post: self.add_widget(app.client_player_settings)
+
+
+<RTVSettingsDropdown@FlatDropDown>:
+    flat_color: app.theme.primary_text
+    flat_border_color: app.theme.divider
+    do_scroll: False, False
+    FlatSplitter:
+        size_hint: None, None
+        height: self.minimum_height
+        min_size: self.minimum_width
+        sizable_from: 'right'
+        flat_color: app.theme.accent
+        on_kv_post: self.add_widget(app.rtv_settings)
 
 
 <PlayerMetadata@BoxLayout>:

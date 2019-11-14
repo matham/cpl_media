@@ -7,12 +7,14 @@ from cpl_media.ffmpeg import FFmpegPlayer, FFmpegSettingsWidget
 from cpl_media.thorcam import ThorCamPlayer, ThorCamSettingsWidget
 from cpl_media.remote.client import RemoteVideoPlayer, \
     ClientPlayerSettingsWidget
+from cpl_media.rtv import RTVPlayer, RTVSettingsWidget
 from cpl_media.player import BasePlayer
-from cpl_media.recorder import BaseRecorder
+
 from cpl_media.recorder import ImageFileRecorder, VideoRecorder, \
     ImageFileRecordSettingsWidget, VideoRecordSettingsWidget
 from cpl_media.remote.server import RemoteVideoRecorder, \
     RemoteRecordSettingsWidget
+from cpl_media.recorder import BaseRecorder
 import cpl_media
 
 
@@ -45,6 +47,10 @@ class DemoApp(BaseKivyApp):
 
     client_player_settings = None
 
+    rtv_player: RTVPlayer = None
+
+    rtv_settings = None
+
     player: BasePlayer = ObjectProperty(None, rebind=True)
 
     player_name = StringProperty('ffmpeg')
@@ -70,6 +76,7 @@ class DemoApp(BaseKivyApp):
         d['ptgray'] = PTGrayPlayer
         d['thor'] = ThorCamPlayer
         d['network_client'] = RemoteVideoPlayer
+        d['rtv'] = RTVPlayer
 
         d['image_file_recorder'] = ImageFileRecorder
         d['video_recorder'] = VideoRecorder
@@ -82,6 +89,7 @@ class DemoApp(BaseKivyApp):
         d['ptgray'] = self.ptgray_player
         d['thor'] = self.thor_player
         d['network_client'] = self.client_player
+        d['rtv'] = self.rtv_player
 
         d['image_file_recorder'] = self.image_file_recorder
         d['video_recorder'] = self.video_recorder
@@ -97,6 +105,8 @@ class DemoApp(BaseKivyApp):
         self.thor_player = self.thor_settings.player
         self.client_player_settings = ClientPlayerSettingsWidget()
         self.client_player = self.client_player_settings.player
+        self.rtv_settings = RTVSettingsWidget()
+        self.rtv_player = self.rtv_settings.player
 
         self.image_file_recorder_settings = ImageFileRecordSettingsWidget()
         self.image_file_recorder = self.image_file_recorder_settings.recorder
@@ -129,7 +139,7 @@ class DemoApp(BaseKivyApp):
         for player in (
                 self.ffmpeg_player, self.thor_player, self.client_player,
                 self.image_file_recorder, self.video_recorder,
-                self.server_recorder, self.ptgray_player):
+                self.server_recorder, self.rtv_player, self.ptgray_player):
             if player is not None:
                 player.stop_all(join=True)
         self.dump_app_settings_to_file()
