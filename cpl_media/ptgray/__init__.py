@@ -1,7 +1,7 @@
 """PTGray based player
 ======================
 
-This player can play Point Gray ethernet cameras.
+This player can play Point Gray ethernet cameras using :mod:`pyflycap2`.
 """
 
 from threading import Thread
@@ -44,6 +44,7 @@ class PTGrayPlayer(BasePlayer):
         'iris', 'frame_rate', 'pan', 'tilt', 'mirror')
 
     is_available = BooleanProperty(CameraContext is not None)
+    """Whether ptgray is available to play."""
 
     serial = NumericProperty(0)
     '''The serial number of the camera to open. Either :attr:`ip` or
@@ -51,13 +52,21 @@ class PTGrayPlayer(BasePlayer):
     '''
 
     serials = ListProperty([])
+    """The serials of all the cams available.
+
+    This may only be set by calling :meth:`ask_config`, not set directly.
+    """
 
     ip = StringProperty('')
-    '''The ip address of the camera to open. Either :attr:`ip` or
+    '''The IP address of the camera to open. Either :attr:`ip` or
     :attr:`serial` must be provided.
     '''
 
     ips = ListProperty([])
+    """The IPs of all the cams available.
+
+    This may only be set by calling :meth:`ask_config`, not set directly.
+    """
 
     cam_config_opts = DictProperty({})
     '''The configuration options used to configure the camera after opening.
@@ -66,29 +75,114 @@ class PTGrayPlayer(BasePlayer):
     '''
 
     active_settings = ListProperty([])
+    """The list of settings that the camera can control.
+
+    This may only be set by calling :meth:`ask_config`, not set directly.
+    """
 
     brightness = DictProperty({})
+    """The camera options for the brightness setting.
+
+    This may only be set by calling :meth:`ask_cam_option_config`, not
+    set directly.
+    """
+
     exposure = DictProperty({})
+    """The camera options for the exposure setting.
+
+    This may only be set by calling :meth:`ask_cam_option_config`, not
+    set directly.
+    """
+
     sharpness = DictProperty({})
+    """The camera options for the sharpness setting.
+
+    This may only be set by calling :meth:`ask_cam_option_config`, not
+    set directly.
+    """
+
     hue = DictProperty({})
+    """The camera options for the hue setting.
+
+    This may only be set by calling :meth:`ask_cam_option_config`, not
+    set directly.
+    """
+
     saturation = DictProperty({})
+    """The camera options for the saturation setting.
+
+    This may only be set by calling :meth:`ask_cam_option_config`, not
+    set directly.
+    """
+
     gamma = DictProperty({})
+    """The camera options for the gamma setting.
+
+    This may only be set by calling :meth:`ask_cam_option_config`, not
+    set directly.
+    """
+
     shutter = DictProperty({})
+    """The camera options for the shutter setting.
+
+    This may only be set by calling :meth:`ask_cam_option_config`, not
+    set directly.
+    """
+
     gain = DictProperty({})
+    """The camera options for the gain setting.
+
+    This may only be set by calling :meth:`ask_cam_option_config`, not
+    set directly.
+    """
+
     iris = DictProperty({})
+    """The camera options for the iris setting.
+
+    This may only be set by calling :meth:`ask_cam_option_config`, not
+    set directly.
+    """
+
     frame_rate = DictProperty({})
+    """The camera options for the frame_rate setting.
+
+    This may only be set by calling :meth:`ask_cam_option_config`, not
+    set directly.
+    """
+
     pan = DictProperty({})
+    """The camera options for the pan setting.
+
+    This may only be set by calling :meth:`ask_cam_option_config`, not
+    set directly.
+    """
+
     tilt = DictProperty({})
+    """The camera options for the tilt setting.
+
+    This may only be set by calling :meth:`ask_cam_option_config`, not
+    set directly.
+    """
 
     mirror = BooleanProperty(False)
+    """Whether the camera is mirrored. Read only.
+    """
 
     config_thread = None
+    """The configuration thread.
+    """
 
     config_queue = None
+    """The configuration queue.
+    """
 
     config_active_queue = ListProperty([])
+    """The items currently being configured in the configuration thread.
+    """
 
     config_active = BooleanProperty(False)
+    """Whether the configuration is currently active.
+    """
 
     _camera = None
 
@@ -98,8 +192,9 @@ class PTGrayPlayer(BasePlayer):
         'rgb16': 'rgb565le', 's_mono16': 'gray16le', 's_rgb16': 'rgb565le',
         'bgr': 'bgr24', 'bgru': 'bgra', 'rgb': 'rgb24', 'rgbu': 'rgba',
         'bgr16': 'bgr565le', 'yuv422_jpeg': 'yuvj422p'}
-
-    cam_registers = {}
+    """Pixel formats supported by the camera and their :mod:`ffpyplayer`
+    equivalent.
+    """
 
     def __init__(self, **kwargs):
         self.active_settings = self.get_setting_names()
@@ -127,6 +222,8 @@ class PTGrayPlayer(BasePlayer):
         self.player_summery = 'PTGray "{}"'.format(name)
 
     def start_config(self, *largs):
+        """Called by `__init__` to start the configuration thread.
+        """
         self.config_queue = Queue()
         self.config_active_queue = []
         thread = self.config_thread = Thread(
@@ -136,6 +233,8 @@ class PTGrayPlayer(BasePlayer):
 
     @error_guard
     def stop_config(self, *largs, join=False):
+        """Stops the configuration thread.
+        """
         self.ask_config('eof', ignore_play=True)
         if join and self.config_thread:
             self.config_thread.join()
@@ -143,6 +242,13 @@ class PTGrayPlayer(BasePlayer):
 
     @error_guard
     def ask_config(self, item, ignore_play=False):
+        """Asks to read the config values of the item. E.g. ``'serials'``
+        for the list of serials or ``'gui'`` to show the PTGray GUI to the
+        user.
+
+        :param item: The request to send.
+        :param ignore_play: Whether to send it event if the camera is playing.
+        """
         if not ignore_play and self.play_state != 'none':
             raise TypeError('Cannot configure while playing')
 
@@ -154,11 +260,21 @@ class PTGrayPlayer(BasePlayer):
             queue.put(item)
 
     def ask_cam_option_config(self, setting, name, value):
+        """Asks to set the setting of the camera to a specific value.
+
+        :param setting: The setting, e.g. ``"brightness"``.
+        :param name: How to set it, e.g. ``"value"`` to set the value or
+            ``'one push'`` to auto configure it.
+        :param value: The value to use to set it to.
+        """
         if not name or getattr(self, setting)[name] != value:
             self.ask_config(
                 ('option', (setting, name, value)), ignore_play=True)
 
     def finish_ask_config(self, item, *largs, **kwargs):
+        """Called in the kivy thread automatically after the camera
+        has been re-configured.
+        """
         if isinstance(item, tuple) and item[0] == 'option':
             setting, _, _ = item[1]
             getattr(self, setting).update(kwargs['values'])
@@ -184,6 +300,8 @@ class PTGrayPlayer(BasePlayer):
             self.can_play = True
 
     def get_active_settings(self):
+        """List of settings supported by the camera.
+        """
         settings = []
         for setting in self.get_setting_names():
             if getattr(self, setting).get('present', False):
@@ -191,11 +309,17 @@ class PTGrayPlayer(BasePlayer):
         return list(sorted(settings))
 
     def get_setting_names(self):
+        """List of all settings potentially supported by a camera.
+        """
         return list(sorted((
             'brightness', 'exposure', 'sharpness', 'hue', 'saturation',
             'gamma', 'shutter', 'gain', 'iris', 'frame_rate', 'pan', 'tilt')))
 
     def read_cam_option_config(self, setting, cam):
+        """Reads the setting from the camera.
+
+        Called from the internal configuration thread.
+        """
         options = {}
         mn, mx = cam.get_cam_abs_setting_range(setting)
         options['min'], options['max'] = mn, mx
@@ -204,6 +328,10 @@ class PTGrayPlayer(BasePlayer):
         return options
 
     def write_cam_option_config(self, setting, cam, name, value):
+        """Writes the setting to the camera.
+
+        Called from the internal configuration thread.
+        """
         if name == 'value':
             cam.set_cam_abs_setting_value(setting, value)
         else:
@@ -213,6 +341,11 @@ class PTGrayPlayer(BasePlayer):
                     time.sleep(.2)
 
     def write_cam_options_config(self, cam):
+        """Writes all the settings as provided as properties of this instance
+        to the camera.
+
+        Called from the internal configuration thread.
+        """
         for setting in self.get_setting_names():
             settings = getattr(self, setting)
             cam.set_cam_setting_option_values(
@@ -232,6 +365,11 @@ class PTGrayPlayer(BasePlayer):
             cam.set_horizontal_mirror(self.mirror)
 
     def read_cam_options_config(self, cam):
+        """Reads all the settings of this instance
+        to the camera.
+
+        Called from the internal configuration thread.
+        """
         for setting in self.get_setting_names():
             Clock.schedule_once(partial(
                 self.finish_ask_config, None,
@@ -243,6 +381,10 @@ class PTGrayPlayer(BasePlayer):
                 mirror=cam.get_horizontal_mirror()[1]))
 
     def write_gige_opts(self, c, opts):
+        """Writes the GIGE setting to the camera.
+
+        Called from the internal configuration thread.
+        """
         c.set_gige_mode(opts['mode'])
         c.set_drop_mode(opts['drop'])
         c.set_gige_config(opts['offset_x'], opts['offset_y'], opts['width'],
@@ -252,6 +394,10 @@ class PTGrayPlayer(BasePlayer):
         c.set_gige_binning(opts['horizontal'], opts['vertical'])
 
     def read_gige_opts(self, c):
+        """Reads the GIGE setting from the camera.
+
+        Called from the internal configuration thread.
+        """
         opts = self.cam_config_opts
         opts['drop'] = c.get_drop_mode()
         opts.update(c.get_gige_config())
@@ -260,6 +406,8 @@ class PTGrayPlayer(BasePlayer):
         opts['horizontal'], opts['vertical'] = c.get_gige_binning()
 
     def config_thread_run(self):
+        """The function run by the configuration thread.
+        """
         queue = self.config_queue
         cc = CameraContext()
 
@@ -444,12 +592,21 @@ class PTGrayPlayer(BasePlayer):
 
 
 class PTGraySettingsWidget(BoxLayout):
+    """Settings widget for :class:`PTGrayPlayer`.
+    """
 
     settings_last = ''
+    """The last name of the setting the GUI currently controls (i.e. one
+    of :meth:`PTGrayPlayer.get_active_settings`).
+    """
 
     opt_settings = DictProperty({})
+    """The values for the settings currently being controlled in the GUI.
+    """
 
     player: PTGrayPlayer = None
+    """The player.
+    """
 
     def __init__(self, player=None, **kwargs):
         if player is None:
@@ -458,8 +615,8 @@ class PTGraySettingsWidget(BoxLayout):
         super(PTGraySettingsWidget, self).__init__(**kwargs)
 
     def set_filename(self, text_wid, path, selection, filename, is_dir=True):
-        '''Called by the GUI to set the filename.
-        '''
+        """Called by the GUI to set the filename.
+        """
         if not selection:
             if exists(join(path, filename)):
                 selection = [filename]
@@ -477,6 +634,9 @@ class PTGraySettingsWidget(BoxLayout):
         self.opt_settings = getattr(self.player, self.settings_last)
 
     def bind_pt_setting(self, setting):
+        """Tracks the setting currently selected in the GUI and auto-updates
+        when it changes.
+        """
         if self.settings_last:
             self.player.funbind(self.settings_last, self._track_setting)
         self.settings_last = ''

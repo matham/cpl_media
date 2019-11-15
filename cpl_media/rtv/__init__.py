@@ -1,7 +1,7 @@
 """RTV24 based player
 ======================
 
-This player can play RTV24 camera feeds.
+This player can play RTV24 camera feeds using :mod:`pybarst`.
 """
 from time import perf_counter as clock
 import sys
@@ -49,6 +49,8 @@ class RTVPlayer(BasePlayer):
     """
 
     video_fmts_inverse = {v: k for k, v in video_fmts.items()}
+    """Inverse of :attr:`video_fmts`.
+    """
 
     image_fmts = {
         'rgb16': 'rgb565le', 'gray': 'gray', 'rgb15': 'rgb555le',
@@ -63,11 +65,11 @@ class RTVPlayer(BasePlayer):
 
     pipe_name = StringProperty('RTVPlayer')
     '''The internal name used to communicate with Barst. When running remotely,
-    the name is used to discover Barst.
+    or if the server already is open, the name is used to discover Barst.
     '''
 
     port = NumericProperty(0)
-    '''The RTV port on the card to use.
+    '''The RTV port (camera number) on the card to use.
     '''
 
     pixel_fmt = StringProperty('gray')
@@ -83,8 +85,11 @@ class RTVPlayer(BasePlayer):
     '''
 
     is_available = BooleanProperty(BarstServer is not None)
+    """Whether pybarst is available to play."""
 
     barst_server = None
+    """The :class:`pybarst.core.server.BarstServer` instance.
+    """
 
     def __init__(self, **kwargs):
         super(RTVPlayer, self).__init__(**kwargs)
@@ -203,8 +208,12 @@ class RTVPlayer(BasePlayer):
 
 
 class RTVSettingsWidget(BoxLayout):
+    """Settings widget for :class:`RTVPlayer`.
+    """
 
     player: RTVPlayer = None
+    """The player.
+    """
 
     def __init__(self, player=None, **kwargs):
         if player is None:

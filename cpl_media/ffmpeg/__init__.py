@@ -1,7 +1,8 @@
 """FFmpeg based player
 ======================
 
-This can play USB cameras, video files, etc.
+:class:`FFmpegPlayer` can play USB cameras, video files, etc using
+:mod:`ffpyplayer`.
 
 """
 import re
@@ -33,8 +34,8 @@ def eat_first(f, val, *largs, **kwargs):
 
 
 class FFmpegPlayer(BasePlayer):
-    '''Wrapper for ffmapeg based player.
-    '''
+    """Wrapper for :mod:`ffpyplayer` ffmpeg based player.
+    """
 
     __settings_attrs__ = (
         'play_filename', 'file_fmt', 'icodec',
@@ -42,23 +43,30 @@ class FFmpegPlayer(BasePlayer):
         'dshow_filename')
 
     play_filename = StringProperty('')
-    '''The filename of the media being played. Can be e.g. a url etc.
+    '''The filename of the media being played. Can be e.g. a filename etc.
     '''
 
     file_fmt = StringProperty('')
     '''The format used to play the video. Can be empty or a format e.g.
-    ``dshow`` for webcams.
+    ``mjpeg`` for webcams.
     '''
 
     icodec = StringProperty('')
-    '''The codec used to open the video stream with.
+    '''The codec used to open the video stream with if it needs to be
+    specified for the camera.
     '''
 
     use_dshow = BooleanProperty(True)
+    """Whether we use dshow - i.e. USB webcams, or normal media sources.
+    """
 
     dshow_rate = NumericProperty(0)
+    """The frame rate to request from the dshow camera.
+    """
 
     dshow_filename = StringProperty('')
+    """The name of the dshow camera to open.
+    """
 
     dshow_true_filename = StringProperty('')
     '''The real and complete filename of the direct show (webcam) device.
@@ -70,8 +78,12 @@ class FFmpegPlayer(BasePlayer):
     '''
 
     dshow_names = DictProperty({})
+    """All the cameras that can be opened.
+    """
 
     dshow_opts = DictProperty({})
+    """The options supported by the cameras that can be opened.
+    """
 
     dshow_opt_pat = re.compile(
         '([0-9]+)X([0-9]+) (.+), ([0-9\\.]+)(?: - ([0-9\\.]+))? fps')
@@ -93,6 +105,9 @@ class FFmpegPlayer(BasePlayer):
         self.player_summery = 'FFmpeg "{}"'.format(name)
 
     def apply_config_settings(self, settings: dict):
+        """Handles settings as applied by the app config system so the
+        properties are set to correct values.
+        """
         # this must be set after everything so we can loop up its opts in dict
         dshow_filename = settings.pop('dshow_filename', self.dshow_filename)
         super(FFmpegPlayer, self).apply_config_settings(settings)
@@ -123,6 +138,8 @@ class FFmpegPlayer(BasePlayer):
 
     @error_guard
     def refresh_dshow(self):
+        """Refreshes list of direct show cameras available.
+        """
         counts = defaultdict(int)
         video, _, names = list_dshow_devices()
         video2 = {}
@@ -164,6 +181,9 @@ class FFmpegPlayer(BasePlayer):
 
     @error_guard
     def update_dshow_file(self):
+        """Updates the dshow camera name and options in response to a
+        re-configuration.
+        """
         if not self.use_dshow or not self.dshow_filename:
             self.dshow_opt = ''
             self.dshow_true_filename = ''
@@ -181,6 +201,9 @@ class FFmpegPlayer(BasePlayer):
 
     @error_guard
     def parse_dshow_opt(self, opt):
+        """Parses the :attr:`dshow_opts` type string option into
+        `(fmt, (w, h), (rmin, rmax))`
+        """
         return self._parse_dshow_opt(opt)
 
     def _parse_dshow_opt(self, opt):
@@ -201,6 +224,8 @@ class FFmpegPlayer(BasePlayer):
 
     @error_guard
     def player_callback(self, mode, value):
+        """Called internally by ffpyplayer when an error occurs internally.
+        """
         if mode.endswith('error'):
             raise Exception(
                 'FFmpeg Player: internal error "{}", "{}"'.format(mode, value))
@@ -345,8 +370,12 @@ class FFmpegPlayer(BasePlayer):
 
 
 class FFmpegSettingsWidget(BoxLayout):
+    """Settings widget for :class:`FFmpegPlayer`.
+    """
 
     player: FFmpegPlayer = None
+    """The player.
+    """
 
     def __init__(self, player=None, **kwargs):
         if player is None:
@@ -355,8 +384,8 @@ class FFmpegSettingsWidget(BoxLayout):
         super(FFmpegSettingsWidget, self).__init__(**kwargs)
 
     def set_filename(self, text_wid, path, selection, filename, is_dir=True):
-        '''Called by the GUI to set the filename.
-        '''
+        """Called by the GUI to set the filename.
+        """
         if not selection:
             if exists(join(path, filename)):
                 selection = [filename]

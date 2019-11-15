@@ -29,7 +29,7 @@ set_log_callback(logger=Logger, default_only=True)
 logging.info('cpl_media: Using ffpyplayer {}'.format(ffpyplayer.__version__))
 
 VideoMetadata = namedtuple('VideoMetadata', ['fmt', 'w', 'h', 'rate'])
-"""namedtuple describing a video stream.
+"""Namedtuple type describing a video stream.
 """
 
 
@@ -40,50 +40,92 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
     __settings_attrs__ = ('metadata_play', 'metadata_play_used')
 
     display_frame = None
-    """Called from kivy thread.
+    """Called from kivy thread to display the frame whenever a new image
+    arrives. This is called once per kivy frame, so if multiple images arrive
+    during a kivy frame, it is called only for the last one.
     """
 
     display_trigger = None
+    """Clock trigger to call :meth:`display_frame` in the kivy thread.
+    """
 
     frame_callbacks = []
-    """Called from second thread.
+    """A list of callbacks that are called from the internal thread whenever
+    a new image is available.
+
+    All the callbacks are called with a single tuple argument
+    ``(image, metadata)``, where ``image`` is the
+    :class:`ffpyplayer.pic.Image`, and ``metadata`` is a dict with metadata.
+
+    It always contains at least the key ``'t'`` indicating the timestamp of the
+    image, but it may also contains other metadata keys specific to the player
+    such as ``'count'`` for the frame number, when sent by the camera.
     """
 
     play_thread = None
+    """The thread that plays the camera.
+    """
 
     can_play = BooleanProperty(True)
+    """Whether the video source can play now.
+    """
 
     play_state = StringProperty('none')
-    '''Can be one of none, starting, playing, stopping.
+    '''The current state of the state machine of the player.
+
+    Can be one of none, starting, playing, stopping.
     '''
 
     last_image = None
+    """The last :class:`ffpyplayer.pic.Image` received by the camera.
+    """
 
     last_image_metadata = {'t': 0}
+    """The metadata of the last image received by the camera.
+    """
 
     use_real_time = False
+    """Whether the video should use the current real time when we got the
+    image, e.g. when the camera provided timestamp is not reliable.
+    """
 
     metadata_play = ObjectProperty(None)
     '''(internal) Describes the video metadata of the video player. This is
-    the requested format, or guess of the metadata
+    the requested format, or best guess of the metadata.
+
+    Read only.
     '''
 
     metadata_play_used = ObjectProperty(None)
     '''(internal) Describes the video metadata of the video player that is
     actually used by the player. This must be set before recorders may allow
-    playing the player. Depending on the metadata needed by the recorder.
+    recording the player.
+
+    Depending on the metadata needed by the recorder, it may refuse to
+    record until the needed metadata is given.
+
+    Read only.
     '''
 
     real_rate = NumericProperty(0)
+    """The estimated real fps of the video source being played.
+    """
 
     frames_played = NumericProperty(0)
+    """The number of frames that have been played since :meth:`play`
+    was called.
+    """
 
     ts_play = NumericProperty(0)
+    """The time when the camera started playing.
+    """
 
     player_summery = StringProperty('')
+    """Textual summary of the camera type and cofig options.
+    """
 
     data_rate = NumericProperty(0)
-    """MB/s.
+    """The estimated rate in MB/s at which the camera is playing.
     """
 
     def __init__(self, **kwargs):
@@ -115,11 +157,11 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
             self.display_frame(self.last_image)
 
     def process_frame(self, frame, metadata):
-        """Called from second thread
+        """Called from internal thread to process a new image frame received.
 
-        :param frame:
-        :param metadata:
-        :return:
+        :param frame: The :class:`ffpyplayer.pic.Image`.
+        :param metadata: The metadata of the image. See
+            :attr:`frame_callbacks`.
         """
         self.last_image = frame
         self.last_image_metadata = metadata
@@ -144,8 +186,10 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
 
     @error_guard
     def play(self):
-        """Called from main thread only, starts playing and sets play state to
-        `starting`. Only called when :attr:`play_state` is `none`.
+        """May be called from main kivy thread only. It starts playing and sets
+        play state to `starting`.
+
+        May only be called when :attr:`play_state` is `none`.
         """
         if self.play_state != 'none' or not self.can_play:
             raise TypeError(

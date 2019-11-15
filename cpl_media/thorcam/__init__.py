@@ -1,7 +1,7 @@
 """Thor based player
 ======================
 
-This player can play Thor cameras using ``thorcam``.
+This player can play Thor cameras using :mod:`thorcam`.
 """
 
 from time import perf_counter as clock
@@ -264,8 +264,12 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
 
 
 class ThorCamSettingsWidget(BoxLayout):
+    """Settings widget for :class:`ThorCamPlayer`.
+    """
 
     player: ThorCamPlayer = None
+    """The player.
+    """
 
     def __init__(self, player=None, **kwargs):
         if player is None:
@@ -274,8 +278,8 @@ class ThorCamSettingsWidget(BoxLayout):
         super(ThorCamSettingsWidget, self).__init__(**kwargs)
 
     def set_filename(self, text_wid, path, selection, filename, is_dir=True):
-        '''Called by the GUI to set the filename.
-        '''
+        """Called by the GUI to set the filename.
+        """
         if not selection:
             if exists(join(path, filename)):
                 selection = [filename]

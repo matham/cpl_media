@@ -34,6 +34,10 @@ async def media_app(request, nursery, tmp_path):
     Window.initialized = True
     Window.canvas.clear()
 
+    from base_kivy_app.app import report_exception_in_app
+    import cpl_media
+    cpl_media.error_callback = report_exception_in_app
+
     app = DemoTestApp(
         json_config_path=str(tmp_path / 'config.yaml'),
         ini_file=str(tmp_path / 'config.ini'))

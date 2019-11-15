@@ -1,3 +1,9 @@
+"""Demo App
+===========
+
+Provides a demo app showing the players and recorders.
+
+"""
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty, StringProperty
 
@@ -16,6 +22,9 @@ from cpl_media.remote.server import RemoteVideoRecorder, \
     RemoteRecordSettingsWidget
 from cpl_media.recorder import BaseRecorder
 import cpl_media
+
+
+__all__ = ('DemoApp', )
 
 
 class RootAppWidget(BoxLayout):
