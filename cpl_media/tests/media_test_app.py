@@ -49,6 +49,6 @@ class DemoTestApp(DemoApp, UnitKivyApp):
         elif level in ('error', 'exception'):
             raise Exception(msg)
 
-    def _display_frame(self, img):
-        super(DemoTestApp, self)._display_frame(img)
+    def _display_frame(self, image, metadata):
+        super(DemoTestApp, self)._display_frame(image, metadata)
         self._images_showed += 1

@@ -31,10 +31,13 @@ from cpl_media import error_guard
 from cpl_media.recorder import BaseRecorder
 import cpl_media
 
-__all__ = ('RemoteVideoRecorder', 'RemoteData', 'RemoteRecordSettingsWidget')
+__all__ = ('RemoteVideoRecorder', 'RemoteRecordSettingsWidget', 'RemoteData',
+           'EndConnection')
 
 
 class EndConnection(Exception):
+    """Raised when the connection is closed.
+    """
     pass
 
 
@@ -43,8 +46,18 @@ connection_errors = (
 
 
 class RemoteData(object):
+    """Provides methods to send and receive messages from a socket.
+
+    """
 
     def send_msg(self, sock, msg, value):
+        """Sends message to the server.
+
+        :param sock: The socket
+        :param msg: The message name string (e.g. image).
+        :param value: The message value.
+        :return:
+        """
         # ts = time.monotonic()
         if msg == 'image':
             image, metadata = value
@@ -66,6 +79,14 @@ class RemoteData(object):
         # print('part1: {}, part2: {}'.format(ts2 - ts, time.monotonic() - ts2))
 
     def decode_data(self, msg_buff, msg_len):
+        """Decodes buffer data received from the network.
+
+        :param msg_buff: The bytes data received so far.
+        :param msg_len: The expected size of the message as tuple -
+            The size of the message and any associated binary data.
+        :return: A tuple of the message name and value, or (None, None) if
+            we haven't read the full message.
+        """
         n, bin_n = msg_len
         assert n + bin_n == len(msg_buff)
         data = msg_buff[:n].decode('utf8')
@@ -84,6 +105,18 @@ class RemoteData(object):
         return msg, value
 
     def read_msg(self, sock, msg_len, msg_buff):
+        """Reads the message and decodes it once we read the full message.
+
+        :param sock: The socket.
+        :param msg_len: The tuple of the message length and associated data.
+            If empty, the start of the next message will provide this
+            information.
+        :param msg_buff: The message buffer.
+        :return: A 4-tuple of ``(msg_len, msg_buff, msg, value)``. Where
+            ``msg_len, msg_buff`` are similar to the input, and
+            ``(msg, value)`` is the message and its value if we read a full
+            message, otherwise they are None.
+        """
         # still reading msg size
         msg = value = None
         if not msg_len:
@@ -113,12 +146,15 @@ class RemoteData(object):
 
 
 class RemoteVideoRecorder(BaseRecorder, RemoteData):
-    """The server is intended to be started before anything else can be
+    """A server recorder that takes images from a player and sends it
+    to a client player over a socket.
+
+    The server is intended to be started before anything else can be
     processed. Once the server is run, we can start recording
     (whether a client is connected or not). If the client is not playing,
     we don't send frames and just skip them.
 
-    Client should accept these messages: exception, started_recording,
+    A client should accept these messages: exception, started_recording,
     stopped_recording, or image.
     Server accepts messages from client: started_playing, stopped_playing.
 
@@ -131,39 +167,76 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
     and if we are recording.
 
     We only accept started_playing either before any started_playing
-    message or after right a stopped_playing message (i.e. no duplicates).
+    message or after a stopped_playing message (i.e. no duplicates).
     """
 
     __settings_attrs__ = ('server', 'port', 'timeout', 'max_images_buffered')
 
-    server = StringProperty('')
+    server = StringProperty('localhost')
+    """The server address on which to broadcast the data.
+    """
 
     port = NumericProperty(10000)
+    """The server port on which to broadcast the data.
+    """
 
     timeout = NumericProperty(.01)
+    """How long to wait before timing out when reading data before checking the
+    queue for other requests.
+    """
 
     server_active = BooleanProperty(False)
+    """Whether the server is currently running.
+    """
 
     max_images_buffered = NumericProperty(5)
+    """How many images the server should buffer before it starts dropping
+    images, rather than queuing them to be sent to the client.
+    """
 
     from_kivy_queue = None
-    """This queue can receive these messages: eof, image, started_recording,
+    """The queue that receives messages from Kivy.
+
+    This queue can receive these messages: eof, image, started_recording,
     or stopped_recording.
     """
 
     to_kivy_queue = None
+    """The queue that sends messages to Kivy.
+    """
 
     _kivy_trigger = None
+    """Trigger for kivy thread to read the queue - to be called after adding
+    something to the queue.
+    """
 
     server_thread = None
+    """The server thread instance.
+    """
 
-    _server_client_playing = False  # if client is playing
+    _server_client_playing = False
+    """Whether the client is playing
 
-    _server_client_requested_playing = False  # if client requested playing
+    May only be set from the server thread.
+    """
 
-    _server_recording = None  # keeps track of whether we are recording rn
+    _server_client_requested_playing = False
+    """Whether the client requested playing
+
+    May only be set from the server thread.
+    """
+
+    _server_recording = None
+    """Keeps track of whether we are recording rn
+
+    May only be set from the server thread.
+    """
 
     _first_image_while_playing = False
+    """If this is the first image right after we started recording.
+
+    May only be set from the server thread.
+    """
 
     def __init__(self, **kwargs):
         super(RemoteVideoRecorder, self).__init__(**kwargs)
@@ -178,6 +251,8 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
             self.server, self.port)
 
     def server_run(self, from_kivy_queue, to_kivy_queue):
+        """Server method, that is executed in the internal server thread.
+        """
         trigger = self._kivy_trigger
         timeout = self.timeout
 
@@ -249,6 +324,10 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
             sock.close()
 
     def _server_message_from_client(self, connection, msg, value):
+        """Processes message from the client.
+
+        Executed from the internal thread.
+        """
         try:
             if msg == 'started_playing':
                 if self._server_client_playing or \
@@ -275,6 +354,10 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
         return False
 
     def _server_message_from_queue(self, connection, from_kivy_queue):
+        """Processes message from the kivy queue.
+
+        Executed from the internal thread.
+        """
         msg, value = from_kivy_queue.get_nowait()
         if msg == 'eof':
             return 'eof'
@@ -318,6 +401,11 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
 
     @error_guard
     def send_message_to_client(self, msg, value):
+        """Sends the message to the client through the server.
+
+        :param msg: The message name string.
+        :param value: The message value.
+        """
         if self.from_kivy_queue is None:
             return
 
@@ -325,6 +413,9 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
 
     @error_guard
     def send_image_to_client(self, image):
+        """Sends a image (tuple of image, metadata) to the client through the
+        server.
+        """
         if self.from_kivy_queue is None:
             return
         image, metadata = image
@@ -337,6 +428,8 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
 
     @error_guard
     def process_in_kivy_thread(self, *largs):
+        """Processes messages from the server in the kivy thread.
+        """
         while self.to_kivy_queue is not None:
             try:
                 msg, value = self.to_kivy_queue.get(block=False)
@@ -352,6 +445,8 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
                 break
 
     def start_server(self):
+        """Starts the server, so that we can :meth:`record`.
+        """
         if self.server_thread is not None:
             return
 
@@ -368,6 +463,8 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
 
     @error_guard
     def stop_server(self, join=False):
+        """Stops the server and also stops recording if we were recording.
+        """
         self.stop(join=join)
         if self.server_thread is None:
             return
@@ -389,14 +486,14 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
         self.from_kivy_queue.put(
             ('started_recording', self.metadata_record_used))
 
-        self._complete_start()
+        self.complete_start()
 
     @error_guard
     def stop(self, *largs, join=False):
         if super(RemoteVideoRecorder, self).stop(join=join):
             self.player.frame_callbacks.remove(self.send_image_to_client)
             self.from_kivy_queue.put(('stopped_recording', None))
-            self._complete_stop()
+            self.complete_stop()
 
     def stop_all(self, join=False):
         super(RemoteVideoRecorder, self).stop_all(join=join)
@@ -407,8 +504,12 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
 
 
 class RemoteRecordSettingsWidget(BoxLayout):
+    """Settings widget for :class:`RemoteVideoRecorder`.
+    """
 
     recorder: RemoteVideoRecorder = None
+    """The recorder.
+    """
 
     def __init__(self, recorder=None, **kwargs):
         if recorder is None:

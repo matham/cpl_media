@@ -1,10 +1,10 @@
 """Remote player
 ================
 
-This class plays video from the network. E.g. a server can be configured
-to receive video from a FFmpeg camera. This client plays the video from
+This class plays video from the network. E.g. a
+:class:`cpl_media.remote.server.RemoteData` can be configured
+to broadcast video from a FFmpeg camera. This client plays the video from
 the server.
-
 """
 
 from threading import Thread
@@ -33,24 +33,45 @@ __all__ = ('RemoteVideoPlayer', 'ClientPlayerSettingsWidget')
 
 
 class RemoteVideoPlayer(BasePlayer, RemoteData):
+    """A player that is a network client that plays images received from a
+    :class:`cpl_media.remote.server.RemoteData` over the network.
+    """
 
     __settings_attrs__ = ('server', 'port', 'timeout')
 
     server = StringProperty('')
+    """The server address that broadcasts the data.
+    """
 
     port = NumericProperty(0)
+    """The server port that broadcasts the data.
+    """
 
     timeout = NumericProperty(.01)
+    """How long to wait before timing out when reading data before checking the
+    queue for other requests.
+    """
 
     client_active = BooleanProperty(False)
+    """Whether the client thread is currently running.
+    """
 
     from_kivy_queue = None
+    """The queue that receives messages from Kivy.
+    """
 
     to_kivy_queue = None
+    """The queue that sends messages to Kivy.
+    """
 
     _kivy_trigger = None
+    """Trigger for kivy thread to read the queue - to be called after adding
+    something to the queue.
+    """
 
     listener_thread = None
+    """The client thread instance.
+    """
 
     _frame_count = 0
 
@@ -68,6 +89,8 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
         self.player_summery = 'Network "{}:{}"'.format(self.server, self.port)
 
     def listener_run(self, from_kivy_queue, to_kivy_queue):
+        """Client method, that is executed in the internal client thread.
+        """
         trigger = self._kivy_trigger
         timeout = self.timeout
 
@@ -114,11 +137,18 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
             sock.close()
 
     def send_message_to_server(self, key, value):
+        """Sends the message to the server over the network.
+
+        :param msg: The message name string.
+        :param value: The message value.
+        """
         if self.from_kivy_queue is None:
             return
         self.from_kivy_queue.put((key, value))
 
     def start_listener(self):
+        """Starts the client, so that we can :meth:`play`.
+        """
         if self.listener_thread is not None:
             return
 
@@ -131,6 +161,8 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
 
     @error_guard
     def process_in_kivy_thread(self, *largs):
+        """Processes messages from the client in the kivy thread.
+        """
         while self.to_kivy_queue is not None:
             try:
                 msg, value = self.to_kivy_queue.get(block=False)
@@ -143,18 +175,18 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
                     cpl_media.error_callback(e, exc_info=exec_info)
                     self.stop_all()
                     if self.play_state != 'none':
-                        self._complete_stop()
+                        self.complete_stop()
                 elif msg == 'started_recording':
                     if self.play_state == 'starting':
                         self.ts_play = self._ivl_start = clock()
                         self._frame_count = 0
 
                         self.metadata_play_used = VideoMetadata(*value)
-                        self._complete_start()
+                        self.complete_start()
                 elif msg == 'stopped_recording':
                     self.stop()
                 elif msg == 'stopped_playing':
-                    self._complete_stop()
+                    self.complete_stop()
                 elif msg == 'image':
                     if self.play_state != 'playing':
                         continue
@@ -182,6 +214,8 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
 
     @error_guard
     def stop_listener(self, join=False):
+        """Stops the client and also stops playing if we were playing.
+        """
         self.stop(join=join)
         if self.listener_thread is None:
             return
@@ -216,8 +250,12 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
 
 
 class ClientPlayerSettingsWidget(BoxLayout):
+    """Settings widget for :class:`RemoteVideoPlayer`.
+    """
 
     player: RemoteVideoPlayer = None
+    """The player.
+    """
 
     def __init__(self, player=None, **kwargs):
         if player is None:

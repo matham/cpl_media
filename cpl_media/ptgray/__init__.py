@@ -543,7 +543,7 @@ class PTGrayPlayer(BasePlayer):
                 if not started:
                     ivl_start = clock()
                     self.setattr_in_kivy_thread('ts_play', ivl_start)
-                    Clock.schedule_once(self._complete_start)
+                    Clock.schedule_once(self.complete_start)
                     started = True
                     self._camera = c
 
@@ -584,7 +584,7 @@ class PTGrayPlayer(BasePlayer):
             try:
                 c.disconnect()
             finally:
-                Clock.schedule_once(self._complete_stop)
+                Clock.schedule_once(self.complete_stop)
 
     def stop_all(self, join=False):
         self.stop_config(join=join)

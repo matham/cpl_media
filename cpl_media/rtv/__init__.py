@@ -172,7 +172,7 @@ class RTVPlayer(BasePlayer):
                 if not started:
                     ivl_start = clock()
                     self.setattr_in_kivy_thread('ts_play', ivl_start)
-                    Clock.schedule_once(self._complete_start)
+                    Clock.schedule_once(self.complete_start)
                     started = True
 
                 ivl_end = clock()
@@ -195,7 +195,7 @@ class RTVPlayer(BasePlayer):
                 if chan is not None:
                     chan.close_channel_server()
             finally:
-                Clock.schedule_once(self._complete_stop)
+                Clock.schedule_once(self.complete_stop)
 
     @error_guard
     def stop_all(self, join=False):

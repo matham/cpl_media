@@ -1,7 +1,7 @@
 """Demo App
 ===========
 
-Provides a demo app showing the players and recorders.
+A demo app showing the configuration and usage of the players and recorders.
 
 """
 from kivy.uix.boxlayout import BoxLayout
@@ -135,9 +135,9 @@ class DemoApp(BaseKivyApp):
         self.client_player.display_frame = self._display_frame
         return RootAppWidget()
 
-    def _display_frame(self, img):
+    def _display_frame(self, image, metadata):
         if self.image_display is not None:
-            self.image_display.update_img(img)
+            self.image_display.update_img(image)
 
     def stop_recording(self):
         self.server_recorder.stop()

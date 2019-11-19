@@ -38,7 +38,7 @@ extensions = [
 ]
 
 intersphinx_mapping = {
-    'kivy': ('https://kivy.org/docs/', None),
+    'kivy': ('https://kivy.org/doc/stable/', None),
     'ffpyplayer': ('https://matham.github.io/ffpyplayer/', None),
     'pyflycap2': ('https://matham.github.io/pyflycap2/', None),
     'thorcam': ('https://matham.github.io/thorcam/', None),

@@ -12,10 +12,9 @@ ffmpeg:
   use_dshow: true
 image_file_recorder:
   compression: raw
-  estimate_record_rate: false
   extension: tiff
   metadata_record: ['', 0, 0, 0]
-  record_directory: ~/
+  record_directory: '~'
   record_prefix: image_
 network_client:
   metadata_play: ['', 0, 0, 0]
@@ -24,7 +23,6 @@ network_client:
   server: ''
   timeout: 0.01
 network_server:
-  estimate_record_rate: false
   max_images_buffered: 5
   metadata_record: ['', 0, 0, 0]
   port: 10000
@@ -91,6 +89,6 @@ thor:
 video_recorder:
   estimate_record_rate: false
   metadata_record: ['', 0, 0, 0]
-  record_directory: ~/
+  record_directory: '~'
   record_fname: video{}.mkv
   record_fname_count: 0

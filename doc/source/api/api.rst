@@ -11,4 +11,3 @@
    common.rst
    players.rst
    recorders.rst
-   app.rst

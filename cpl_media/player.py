@@ -43,6 +43,10 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
     """Called from kivy thread to display the frame whenever a new image
     arrives. This is called once per kivy frame, so if multiple images arrive
     during a kivy frame, it is called only for the last one.
+
+    This callback takes two arguments: ``(image, metadata)``, where ``image``
+    is the :class:`ffpyplayer.pic.Image`, and ``metadata`` is a dict with
+    metadata.
     """
 
     display_trigger = None
@@ -121,11 +125,11 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
     """
 
     player_summery = StringProperty('')
-    """Textual summary of the camera type and cofig options.
+    """Textual summary of the camera type and config options.
     """
 
     data_rate = NumericProperty(0)
-    """The estimated rate in MB/s at which the camera is playing.
+    """The estimated rate in B/s at which the camera is playing.
     """
 
     def __init__(self, **kwargs):
@@ -154,7 +158,7 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
 
     def _display_frame(self, *largs):
         if self.display_frame is not None:
-            self.display_frame(self.last_image)
+            self.display_frame(self.last_image, self.last_image_metadata)
 
     def process_frame(self, frame, metadata):
         """Called from internal thread to process a new image frame received.
@@ -170,6 +174,9 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
         self.display_trigger()
 
     def get_settings_attrs(self, attrs):
+        """(internal) used by the config system to get the special config data
+        of the player.
+        """
         d = {}
         for key in attrs:
             if key in ('metadata_play', 'metadata_play_used'):
@@ -179,6 +186,9 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
         return d
 
     def apply_config_settings(self, settings):
+        """(internal) used by the config system to set the special config data
+        of the player.
+        """
         for k, v in settings.items():
             if k in ('metadata_play', 'metadata_play_used'):
                 v = VideoMetadata(*v)
@@ -186,10 +196,16 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
 
     @error_guard
     def play(self):
-        """May be called from main kivy thread only. It starts playing and sets
-        play state to `starting`.
+        """Starts playing the video source and sets the :attr:`play_state` to
+        `starting`.
 
-        May only be called when :attr:`play_state` is `none`.
+        May be called from main kivy thread only.
+
+        May only be called when :attr:`play_state` is `none`, otherwise an
+        exception is raised.
+
+        Players need to eventually call :meth:`complete_start` to finish
+        starting playing.
         """
         if self.play_state != 'none' or not self.can_play:
             raise TypeError(
@@ -204,6 +220,17 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
 
     @error_guard
     def stop(self, *largs, join=False):
+        """Stops playing the video source, if it is playing and sets the
+        :attr:`play_state` to `stopping`.
+
+        Players need to eventually call :meth:`complete_stop` to finish
+        stopping playing.
+
+        :param join: whether to block the thread until the internal play thread
+            has exited.
+        :return: Whether we stopped playing (True) or were already
+            stop(ping/ed) playing.
+        """
         if self.play_state == 'none':
             assert self.play_thread is None
             return False
@@ -221,6 +248,9 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
         return True
 
     def update_metadata(self, fmt=None, w=None, h=None, rate=None):
+        """Sets :attr:`metadata_play_used` based on :attr:`metadata_play` and
+        any values provided to the function, if not None.
+        """
         ifmt, iw, ih, irate = self.metadata_play
         if fmt is not None:
             ifmt = fmt
@@ -233,7 +263,10 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
 
         self.metadata_play_used = VideoMetadata(ifmt, iw, ih, irate)
 
-    def _complete_start(self, *largs):
+    def complete_start(self, *largs):
+        """After :meth:`play`, this is called to set the player into `playing`
+        :attr:`play_state`.
+        """
         # when this is called, there may be a subsequent call scheduled
         # to stop, from the internal thread, but the internal thread never
         # requests first to stop and then to be in playing state
@@ -243,14 +276,18 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
         if self.play_state == 'starting':  # not stopping
             self.play_state = 'playing'
 
-    def _complete_stop(self, *largs):
+    def complete_stop(self, *largs):
+        """After :meth:`stop`, this is called to set the player into `none`
+        :attr:`play_state`.
+        """
         assert self.play_state != 'none'
 
         self.play_thread = None
-        self.image_queue = None
         self.play_state = 'none'
 
     def play_thread_run(self):
+        """The method that runs in the internal play thread.
+        """
         raise NotImplementedError
 
     def stop_all(self, join=False):

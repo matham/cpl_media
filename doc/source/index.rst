@@ -11,7 +11,7 @@ Contents:
    installation.rst
    getting_started.rst
 
-   examples.rst
+   api/app.rst
 
    api/api.rst
 

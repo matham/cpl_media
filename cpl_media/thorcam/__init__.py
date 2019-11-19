@@ -45,69 +45,103 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
         'serial', 'serials')
 
     supported_freqs = ListProperty(['20 MHz', ])
+    """The supported frequencies."""
 
     freq = StringProperty('20 MHz')
+    """The frequency to use."""
 
     supported_taps = ListProperty(['1', ])
+    """The supported taps."""
 
     taps = StringProperty('1')
+    """The tap to use."""
 
     supports_color = BooleanProperty(False)
+    """Whether the camera supports color."""
 
     exposure_range = ListProperty([0, 100])
+    """The supported exposure range in ms."""
 
     exposure_ms = NumericProperty(0)
+    """The exposure value in ms to use."""
 
     binning_x_range = ListProperty([0, 0])
+    """The supported exposure range."""
 
     binning_x = NumericProperty(0)
+    """The x binning value to use."""
 
     binning_y_range = ListProperty([0, 0])
+    """The supported exposure range."""
 
     binning_y = NumericProperty(0)
+    """The y binning value to use."""
 
     sensor_size = ListProperty([0, 0])
+    """The size of the sensor in pixels."""
 
     roi_x = NumericProperty(0)
+    """The x start position of the ROI in pixels."""
 
     roi_y = NumericProperty(0)
+    """The y start position of the ROI in pixels."""
 
     roi_width = NumericProperty(0)
+    """The width after the x start position of the ROI in pixels, to use."""
 
     roi_height = NumericProperty(0)
+    """The height after the y start position of the ROI in pixels, to use."""
 
     gain_range = ListProperty([0, 100])
+    """The supported exposure range."""
 
     gain = NumericProperty(0)
+    """The gain value to use."""
 
     black_level_range = ListProperty([0, 100])
+    """The supported exposure range."""
 
     black_level = NumericProperty(0)
+    """The black level value to use."""
 
     frame_queue_size = NumericProperty(1)
+    """The max number of image frames to be allowed on the camera's hardware
+    queue. Once exceeded, the frames are dropped."""
 
     supported_triggers = ListProperty(['SW Trigger', 'HW Trigger'])
+    """The trigger types supported by the camera."""
 
     trigger_type = StringProperty('SW Trigger')
+    """The trigger type of the camera to use."""
 
     trigger_count = NumericProperty(1)
+    """The number of frames to capture in response to the trigger."""
 
     num_queued_frames = NumericProperty(0)
+    """The number of image frames currently on the camera's hardware queue."""
 
     color_gain = ListProperty([1, 1, 1])
+    """The color gain for each red, green, and blue channel."""
 
     serials = ListProperty([])
-    """The list of cameras serial number available.
+    """The list of serial numbers representing the cameras available.
     """
 
     serial = StringProperty('')
+    """The serial number of the camera that will be opened.
+    """
 
     to_kivy_queue = None
+    """The queue that sends messages to be executed in the Kivy thread.
+    """
 
     is_available = BooleanProperty(ThorCamClient is not object)
+    """Whether :mod:`thorcam` is available to play."""
 
     cam_state = StringProperty('none')
-    """Can be one of none, opening, open, closing.
+    """The current state of the state machine of the camera.
+
+    Can be one of none, opening, open, closing.
     """
 
     _frame_count = 0
@@ -140,6 +174,8 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
 
     @error_guard
     def process_in_kivy_thread(self, *largs):
+        """Processes messages from the camera in the kivy thread.
+        """
         while self.to_kivy_queue is not None:
             try:
                 msg, value = self.to_kivy_queue.get(block=False)
@@ -159,7 +195,7 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
                     self.cam_state = 'none'
                     self.can_play = False
                     if self.play_state != 'none':
-                        self._complete_stop()
+                        self.complete_stop()
                 elif msg == 'image':
                     self._handle_image_received(value)
                 elif msg == 'playing':
@@ -167,7 +203,7 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
                         assert self.play_state == 'starting'
                     else:
                         assert self.play_state == 'stopping'
-                        self._complete_stop()
+                        self.complete_stop()
                 elif msg == 'settings':
                     # maintain the last settings
                     old_vals = {key: getattr(self, key) for key in self.settings}
@@ -186,7 +222,7 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
                 break
 
     def _handle_image_received(self, value):
-        """Runs in the kivy thread.
+        """Runs in the kivy thread when we get an image
         """
         t = clock()
         if self.play_state == 'starting':
@@ -196,7 +232,7 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
             img = value[0]
             self.metadata_play_used = VideoMetadata(
                 img.get_pixel_format(), *img.get_size(), 0)
-            self._complete_start()
+            self.complete_start()
 
         if self.play_state != 'playing':
             return
@@ -218,6 +254,8 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
 
     @error_guard
     def open_camera(self, serial):
+        """Opens the camera so that we can :meth:`play`.
+        """
         if self.cam_state != 'none':
             raise TypeError('Can only open camera if it has not been opened')
         self.cam_state = 'opening'
@@ -225,6 +263,8 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
 
     @error_guard
     def close_camera(self):
+        """closes the camera and also stops playing if we were playing.
+        """
         if self.cam_state != 'open':
             raise TypeError('Can only close camera if it has been opened')
         self.stop()
@@ -233,6 +273,10 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
         self.send_camera_request('close_cam', None)
 
     def refresh_cameras(self):
+        """Refreshes the list of Thor cameras plugged in.
+
+        It updates :attr:`serials` when we have the new list.
+        """
         self.send_camera_request('serials', None)
 
     @error_guard
@@ -253,6 +297,11 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
             self.send_camera_request('stop')
 
     def set_setting(self, name, value):
+        """Requests that the setting should be changed for the camera.
+
+        :param name: The setting name to be changed. E.g. ``"exposure_ms"``.
+        :param value: The new setting value.
+        """
         self.send_camera_request('setting', (name, value))
 
     def play_thread_run(self):

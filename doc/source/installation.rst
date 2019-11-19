@@ -7,17 +7,20 @@ Installation
 Dependencies
 -------------
 
-    * Python 3.6+
-    * Kivy Master `E.g. Windows nightly wheels <https://kivy.org/docs/installation/installation-windows.html#nightly-wheel-installation>`_
-    * If the video/image widget is used, then ffpyplayer. E.g. `pip install ffpyplayer`.
-    * If using the default filebrowser in the , then `kivy_garden.filebrowser`. E.g. `python -m pip install kivy_garden.filebrowser --extra-index-url https://kivy-garden.github.io/simple/`.
+* Python 3.6+
+* Kivy Master `E.g. Windows nightly wheels <https://kivy.org/docs/installation/installation-windows.html#nightly-wheel-installation>`_
+* Dependencies automatically installed with pip and listed in ``setup.py``.
+* Optional dependencies that should be installed depending on the cameras to be used:
+  * Thor camera: :mod:`thorcam`.
+  * RTV analog camera board: :mod:`pybarst`.
+  * Point Gray camera: :mod:`pyflycap2`.
 
-CPL_Media
-------------
-After installing the dependencies BaseKivyApp can be installed using::
+Installing CPL_Media
+---------------------
+After installing the dependencies cpl_media can be installed using::
 
-    pip install base_kivy_app
+    pip install cpl_media
 
-or to get base_kivy_app master for the most current base_kivy_app version::
+to get the last release from pypi, or to get cpl_media master for the most current cpl_media version do::
 
-    pip install https://github.com/matham/base_kivy_app/archive/master.zip
+    pip install https://github.com/matham/cpl_media/archive/master.zip

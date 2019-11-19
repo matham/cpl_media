@@ -236,7 +236,7 @@ class FFmpegPlayer(BasePlayer):
         except Exception as e:
             self.exception(e)
         finally:
-            Clock.schedule_once(self._complete_stop)
+            Clock.schedule_once(self.complete_stop)
 
     def _play_thread_run(self):
         process_frame = self.process_frame
@@ -328,7 +328,7 @@ class FFmpegPlayer(BasePlayer):
         Clock.schedule_once(
             partial(eat_first, self.update_metadata, rate=rate, w=w, h=h,
                     fmt=fmt), 0)
-        Clock.schedule_once(self._complete_start)
+        Clock.schedule_once(self.complete_start)
 
         # started
         process_frame(img[0], {'t': ivl_start if use_rt else img[1]})
