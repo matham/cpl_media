@@ -92,8 +92,8 @@ class DemoApp(BaseKivyApp):
         d['network_server'] = RemoteVideoRecorder
         return d
 
-    def get_app_config_classes(self):
-        d = super(DemoApp, self).get_app_config_classes()
+    def get_config_instances(self):
+        d = super(DemoApp, self).get_config_instances()
         d['ffmpeg'] = self.ffmpeg_player
         d['ptgray'] = self.ptgray_player
         d['thor'] = self.thor_player

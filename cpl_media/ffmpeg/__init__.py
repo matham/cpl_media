@@ -109,8 +109,9 @@ class FFmpegPlayer(BasePlayer):
         properties are set to correct values.
         """
         # this must be set after everything so we can loop up its opts in dict
-        dshow_filename = settings.pop('dshow_filename', self.dshow_filename)
-        super(FFmpegPlayer, self).apply_config_settings(settings)
+        dshow_filename = settings.get('dshow_filename', self.dshow_filename)
+        used = super(FFmpegPlayer, self).apply_config_settings(settings)
+        used.add('dshow_filename')
 
         try:
             if self.dshow_opt:
@@ -135,6 +136,7 @@ class FFmpegPlayer(BasePlayer):
                 self._parse_dshow_opt(self.dshow_opt)
 
         self.dshow_filename = dshow_filename
+        return used
 
     @error_guard
     def refresh_dshow(self):

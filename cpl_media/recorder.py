@@ -172,10 +172,11 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
         """(internal) used by the config system to set the special config data
         of the recorder.
         """
-        for k, v in settings.items():
-            if k == 'metadata_record':
-                v = VideoMetadata(*v)
-            setattr(self, k, v)
+        if 'metadata_record' in settings:
+            setattr(self, 'metadata_record',
+                    VideoMetadata(*settings['metadata_record']))
+            return {'metadata_record'}
+        return set()
 
     @staticmethod
     def save_image(fname, img, codec='bmp', pix_fmt='', lib_opts={}):

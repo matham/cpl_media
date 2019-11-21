@@ -189,10 +189,12 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
         """(internal) used by the config system to set the special config data
         of the player.
         """
-        for k, v in settings.items():
-            if k in ('metadata_play', 'metadata_play_used'):
-                v = VideoMetadata(*v)
-            setattr(self, k, v)
+        used = set()
+        for k in ('metadata_play', 'metadata_play_used'):
+            if k in settings:
+                setattr(self, k, VideoMetadata(*settings[k]))
+                used.add(k)
+        return used
 
     @error_guard
     def play(self):
