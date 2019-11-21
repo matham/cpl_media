@@ -5,6 +5,7 @@ A library providing kivy support for playing and recording from
 various cameras.
 """
 from functools import wraps
+import traceback
 import sys
 
 __all__ = ('error_guard', 'error_callback')
@@ -38,6 +39,15 @@ def error_guard(error_func):
         try:
             return error_func(*largs, **kwargs)
         except Exception as e:
-            error_callback(e, exc_info=sys.exc_info(), threaded=True)
+            exc_info = sys.exc_info()
+            stack = traceback.extract_stack()
+            tb = traceback.extract_tb(exc_info[2])
+            full_tb = stack[:-1] + tb
+            exc_line = traceback.format_exception_only(*exc_info[:2])
+
+            err = 'Traceback (most recent call last):'
+            err += "".join(traceback.format_list(full_tb))
+            err += "".join(exc_line)
+            error_callback(e, exc_info=err, threaded=True)
 
     return safe_func
