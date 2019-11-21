@@ -479,7 +479,8 @@ class PTGrayPlayer(BasePlayer):
                     elif isinstance(item, tuple) and item[0] == 'option':
                         _, (setting, name, value) = item
                         if name:
-                            self.write_cam_option_config(setting, cam, name, value)
+                            self.write_cam_option_config(
+                                setting, cam, name, value)
                         Clock.schedule_once(partial(
                             self.finish_ask_config, item,
                             values=self.read_cam_option_config(setting, cam)))

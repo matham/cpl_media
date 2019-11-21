@@ -3,12 +3,11 @@
 
 Provides the base class for video recorders.
 """
-from os.path import isfile, join, abspath, expanduser
 from threading import Thread
 from fractions import Fraction
 from time import perf_counter as clock
 from queue import Queue
-from os.path import splitext, join, exists, isdir, abspath, dirname
+from os.path import expanduser, join, exists, isdir, abspath, dirname
 
 from ffpyplayer.pic import get_image_size, Image, SWScale
 from ffpyplayer.tools import get_supported_pixfmts, get_format_codec
@@ -47,9 +46,9 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
     '''The current state of the state machine of the recorder.
 
     Can be one of none, starting, recording, stopping.
-    
+
     State management:
-    
+
     All state changes happen in the kivy main thread. It starts in none state.
     Requesting to record takes us out of none - we cannot get back to none
     until the internal thread requests it and we then get back to none.
@@ -91,7 +90,7 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
     """
 
     frames_skipped = NumericProperty(0)
-    """The number of frames skipped and not recorded so far since 
+    """The number of frames skipped and not recorded so far since
     :meth:`record`.
     """
 
@@ -618,7 +617,6 @@ class VideoRecorder(BaseRecorder):
                 Clock.schedule_once(self.complete_start)
 
             try:
-                last_t = metadata['t']
                 self.setattr_in_kivy_thread(
                     'size_recorded',
                     recorder.write_frame(img, metadata['t'] - t0))

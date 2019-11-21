@@ -16,8 +16,6 @@ os.environ['KIVY_USE_DEFAULTCONFIG'] = '1'
 
 @pytest.fixture()
 async def media_app(request, nursery, tmp_path):
-    params = request.param if hasattr(
-        request, 'param') and request.param else {}
     ts0 = time.perf_counter()
     from kivy.core.window import Window
     from kivy.context import Context

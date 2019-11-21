@@ -20,8 +20,6 @@ from kivy.lang import Builder
 from cpl_media.player import BasePlayer, VideoMetadata
 from cpl_media import error_guard
 
-from cpl_media.player import BasePlayer
-
 try:
     import pybarst
     from pybarst.core.server import BarstServer

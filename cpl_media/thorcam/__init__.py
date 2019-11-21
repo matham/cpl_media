@@ -207,7 +207,8 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
                         self.complete_stop()
                 elif msg == 'settings':
                     # maintain the last settings
-                    old_vals = {key: getattr(self, key) for key in self.settings}
+                    old_vals = {
+                        key: getattr(self, key) for key in self.settings}
                     for key, val in value.items():
                         setattr(self, key, val)
                         if key in old_vals and old_vals[key] != val:
