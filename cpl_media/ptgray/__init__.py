@@ -255,7 +255,12 @@ class PTGrayPlayer(BasePlayer):
         queue = self.config_queue
         if queue is not None:
             self.config_active = True
-            self.can_play = False
+            if item != 'eof':
+                # XXX: really strange bug, but somehow if this is set here when
+                # we call stop_all and we join, it blocks forever on setting
+                # can_play. Blocking only happens when kv binds to can_play.
+                # Makes no sense as it's all from the same thread???
+                self.can_play = False
             self.config_active_queue.append(item)
             queue.put(item)
 
