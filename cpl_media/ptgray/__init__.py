@@ -196,10 +196,10 @@ class PTGrayPlayer(BasePlayer):
     equivalent.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, open_thread=True, **kwargs):
         self.active_settings = self.get_setting_names()
         super(PTGrayPlayer, self).__init__(**kwargs)
-        if CameraContext is not None:
+        if CameraContext is not None and open_thread:
             self.start_config()
 
         def do_serial(*largs):

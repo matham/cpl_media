@@ -118,6 +118,7 @@ class RTVPlayer(BasePlayer):
             pix_fmt, w, h, 29.97)
 
     def play_thread_run(self):
+        chan = None
         try:
             process_frame = self.process_frame
             paths = list(pybarst.dep_bins)
@@ -141,7 +142,6 @@ class RTVPlayer(BasePlayer):
             w, h = self.video_fmts[self.video_fmt]
             video_fmt = self.video_fmt
             port = self.port
-            chan = None
 
             if self.barst_server is None:
                 self.barst_server = BarstServer(

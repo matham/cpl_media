@@ -142,6 +142,7 @@ class DemoApp(BaseKivyApp):
     def stop_recording(self):
         self.server_recorder.stop()
         self.video_recorder.stop()
+        self.image_file_recorder.stop()
 
     def clean_up(self):
         super(DemoApp, self).clean_up()

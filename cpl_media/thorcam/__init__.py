@@ -148,12 +148,13 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
 
     _ivl_start = 0
 
-    def __init__(self, **kwargs):
+    def __init__(self, open_thread=True, **kwargs):
         super(ThorCamPlayer, self).__init__(**kwargs)
         self.can_play = False
         self._kivy_trigger = Clock.create_trigger(self.process_in_kivy_thread)
         self.to_kivy_queue = Queue()
-        self.start_cam_process()
+        if ThorCamClient is not object and open_thread:
+            self.start_cam_process()
 
         self.fbind('serial', self._update_summary)
         self._update_summary()
