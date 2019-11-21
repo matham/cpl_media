@@ -58,6 +58,7 @@
         size_hint_min_x: max(dshow.minimum_width, other.minimum_width)
         size_hint_y: None
         height: max(dshow.minimum_height, other.minimum_height)
+        on_kv_post: self.current = 'dshow' if root.player.use_dshow else 'other'
         Screen:
             name: 'dshow'
             BoxLayout:
