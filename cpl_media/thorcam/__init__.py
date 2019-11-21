@@ -311,7 +311,7 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
 
     def stop_all(self, join=False):
         super(ThorCamPlayer, self).stop_all(join=join)
-        if ThorCamClient is not object:
+        if ThorCamClient is not object and self._server_thread is not None:
             self.stop_cam_process(join=join)
 
 
