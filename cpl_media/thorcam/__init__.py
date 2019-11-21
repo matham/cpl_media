@@ -310,7 +310,8 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
 
     def stop_all(self, join=False):
         super(ThorCamPlayer, self).stop_all(join=join)
-        self.stop_cam_process(join=join)
+        if ThorCamClient is not object:
+            self.stop_cam_process(join=join)
 
 
 class ThorCamSettingsWidget(BoxLayout):
