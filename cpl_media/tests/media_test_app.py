@@ -12,7 +12,7 @@ from .app.demo_app import DemoApp
 from kivy.tests.async_common import UnitKivyApp
 
 
-class DemoTestApp(DemoApp, UnitKivyApp):
+class DemoTestApp(UnitKivyApp, DemoApp):
 
     _images_showed = 0
 
@@ -20,9 +20,6 @@ class DemoTestApp(DemoApp, UnitKivyApp):
         self._ini_config_filename = ini_file
         self._data_path = os.path.dirname(ini_file)
         super(DemoTestApp, self).__init__(**kwargs)
-
-    async def async_sleep(self, dt):
-        await trio.sleep(dt)
 
     def check_close(self):
         super(DemoTestApp, self).check_close()

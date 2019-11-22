@@ -4,8 +4,11 @@
 A demo app showing the configuration and usage of the players and recorders.
 
 """
+from os.path import join, dirname
+
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty, StringProperty
+from kivy.lang import Builder
 
 from base_kivy_app.app import BaseKivyApp, run_app, report_exception_in_app
 from cpl_media.ptgray import PTGrayPlayer, PTGraySettingsWidget
@@ -25,6 +28,8 @@ import cpl_media
 
 
 __all__ = ('DemoApp', )
+
+Builder.load_file(join(dirname(__file__), 'demo_app.kv'))
 
 
 class RootAppWidget(BoxLayout):

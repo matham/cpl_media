@@ -40,38 +40,38 @@ async def media_app(request, nursery, tmp_path):
         json_config_path=str(tmp_path / 'config.yaml'),
         ini_file=str(tmp_path / 'config.ini'))
 
-    async def run_app():
-        await app.async_run(async_lib='trio')
+    try:
+        app.set_async_lib('trio')
+        nursery.start_soon(app.async_run)
 
-    nursery.start_soon(run_app)
+        ts = time.perf_counter()
+        while not app.app_has_started:
+            await trio.sleep(.1)
+            if time.perf_counter() - ts >= 10:
+                raise TimeoutError()
 
-    ts = time.perf_counter()
-    while not app.app_has_started:
-        await trio.sleep(.1)
-        if time.perf_counter() - ts >= 10:
-            raise TimeoutError()
+        await app.wait_clock_frames(5)
 
-    await app.wait_clock_frames(5)
+        ts1 = time.perf_counter()
+        yield app
+        ts2 = time.perf_counter()
 
-    ts1 = time.perf_counter()
-    yield app
-    ts2 = time.perf_counter()
+        stopTouchApp()
 
-    stopTouchApp()
+        ts = time.perf_counter()
+        while not app.app_has_stopped:
+            await trio.sleep(.1)
+            if time.perf_counter() - ts >= 10:
+                raise TimeoutError()
+    finally:
+        stopTouchApp()
+        app.clean_up()
+        for child in Window.children[:]:
+            Window.remove_widget(child)
 
-    ts = time.perf_counter()
-    while not app.app_has_stopped:
-        await trio.sleep(.1)
-        if time.perf_counter() - ts >= 10:
-            raise TimeoutError()
-
-    app.clean_up()
-    for child in Window.children[:]:
-        Window.remove_widget(child)
-
-    context.pop()
-    del context
-    LoggerHistory.clear_history()
+        context.pop()
+        del context
+        LoggerHistory.clear_history()
 
     ts3 = time.perf_counter()
     print(ts1 - ts0, ts2 - ts1, ts3 - ts2)
