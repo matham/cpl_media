@@ -10,7 +10,8 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.lang import Builder
 
-from base_kivy_app.app import BaseKivyApp, run_app, report_exception_in_app
+from base_kivy_app.app import BaseKivyApp, run_app as run_base_app,\
+    report_exception_in_app
 from cpl_media.ptgray import PTGrayPlayer, PTGraySettingsWidget
 from cpl_media.ffmpeg import FFmpegPlayer, FFmpegSettingsWidget
 from cpl_media.thorcam import ThorCamPlayer, ThorCamSettingsWidget
@@ -160,6 +161,13 @@ class DemoApp(BaseKivyApp):
         self.dump_app_settings_to_file()
 
 
-if __name__ == '__main__':
+def run_app():
+    """The function that starts the GUI and the entry point for
+    the main script.
+    """
     cpl_media.error_callback = report_exception_in_app
-    run_app(DemoApp)
+    return run_base_app(DemoApp)
+
+
+if __name__ == '__main__':
+    run_app()

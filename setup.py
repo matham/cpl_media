@@ -42,4 +42,6 @@ setup(
         'Bug Reports': URL + '/issues',
         'Source': URL,
     },
+    entry_points={
+        'console_scripts': ['cpl_media=cpl_media.tests.app.demo_app:run_app']},
 )
