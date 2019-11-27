@@ -11,7 +11,7 @@ from threading import Thread
 import socket
 import sys
 import struct
-from time import clock
+from time import perf_counter as clock
 from queue import Queue, Empty
 import traceback
 from os.path import splitext, join, exists, isdir, abspath, dirname
