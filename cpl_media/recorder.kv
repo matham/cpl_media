@@ -102,11 +102,12 @@
             flat_color: app.theme.text_primary
         ThemedSpinner:
             id: pix_fmt
-            values: [''] + pix_fmts
+            values: ['']
             text:  root.recorder.metadata_record.fmt if root.recorder.metadata_record else ''
             size_hint_x: None
             width: max(self.minimum_width, 50)
             on_text: root.recorder._set_metadata_record(pix_fmt.text, int(input_w.text or 0), int(input_h.text or 0), int(rate.text or 0))
+            on_touch_down: if self.collide_point(*args[1].pos) and len(self.values) == 1: self.values = [''] + pix_fmts
         FlatLabel:
             text: 'Width:'
             size: self.texture_size

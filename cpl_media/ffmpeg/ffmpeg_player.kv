@@ -134,7 +134,7 @@
                     spacing: '5dp'
                     size_hint_min_x: self.minimum_width
                     size_hint_y: None
-                    height: self.minimum_height
+                    height: lower_bar.height
                     FlatLabel:
                         text: 'Filename:'
                         size: self.texture_size
@@ -158,36 +158,34 @@
                 BoxLayout:
                     spacing: '5dp'
                     size_hint: None, None
-                    size: self.minimum_size
+                    width: self.minimum_width
+                    height: lower_bar.height
                     FlatLabel:
                         text: 'Media Format:'
                         size: self.texture_size
                         size_hint: None, None
                         flat_color: app.theme.text_primary
-                    FlatSizedTextInput:
-                        text: root.player.file_fmt
-                        hint_text: 'customize'
+                    ThemedSpinner:
+                        values: ['']
+                        text:  root.player.file_fmt
                         size_hint_x: None
-                        width: '100dp'
-                        background_color: app.theme.primary_light
-                        on_text_validate:
-                            if self.text not in formats_in: self.text = ''
-                            root.player.file_fmt = self.text
+                        width: max(self.minimum_width, dp(100))
+                        on_text: root.player.file_fmt = self.text
+                        on_touch_down: if self.collide_point(*args[1].pos) and len(self.values) == 1: self.values = [''] + formats_in
                     FlatLabel:
                         text: 'Video Codec:'
                         size: self.texture_size
                         size_hint: None, None
                         flat_color: app.theme.text_primary
-                    FlatSizedTextInput:
-                        text: root.player.icodec
-                        hint_text: 'customize'
+                    ThemedSpinner:
+                        values: ['']
+                        text:  root.player.icodec
                         size_hint_x: None
-                        width: '100dp'
-                        background_color: app.theme.primary_light
-                        on_text_validate:
-                            if self.text not in codecs_dec: self.text = ''
-                            root.player.icodec = self.text
+                        width: max(self.minimum_width, dp(100))
+                        on_text: root.player.icodec = self.text
+                        on_touch_down: if self.collide_point(*args[1].pos) and len(self.values) == 1: self.values = [''] + codecs_dec
     BoxLayout:
+        id: lower_bar
         spacing: '5dp'
         padding: '5dp', 0
         size_hint_min_x: self.minimum_width
@@ -200,11 +198,12 @@
             flat_color: app.theme.text_primary
         ThemedSpinner:
             id: pix_fmt
-            values: [''] + pix_fmts
+            values: ['']
             text:  root.player.metadata_play.fmt if root.player.metadata_play else ''
             size_hint_x: None
-            width: max(self.minimum_width, 50)
+            width: max(self.minimum_width, dp(50))
             on_text: root.player._set_metadata_play(pix_fmt.text, int(input_w.text or 0), int(input_h.text or 0))
+            on_touch_down: if self.collide_point(*args[1].pos) and len(self.values) == 1: self.values = [''] + pix_fmts
         FlatLabel:
             text: 'Width:'
             size: self.texture_size
