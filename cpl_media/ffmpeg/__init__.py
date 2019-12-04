@@ -104,13 +104,13 @@ class FFmpegPlayer(BasePlayer):
         name = self.dshow_filename if self.use_dshow else self.play_filename
         self.player_summery = 'FFmpeg "{}"'.format(name)
 
-    def apply_config_settings(self, settings: dict):
+    def apply_config_properties(self, settings: dict):
         """Handles settings as applied by the app config system so the
         properties are set to correct values.
         """
         # this must be set after everything so we can loop up its opts in dict
         dshow_filename = settings.get('dshow_filename', self.dshow_filename)
-        used = super(FFmpegPlayer, self).apply_config_settings(settings)
+        used = super(FFmpegPlayer, self).apply_config_properties(settings)
         used.add('dshow_filename')
 
         try:

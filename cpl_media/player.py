@@ -173,19 +173,14 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
             callback((frame, metadata))
         self.display_trigger()
 
-    def get_settings_attrs(self, attrs):
+    def get_config_properties(self):
         """(internal) used by the config system to get the special config data
         of the player.
         """
-        d = {}
-        for key in attrs:
-            if key in ('metadata_play', 'metadata_play_used'):
-                d[key] = tuple(getattr(self, key))
-            else:
-                d[key] = getattr(self, key)
-        return d
+        return {'metadata_play': tuple(self.metadata_play),
+                'metadata_play_used': tuple(self.metadata_play_used)}
 
-    def apply_config_settings(self, settings):
+    def apply_config_properties(self, settings):
         """(internal) used by the config system to set the special config data
         of the player.
         """

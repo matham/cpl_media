@@ -155,19 +155,13 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
             rate = rate or 30
             self.data_rate = sum(get_image_size(fmt, w, h)) * rate
 
-    def get_settings_attrs(self, attrs):
+    def get_config_properties(self):
         """(internal) used by the config system to get the special config data
         of the recorder.
         """
-        d = {}
-        for key in attrs:
-            if key == 'metadata_record':
-                d[key] = tuple(getattr(self, key))
-            else:
-                d[key] = getattr(self, key)
-        return d
+        return {'metadata_record': tuple(self.metadata_record)}
 
-    def apply_config_settings(self, settings):
+    def apply_config_properties(self, settings):
         """(internal) used by the config system to set the special config data
         of the recorder.
         """
