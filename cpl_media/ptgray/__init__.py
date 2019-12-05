@@ -38,7 +38,7 @@ class PTGrayPlayer(BasePlayer):
     """Wrapper for Point Gray based player.
     """
 
-    __settings_attrs__ = (
+    __config_props__ = (
         'serial', 'ip', 'cam_config_opts', 'brightness', 'exposure',
         'sharpness', 'hue', 'saturation', 'gamma', 'shutter', 'gain',
         'iris', 'frame_rate', 'pan', 'tilt', 'mirror')

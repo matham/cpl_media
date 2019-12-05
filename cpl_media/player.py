@@ -37,7 +37,7 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
     """Base class for every player.
     """
 
-    __settings_attrs__ = ('metadata_play', 'metadata_play_used')
+    __config_props__ = ('metadata_play', 'metadata_play_used')
 
     display_frame = None
     """Called from kivy thread to display the frame whenever a new image

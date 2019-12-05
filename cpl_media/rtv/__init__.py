@@ -35,7 +35,7 @@ class RTVPlayer(BasePlayer):
     """Wrapper for RTV based player.
     """
 
-    __settings_attrs__ = ('remote_computer_name', 'pipe_name', 'port',
+    __config_props__ = ('remote_computer_name', 'pipe_name', 'port',
                           'video_fmt', 'pixel_fmt')
 
     video_fmts = {

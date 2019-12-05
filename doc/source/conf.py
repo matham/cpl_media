@@ -43,6 +43,7 @@ intersphinx_mapping = {
     'pyflycap2': ('https://matham.github.io/pyflycap2/', None),
     'thorcam': ('https://matham.github.io/thorcam/', None),
     'pybarst': ('https://matham.github.io/pybarst/', None),
+    'base_kivy_app': ('https://matham.github.io/base_kivy_app/', None),
 }
 
 # Add any paths that contain templates here, relative to this directory.

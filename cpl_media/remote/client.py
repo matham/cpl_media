@@ -37,7 +37,7 @@ class RemoteVideoPlayer(BasePlayer, RemoteData):
     :class:`cpl_media.remote.server.RemoteData` over the network.
     """
 
-    __settings_attrs__ = ('server', 'port', 'timeout')
+    __config_props__ = ('server', 'port', 'timeout')
 
     server = StringProperty('')
     """The server address that broadcasts the data.

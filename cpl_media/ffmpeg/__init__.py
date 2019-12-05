@@ -37,7 +37,7 @@ class FFmpegPlayer(BasePlayer):
     """Wrapper for :mod:`ffpyplayer` ffmpeg based player.
     """
 
-    __settings_attrs__ = (
+    __config_props__ = (
         'play_filename', 'file_fmt', 'icodec',
         'dshow_true_filename', 'dshow_opt', 'use_dshow', 'dshow_rate',
         'dshow_filename')

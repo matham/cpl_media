@@ -32,7 +32,7 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
     """Records images from :class:cpl_media.player.BasePlayer` to a recorder.
     """
 
-    __settings_attrs__ = ('metadata_record', )
+    __config_props__ = ('metadata_record', )
 
     player: BasePlayer = None
     """The :class:cpl_media.player.BasePlayer` this is being recorded from.
@@ -314,7 +314,7 @@ class ImageFileRecorder(BaseRecorder):
     """Records images as files to disk.
     """
 
-    __settings_attrs__ = (
+    __config_props__ = (
         'record_directory', 'record_prefix', 'compression', 'extension')
 
     record_directory = StringProperty(expanduser('~'))
@@ -441,7 +441,7 @@ class VideoRecorder(BaseRecorder):
     is raised.
     """
 
-    __settings_attrs__ = (
+    __config_props__ = (
         'record_directory', 'record_fname', 'record_fname_count',
         'estimate_record_rate')
 
