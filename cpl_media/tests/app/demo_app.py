@@ -28,7 +28,7 @@ from cpl_media.recorder import BaseRecorder
 import cpl_media
 
 
-__all__ = ('DemoApp', )
+__all__ = ('DemoApp', 'run_app')
 
 Builder.load_file(join(dirname(__file__), 'demo_app.kv'))
 
@@ -167,7 +167,3 @@ def run_app():
     """
     cpl_media.error_callback = report_exception_in_app
     return run_base_app(DemoApp)
-
-
-if __name__ == '__main__':
-    run_app()

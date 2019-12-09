@@ -7,8 +7,10 @@ various cameras.
 from functools import wraps
 import traceback
 import sys
+import pathlib
+import os
 
-__all__ = ('error_guard', 'error_callback')
+__all__ = ('error_guard', 'error_callback', 'get_pyinstaller_datas')
 
 __version__ = '0.1.1.dev0'
 
@@ -51,3 +53,17 @@ def error_guard(error_func):
             error_callback(e, exc_info=err, threaded=True)
 
     return safe_func
+
+
+def get_pyinstaller_datas():
+    """Returns the ``datas`` list required by PyInstaller to be able to package
+    :mod:`cpl_media` in a application.
+
+    """
+    root = pathlib.Path(os.path.dirname(sys.modules[__name__].__file__))
+    datas = []
+    for pat in ('**/*.kv', '*.kv'):
+        for f in root.glob(pat):
+            datas.append((str(f), str(f.relative_to(root.parent).parent)))
+
+    return datas
