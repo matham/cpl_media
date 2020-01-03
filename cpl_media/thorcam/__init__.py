@@ -114,7 +114,7 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
     trigger_type = StringProperty('SW Trigger')
     """The trigger type of the camera to use."""
 
-    trigger_count = NumericProperty(1)
+    trigger_count = NumericProperty(0)
     """The number of frames to capture in response to the trigger."""
 
     num_queued_frames = NumericProperty(0)
@@ -211,7 +211,8 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
                         key: getattr(self, key) for key in self.settings}
                     for key, val in value.items():
                         setattr(self, key, val)
-                        if key in old_vals and old_vals[key] != val:
+                        if key in old_vals and old_vals[key] != val and \
+                                old_vals[key]:
                             self.set_setting(key, old_vals[key])
                 elif msg == 'setting':
                     for key, val in value.items():

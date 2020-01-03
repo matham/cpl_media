@@ -84,7 +84,7 @@ thor:
   supported_triggers: [SW Trigger, HW Trigger]
   supports_color: false
   taps: '1'
-  trigger_count: 1
+  trigger_count: 0
   trigger_type: SW Trigger
 video_recorder:
   estimate_record_rate: false
