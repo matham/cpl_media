@@ -5,13 +5,15 @@ A demo app showing the configuration and usage of the players and recorders.
 
 """
 from os.path import join, dirname
+import math
 
 from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import ObjectProperty, StringProperty
+from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.lang import Builder
 
 from base_kivy_app.app import BaseKivyApp, run_app as run_base_app,\
     report_exception_in_app
+from base_kivy_app.graphics import BufferImage
 from cpl_media.ptgray import PTGrayPlayer, PTGraySettingsWidget
 from cpl_media.ffmpeg import FFmpegPlayer, FFmpegSettingsWidget
 from cpl_media.thorcam import ThorCamPlayer, ThorCamSettingsWidget
@@ -44,7 +46,7 @@ class RecorderMetadata(BoxLayout):
 
 class DemoApp(BaseKivyApp):
 
-    __config_props__ = ('player_name', )
+    __config_props__ = ('player_name', 'display_rotation')
 
     ffmpeg_player: FFmpegPlayer = None
 
@@ -70,7 +72,7 @@ class DemoApp(BaseKivyApp):
 
     player_name = StringProperty('ffmpeg')
 
-    image_display = None
+    image_display: BufferImage = None
 
     image_file_recorder: ImageFileRecorder = None
 
@@ -83,6 +85,8 @@ class DemoApp(BaseKivyApp):
     server_recorder: RemoteVideoRecorder = None
 
     server_recorder_settings = None
+
+    display_rotation = NumericProperty(0)
 
     @classmethod
     def get_config_classes(cls):
@@ -139,7 +143,8 @@ class DemoApp(BaseKivyApp):
         self.ptgray_player.display_frame = self._display_frame
         self.thor_player.display_frame = self._display_frame
         self.client_player.display_frame = self._display_frame
-        return RootAppWidget()
+
+        return super(DemoApp, self).build(root=RootAppWidget())
 
     def _display_frame(self, image, metadata):
         if self.image_display is not None:

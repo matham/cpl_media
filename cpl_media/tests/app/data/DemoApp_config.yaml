@@ -1,4 +1,4 @@
-app: {inspect: false, player_name: ffmpeg}
+app: {display_rotation: 0.0, inspect: false, player_name: ffmpeg}
 ffmpeg:
   dshow_filename: ''
   dshow_opt: ''

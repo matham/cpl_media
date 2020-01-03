@@ -1,8 +1,12 @@
 #:import pretty_space base_kivy_app.utils.pretty_space
 #:import pretty_time base_kivy_app.utils.pretty_time
 
+<RelativeStencilLayout@RelativeLayout+StencilView>
+
 <RootAppWidget>:
+    settings_pin_container: settings_pin_container
     orientation: 'vertical'
+    spacing: '5dp'
     canvas:
         Color:
             rgba: app.theme.primary
@@ -14,22 +18,36 @@
     PlayerSelection:
         padding: '5dp', 0, 0, '10dp'
     RecordSelection
-    BufferImage:
-        on_kv_post: app.image_display = self
-        auto_bring_to_front: False
-        available_size: self.size
-        on_size: if self.img is not None: self.update_img(self.img)
-
-        do_scale: True
-        do_translation: True, True
-        do_rotation: True
-
-        canvas.before:
+    BoxLayout:
+        id: settings_pin_container
+        size_hint_y: None
+        height: self.minimum_height
+        canvas:
+            Color:
+                rgba: app.theme.primary_text
+            Rectangle:
+                size: self.size
+                pos: self.pos
+    RelativeStencilLayout:
+        on_size: image_display.reload_buffer()
+        canvas:
             Color:
                 rgba: [0, 0, 0, 1]
             Rectangle:
-                pos: self.pos
                 size: self.size
+        BufferImage:
+            id: image_display
+            on_kv_post: app.image_display = self
+            auto_bring_to_front: False
+            available_size: self.parent.size
+            size: self.image_size
+            size_hint: None, None
+
+            do_scale: False
+            do_translation: False, False
+            do_rotation: False
+            on_rotation: app.display_rotation = self.rotation
+            rotation: app.display_rotation
 
 
 <ConfigSelectLabelButton@FlatToggleButton>:
@@ -52,91 +70,96 @@
 <PlayerSelection@BoxLayout>:
     size_hint: None, None
     size: self.minimum_width, '34dp'
-    ConfigSelectIconButton:
-        state: ffmpeg.state
-        on_state:
-            ffmpeg.state = self.state
-            if self.state == 'down': app.player = app.ffmpeg_player
-            if self.state == 'down': app.player_name = 'ffmpeg'
-    ConfigSelectLabelButton:
-        id: ffmpeg
-        text: 'Webcam/file'
-        state: 'down' if app.player_name == 'ffmpeg' else 'normal'
-    FlatImageButton:
-        on_kv_post: self.more_widget = Factory.FFmpegSettingsDropdown()
-        scale_down_color: True
-        source: 'flat_dots_vertical.png'
-        flat_color: app.theme.accent
-        on_release: self.more_widget.open(root)
-        disabled: ffmpeg.state != 'down'
-    ConfigSelectIconButton:
-        state: ptgray.state
-        on_state:
-            ptgray.state = self.state
-            if self.state == 'down': app.player = app.ptgray_player
-            if self.state == 'down': app.player_name = 'ptgray'
-    ConfigSelectLabelButton:
-        id: ptgray
-        text: 'PTGray'
-        state: 'down' if app.player_name == 'ptgray' else 'normal'
-    FlatImageButton:
-        on_kv_post: self.more_widget = Factory.PTGraySettingsDropdown()
-        scale_down_color: True
-        source: 'flat_dots_vertical.png'
-        flat_color: app.theme.accent
-        on_release: self.more_widget.open(root)
-        disabled: ptgray.state != 'down'
-    ConfigSelectIconButton:
-        state: thor.state
-        on_state:
-            thor.state = self.state
-            if self.state == 'down': app.player = app.thor_player
-            if self.state == 'down': app.player_name = 'thor'
-    ConfigSelectLabelButton:
-        id: thor
-        text: 'Thor'
-        state: 'down' if app.player_name == 'thor' else 'normal'
-    FlatImageButton:
-        on_kv_post: self.more_widget = Factory.ThorSettingsDropdown()
-        scale_down_color: True
-        source: 'flat_dots_vertical.png'
-        flat_color: app.theme.accent
-        on_release: self.more_widget.open(root)
-        disabled: thor.state != 'down'
-    ConfigSelectIconButton:
-        state: client_player.state
-        on_state:
-            client_player.state = self.state
-            if self.state == 'down': app.player = app.client_player
-            if self.state == 'down': app.player_name = 'client'
-    ConfigSelectLabelButton:
-        id: client_player
-        text: 'Network'
-        state: 'down' if app.player_name == 'client' else 'normal'
-    FlatImageButton:
-        on_kv_post: self.more_widget = Factory.ClientPlayerSettingsDropdown()
-        scale_down_color: True
-        source: 'flat_dots_vertical.png'
-        flat_color: app.theme.accent
-        on_release: self.more_widget.open(root)
-        disabled: client_player.state != 'down'
-    ConfigSelectIconButton:
-        state: rtv.state
-        on_state:
-            rtv.state = self.state
-            if self.state == 'down': app.player = app.rtv_player
-            if self.state == 'down': app.player_name = 'rtv'
-    ConfigSelectLabelButton:
-        id: rtv
-        text: 'RTV'
-        state: 'down' if app.player_name == 'rtv' else 'normal'
-    FlatImageButton:
-        on_kv_post: self.more_widget = Factory.RTVSettingsDropdown()
-        scale_down_color: True
-        source: 'flat_dots_vertical.png'
-        flat_color: app.theme.accent
-        on_release: self.more_widget.open(root)
-        disabled: rtv.state != 'down'
+    spacing: '5dp'
+    BoxLayout:
+        disabled: pin_btn.state == 'down'
+        size_hint: None, None
+        size: self.minimum_width, '34dp'
+        ConfigSelectIconButton:
+            state: ffmpeg.state
+            on_state:
+                ffmpeg.state = self.state
+                if self.state == 'down': app.player = app.ffmpeg_player
+                if self.state == 'down': app.player_name = 'ffmpeg'
+        ConfigSelectLabelButton:
+            id: ffmpeg
+            text: 'Webcam/file'
+            state: 'down' if app.player_name == 'ffmpeg' else 'normal'
+        FlatImageButton:
+            on_kv_post: self.more_widget = Factory.FFmpegSettingsDropdown()
+            scale_down_color: True
+            source: 'flat_dots_vertical.png'
+            flat_color: app.theme.accent
+            on_release: self.more_widget.open(root)
+            disabled: ffmpeg.state != 'down'
+        ConfigSelectIconButton:
+            state: ptgray.state
+            on_state:
+                ptgray.state = self.state
+                if self.state == 'down': app.player = app.ptgray_player
+                if self.state == 'down': app.player_name = 'ptgray'
+        ConfigSelectLabelButton:
+            id: ptgray
+            text: 'PTGray'
+            state: 'down' if app.player_name == 'ptgray' else 'normal'
+        FlatImageButton:
+            on_kv_post: self.more_widget = Factory.PTGraySettingsDropdown()
+            scale_down_color: True
+            source: 'flat_dots_vertical.png'
+            flat_color: app.theme.accent
+            on_release: self.more_widget.open(root)
+            disabled: ptgray.state != 'down'
+        ConfigSelectIconButton:
+            state: thor.state
+            on_state:
+                thor.state = self.state
+                if self.state == 'down': app.player = app.thor_player
+                if self.state == 'down': app.player_name = 'thor'
+        ConfigSelectLabelButton:
+            id: thor
+            text: 'Thor'
+            state: 'down' if app.player_name == 'thor' else 'normal'
+        FlatImageButton:
+            on_kv_post: self.more_widget = Factory.ThorSettingsDropdown()
+            scale_down_color: True
+            source: 'flat_dots_vertical.png'
+            flat_color: app.theme.accent
+            on_release: self.more_widget.open(root)
+            disabled: thor.state != 'down'
+        ConfigSelectIconButton:
+            state: client_player.state
+            on_state:
+                client_player.state = self.state
+                if self.state == 'down': app.player = app.client_player
+                if self.state == 'down': app.player_name = 'client'
+        ConfigSelectLabelButton:
+            id: client_player
+            text: 'Network'
+            state: 'down' if app.player_name == 'client' else 'normal'
+        FlatImageButton:
+            on_kv_post: self.more_widget = Factory.ClientPlayerSettingsDropdown()
+            scale_down_color: True
+            source: 'flat_dots_vertical.png'
+            flat_color: app.theme.accent
+            on_release: self.more_widget.open(root)
+            disabled: client_player.state != 'down'
+        # ConfigSelectIconButton:
+        #     state: rtv.state
+        #     on_state:
+        #         rtv.state = self.state
+        #         if self.state == 'down': app.player = app.rtv_player
+        #         if self.state == 'down': app.player_name = 'rtv'
+        # ConfigSelectLabelButton:
+        #     id: rtv
+        #     text: 'RTV'
+        #     state: 'down' if app.player_name == 'rtv' else 'normal'
+        # FlatImageButton:
+        #     on_kv_post: self.more_widget = Factory.RTVSettingsDropdown()
+        #     scale_down_color: True
+        #     source: 'flat_dots_vertical.png'
+        #     flat_color: app.theme.accent
+        #     on_release: self.more_widget.open(root)
+        #     disabled: rtv.state != 'down'
     FlatImageToggleButton:
         source: 'flat_play.png' if self.state == 'normal' else 'flat_stop.png'
         flat_color: app.theme.accent
@@ -144,6 +167,22 @@
         state: 'down' if app.player.play_state == 'starting' or app.player.play_state == 'playing' else 'normal'
         on_state: if self.state == 'normal': app.stop_recording()
         on_release: app.player.play() if self.state == 'down' else app.player.stop()
+    FlatImageButton:
+        scale_down_color: True
+        source: 'rotate-right-variant.png'
+        flat_color: app.theme.accent
+        on_release: app.image_display.rotate_right_reposition()
+    FlatImageToggleButton:
+        id: pin_btn
+        scale_down_color: True
+        source: 'flat_pin.png' if self.state == 'normal' else 'flat_pin_off.png'
+        flat_color: app.theme.accent
+        on_release:
+            settings = getattr(app, '{}_settings'.format(app.player_name))
+            if self.state == 'down': self._old_settings_parent = settings.parent
+            settings.parent.remove_widget(settings)
+            if self.state == 'down': app.root.settings_pin_container.add_widget(settings)
+            if self.state == 'normal': self._old_settings_parent.add_widget(settings)
 
 
 <FFmpegSettingsDropdown@FlatDropDown>:
