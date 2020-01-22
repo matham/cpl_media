@@ -290,8 +290,8 @@ class FFmpegPlayer(BasePlayer):
         if not src_fmt:
             raise ValueError("Player failed, couldn't get pixel type")
 
-        # if ipix_fmt:
-        #     src_fmt = ipix_fmt
+        if ipix_fmt:
+            src_fmt = ipix_fmt
         fmt = {'gray': 'gray', 'rgb24': 'rgb24', 'bgr24': 'rgb24',
                'rgba': 'rgba', 'bgra': 'rgba'}.get(src_fmt, 'yuv420p')
         ffplayer.set_output_pix_fmt(fmt)
