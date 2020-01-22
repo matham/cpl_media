@@ -68,7 +68,7 @@ class PTGrayPlayer(BasePlayer):
     This may only be set by calling :meth:`ask_config`, not set directly.
     """
 
-    cam_config_opts = DictProperty({})
+    cam_config_opts = DictProperty({'fmt': 'yuv422'})
     '''The configuration options used to configure the camera after opening.
     This are internal and can only be set by the internal thread once
     initially set by config.
