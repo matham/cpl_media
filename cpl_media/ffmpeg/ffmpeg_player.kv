@@ -198,12 +198,12 @@
             flat_color: app.theme.text_primary
         ThemedSpinner:
             id: pix_fmt
-            values: ['']
-            text:  root.player.metadata_play.fmt if root.player.metadata_play else ''
+            values: ['---']
+            text: (root.player.metadata_play.fmt or '---') if root.player.metadata_play else '---'
             size_hint_x: None
             width: max(self.minimum_width, dp(50))
-            on_text: root.player._set_metadata_play(pix_fmt.text, int(input_w.text or 0), int(input_h.text or 0))
-            on_touch_down: if self.collide_point(*args[1].pos) and len(self.values) == 1: self.values = [''] + pix_fmts
+            on_text: root.player._set_metadata_play(pix_fmt.text if pix_fmt.text != '---' else '', int(input_w.text or 0), int(input_h.text or 0))
+            on_touch_down: if self.collide_point(*args[1].pos) and len(self.values) == 1: self.values = (['---'] + pix_fmts)
         FlatLabel:
             text: 'Width:'
             size: self.texture_size
@@ -214,7 +214,7 @@
             text: str(root.player.metadata_play.w) if root.player.metadata_play and root.player.metadata_play.w else ''
             background_color: app.theme.primary_light
             hint_text: 'width'
-            on_text: root.player._set_metadata_play(pix_fmt.text, int(input_w.text or 0), int(input_h.text or 0))
+            on_text: root.player._set_metadata_play(pix_fmt.text if pix_fmt.text != '---' else '', int(input_w.text or 0), int(input_h.text or 0))
             size_hint_x: None
             width: '60dp'
         FlatLabel:
@@ -227,7 +227,7 @@
             text: str(root.player.metadata_play.h) if root.player.metadata_play and root.player.metadata_play.h else ''
             background_color: app.theme.primary_light
             hint_text: 'height'
-            on_text: root.player._set_metadata_play(pix_fmt.text, int(input_w.text or 0), int(input_h.text or 0))
+            on_text: root.player._set_metadata_play(pix_fmt.text if pix_fmt.text != '---' else '', int(input_w.text or 0), int(input_h.text or 0))
             size_hint_x: None
             width: '60dp'
 
