@@ -454,7 +454,7 @@ class VideoRecorder(BaseRecorder):
 
     If ``{}`` is present in the filename, it'll be replaced with the value of
     :attr:`record_fname_count` which auto increments after every video, when
-    used.
+    used. We use Python's ``format`` machinery for this.
     '''
 
     record_fname_count = NumericProperty(0)
@@ -520,7 +520,7 @@ class VideoRecorder(BaseRecorder):
     def _update_record_fname(self, *largs):
         self.record_filename = join(
             self.record_directory,
-            self.record_fname.replace('{}', str(self.record_fname_count)))
+            self.record_fname.format(self.record_fname_count))
 
     def send_image_to_recorder(self, image):
         """Sends the image to the recorder queue to save the image in the

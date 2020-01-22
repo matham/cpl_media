@@ -184,7 +184,7 @@
             text: root.recorder.record_fname
             background_color: app.theme.primary_light
             hint_text: 'filename'
-            on_text: root.recorder.record_fname = self.text
+            on_text_validate: root.recorder.record_fname = self.text
         FlatLabel:
             text: 'n:'
             size: self.texture_size
