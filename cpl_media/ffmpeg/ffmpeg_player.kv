@@ -150,11 +150,7 @@
                         scale_down_color: True
                         source: 'flat_folder.png'
                         flat_color: app.theme.accent
-                        on_release:
-                            app.filebrowser.dirselect = False
-                            app.filebrowser.multiselect = False
-                            app.filebrowser.callback = partial(root.set_filename, filename, is_dir=False)
-                            app.filebrowser.open()
+                        on_release: app.open_filechooser(callback=partial(root.set_filename, filename), target=root.player.play_filename, title='Select file')
                 BoxLayout:
                     spacing: '5dp'
                     size_hint: None, None

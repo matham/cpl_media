@@ -330,21 +330,5 @@ class ThorCamSettingsWidget(BoxLayout):
         self.player = player
         super(ThorCamSettingsWidget, self).__init__(**kwargs)
 
-    def set_filename(self, text_wid, path, selection, filename, is_dir=True):
-        """Called by the GUI to set the filename.
-        """
-        if not selection:
-            if exists(join(path, filename)):
-                selection = [filename]
-            else:
-                text_wid.text = ''
-                return
-
-        f = abspath(join(path, selection[0]))
-        if is_dir and not isdir(f):
-            f = dirname(f)
-        self.player.play_filename = f
-        text_wid.text = f
-
 
 Builder.load_file(join(dirname(__file__), 'thorcam_player.kv'))

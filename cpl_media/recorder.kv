@@ -28,11 +28,7 @@
             scale_down_color: True
             source: 'flat_folder.png'
             flat_color: app.theme.accent
-            on_release:
-                app.filebrowser.dirselect = True
-                app.filebrowser.multiselect = False
-                app.filebrowser.callback = partial(root.set_filename, directory, is_dir=True)
-                app.filebrowser.open()
+            on_release: app.open_filechooser(callback=partial(root.set_filename, directory), target=root.recorder.record_directory, dirselect=True, title='Select target directory')
     BoxLayout:
         spacing: '5dp'
         size_hint_min_x: self.minimum_width
@@ -170,11 +166,7 @@
             scale_down_color: True
             source: 'flat_folder.png'
             flat_color: app.theme.accent
-            on_release:
-                app.filebrowser.dirselect = True
-                app.filebrowser.multiselect = False
-                app.filebrowser.callback = partial(root.set_filename, directory, is_dir=True)
-                app.filebrowser.open()
+            on_release: app.open_filechooser(callback=partial(root.set_filename, directory), target=root.recorder.record_directory, dirselect=True, title='Select target directory')
         FlatLabel:
             text: 'Filename:'
             size: self.texture_size

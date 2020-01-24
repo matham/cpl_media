@@ -620,22 +620,6 @@ class PTGraySettingsWidget(BoxLayout):
         self.player = player
         super(PTGraySettingsWidget, self).__init__(**kwargs)
 
-    def set_filename(self, text_wid, path, selection, filename, is_dir=True):
-        """Called by the GUI to set the filename.
-        """
-        if not selection:
-            if exists(join(path, filename)):
-                selection = [filename]
-            else:
-                text_wid.text = ''
-                return
-
-        f = abspath(join(path, selection[0]))
-        if is_dir and not isdir(f):
-            f = dirname(f)
-        self.player.play_filename = f
-        text_wid.text = f
-
     def _track_setting(self, *largs):
         self.opt_settings = getattr(self.player, self.settings_last)
 

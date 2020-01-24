@@ -642,26 +642,14 @@ class ImageFileRecordSettingsWidget(BoxLayout):
         self.recorder = recorder
         super(ImageFileRecordSettingsWidget, self).__init__(**kwargs)
 
-    def set_filename(self, text_wid, path, selection, filename, is_dir=True):
+    def set_filename(self, text_wid, paths):
         """Called by the GUI to set the directory.
         """
-        if not selection:
-            if exists(join(path, filename)):
-                f = abspath(join(path, filename))
-                if is_dir and not isdir(f):
-                    f = dirname(f)
-            elif is_dir and exists(path):
-                f = abspath(path)
-            else:
-                text_wid.text = ''
-                return
-        else:
-            f = abspath(join(path, selection[0]))
-            if is_dir and not isdir(f):
-                f = dirname(f)
+        if not paths:
+            return
 
-        self.recorder.record_directory = f
-        text_wid.text = f
+        self.recorder.record_directory = paths[0]
+        text_wid.text = paths[0]
 
 
 class VideoRecordSettingsWidget(BoxLayout):
@@ -678,26 +666,14 @@ class VideoRecordSettingsWidget(BoxLayout):
         self.recorder = recorder
         super(VideoRecordSettingsWidget, self).__init__(**kwargs)
 
-    def set_filename(self, text_wid, path, selection, filename, is_dir=True):
+    def set_filename(self, text_wid, paths):
         """Called by the GUI to set the directory.
         """
-        if not selection:
-            if exists(join(path, filename)):
-                f = abspath(join(path, filename))
-                if is_dir and not isdir(f):
-                    f = dirname(f)
-            elif is_dir and exists(path):
-                f = abspath(path)
-            else:
-                text_wid.text = ''
-                return
-        else:
-            f = abspath(join(path, selection[0]))
-            if is_dir and not isdir(f):
-                f = dirname(f)
+        if not paths:
+            return
 
-        self.recorder.record_directory = f
-        text_wid.text = f
+        self.recorder.record_directory = paths[0]
+        text_wid.text = paths[0]
 
 
 Builder.load_file(join(dirname(__file__), 'recorder.kv'))
