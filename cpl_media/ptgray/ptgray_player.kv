@@ -39,7 +39,7 @@
             ThemedSpinner:
                 size_hint_x: None
                 width: self.minimum_width
-                text_autoupdate: True
+                # text_autoupdate: True
                 values: [str(val) for val in root.player.serials]
                 text: str(root.player.serial) if root.player.serial else ''
                 on_text: root.player.serial = int(self.text) if self.text else 0
@@ -51,7 +51,7 @@
             ThemedSpinner:
                 size_hint_x: None
                 width: self.minimum_width
-                text_autoupdate: True
+                # text_autoupdate: True
                 values: root.player.ips
                 text: root.player.ip
                 on_text: root.player.ip = self.text
