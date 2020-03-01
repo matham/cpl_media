@@ -435,8 +435,8 @@ class PTGrayPlayer(BasePlayer):
                            for s in cams]
                     if cams:
                         if serial not in cams and ip not in ips:
-                            serial = cams[0]
-                            ip = ips[0]
+                            serial = 0
+                            ip = ''
                         elif serial in cams:
                             ip = ips[cams.index(serial)]
                         else:
