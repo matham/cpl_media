@@ -504,6 +504,10 @@ class VideoRecorder(BaseRecorder):
         ih = ih or 480
         assert irate
 
+        if self.record_fname.endswith('mkv') and (
+                ifmt.startswith('rgb') or ifmt.startswith('bgr')):
+            ifmt = get_supported_pixfmts('libx264', ifmt)
+
         ofmt, ow, oh, orate = self.metadata_record
         ofmt = ofmt or ifmt
         ow = ow or iw
