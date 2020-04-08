@@ -114,7 +114,7 @@
                         size_hint: None, None
                         flat_color: app.theme.text_primary
                     FlatSizedTextInput:
-                        text: root.player.dshow_rate if root.player.dshow_rate else ''
+                        text: str(root.player.dshow_rate) if root.player.dshow_rate else ''
                         input_filter: 'float'
                         hint_text: 'fps'
                         size_hint_x: None
