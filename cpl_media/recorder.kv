@@ -192,6 +192,7 @@
             on_text: root.recorder.record_fname_count = int(self.text or 0)
     FlatLabel:
         text: root.recorder.record_filename
+        bold: True
         size: self.texture_size
         size_hint: None, None
         flat_color: app.theme.text_primary
