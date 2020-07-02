@@ -32,7 +32,7 @@ setup(
         'Programming Language :: Python :: 3.8',
     ],
     packages=find_packages(),
-    install_requires=['base_kivy_app', 'ffpyplayer', 'kivy'],
+    install_requires=['base_kivy_app', 'ffpyplayer', 'kivy', 'tree-config'],
     extras_require={
         'dev': ['pytest>=3.6', 'pytest-cov', 'flake8', 'sphinx-rtd-theme',
                 'coveralls', 'trio', 'pytest-trio'],

@@ -46,7 +46,15 @@ class RecorderMetadata(BoxLayout):
 
 class DemoApp(BaseKivyApp):
 
-    __config_props__ = ('player_name', 'display_rotation')
+    _config_props_ = ('player_name', 'display_rotation')
+
+    _config_children_ = {
+        'ffmpeg': 'ffmpeg_player', 'ptgray': 'ptgray_player',
+        'thor': 'thor_player', 'network_client': 'client_player',
+        'rtv': 'rtv_player', 'image_file_recorder': 'image_file_recorder',
+        'video_recorder': 'video_recorder',
+        'network_server': 'server_recorder',
+    }
 
     ffmpeg_player: FFmpegPlayer = None
 
@@ -87,33 +95,6 @@ class DemoApp(BaseKivyApp):
     server_recorder_settings = None
 
     display_rotation = NumericProperty(0)
-
-    @classmethod
-    def get_config_classes(cls):
-        d = super(DemoApp, cls).get_config_classes()
-        d['ffmpeg'] = FFmpegPlayer
-        d['ptgray'] = PTGrayPlayer
-        d['thor'] = ThorCamPlayer
-        d['network_client'] = RemoteVideoPlayer
-        d['rtv'] = RTVPlayer
-
-        d['image_file_recorder'] = ImageFileRecorder
-        d['video_recorder'] = VideoRecorder
-        d['network_server'] = RemoteVideoRecorder
-        return d
-
-    def get_config_instances(self):
-        d = super(DemoApp, self).get_config_instances()
-        d['ffmpeg'] = self.ffmpeg_player
-        d['ptgray'] = self.ptgray_player
-        d['thor'] = self.thor_player
-        d['network_client'] = self.client_player
-        d['rtv'] = self.rtv_player
-
-        d['image_file_recorder'] = self.image_file_recorder
-        d['video_recorder'] = self.video_recorder
-        d['network_server'] = self.server_recorder
-        return d
 
     def build(self):
         self.ffmpeg_settings = FFmpegSettingsWidget()

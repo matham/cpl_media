@@ -35,7 +35,7 @@ class ThorCamPlayer(BasePlayer, ThorCamClient):
     """Wrapper for Thor .Net camera based player.
     """
 
-    __config_props__ = (
+    _config_props_ = (
         'supported_freqs', 'freq', 'supported_taps', 'taps', 'supports_color',
         'exposure_range', 'exposure_ms', 'binning_x_range', 'binning_x',
         'binning_y_range', 'binning_y', 'sensor_size', 'roi_x', 'roi_y',

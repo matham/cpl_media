@@ -32,7 +32,7 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
     """Records images from :class:cpl_media.player.BasePlayer` to a recorder.
     """
 
-    __config_props__ = ('metadata_record', )
+    _config_props_ = ('metadata_record', )
 
     player: BasePlayer = None
     """The :class:cpl_media.player.BasePlayer` this is being recorded from.
@@ -155,21 +155,22 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
             rate = rate or 30
             self.data_rate = sum(get_image_size(fmt, w, h)) * rate
 
-    def get_config_properties(self):
+    def get_config_property(self, name):
         """(internal) used by the config system to get the special config data
         of the recorder.
         """
-        return {'metadata_record': tuple(self.metadata_record)}
+        if name == 'metadata_record':
+            return tuple(self.metadata_record)
+        return getattr(self, name)
 
-    def apply_config_properties(self, settings):
+    def apply_config_property(self, name, value):
         """(internal) used by the config system to set the special config data
         of the recorder.
         """
-        if 'metadata_record' in settings:
-            setattr(self, 'metadata_record',
-                    VideoMetadata(*settings['metadata_record']))
-            return {'metadata_record'}
-        return set()
+        if name == 'metadata_record':
+            self.metadata_record = VideoMetadata(*value)
+        else:
+            setattr(self, name, value)
 
     @staticmethod
     def save_image(fname, img, codec='bmp', pix_fmt='', lib_opts={}):
@@ -314,7 +315,7 @@ class ImageFileRecorder(BaseRecorder):
     """Records images as files to disk.
     """
 
-    __config_props__ = (
+    _config_props_ = (
         'record_directory', 'record_prefix', 'compression', 'extension')
 
     record_directory = StringProperty(expanduser('~'))
@@ -441,7 +442,7 @@ class VideoRecorder(BaseRecorder):
     is raised.
     """
 
-    __config_props__ = (
+    _config_props_ = (
         'record_directory', 'record_fname', 'record_fname_count',
         'estimate_record_rate')
 

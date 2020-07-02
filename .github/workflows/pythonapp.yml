@@ -57,7 +57,14 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         files: dist/*
-        draft: true
+    - name: Publish to PyPI
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+       TWINE_USERNAME: "__token__"
+       TWINE_PASSWORD: ${{ secrets.pypi_password }}
+      run: |
+       python -m pip install twine
+       twine upload dist/*
     - name: Test with pytest
       run: |
         python3 -m pytest --cov=cpl_media --cov-report term --cov-branch cpl_media/tests
@@ -104,11 +111,17 @@ jobs:
         python3 -m pip install --upgrade pip virtualenv wheel setuptools sphinx
         python3 -m pip install kivy[base] --pre --extra-index-url https://kivy.org/downloads/simple/
         python3 -m pip install https://github.com/matham/base_kivy_app/archive/master.zip
+
         python3 -m pip install -e .[dev]
     - name: Generate docs
+      env:
+        TREE_CONFIG_DOC_YAML_PATH: config_prop_docs.yaml
       run: |
         cd doc
+        python -m tree_config.doc_gen download -u "https://matham.github.io/base_kivy_app/$TREE_CONFIG_DOC_YAML_PATH" -o $TREE_CONFIG_DOC_YAML_PATH
+
         make html
+        cp $TREE_CONFIG_DOC_YAML_PATH build/html
     - name: gh-pages upload
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       env:

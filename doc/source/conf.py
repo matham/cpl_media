@@ -69,6 +69,6 @@ html_static_path = ['_static']
 
 
 def setup(app):
-    create_doc_listener(
-        app, cpl_media,
-        os.environ.get('BASEKIVYAPP_CONFIG_DOC_PATH', 'config_attrs.json'))
+    yaml_filename = os.environ.get(
+        'TREE_CONFIG_DOC_YAML_PATH', 'config_prop_docs.yaml')
+    create_doc_listener(app, 'cpl_media', yaml_filename)

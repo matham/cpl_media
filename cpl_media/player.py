@@ -37,7 +37,7 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
     """Base class for every player.
     """
 
-    __config_props__ = ('metadata_play', 'metadata_play_used')
+    _config_props_ = ('metadata_play', 'metadata_play_used')
 
     display_frame = None
     """Called from kivy thread to display the frame whenever a new image
@@ -173,23 +173,26 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
             callback((frame, metadata))
         self.display_trigger()
 
-    def get_config_properties(self):
+    def get_config_property(self, name):
         """(internal) used by the config system to get the special config data
         of the player.
         """
-        return {'metadata_play': tuple(self.metadata_play),
-                'metadata_play_used': tuple(self.metadata_play_used)}
+        if name == 'metadata_play':
+            return tuple(self.metadata_play)
+        if name == 'metadata_play_used':
+            return tuple(self.metadata_play_used)
+        return getattr(self, name)
 
-    def apply_config_properties(self, settings):
+    def apply_config_property(self, name, value):
         """(internal) used by the config system to set the special config data
         of the player.
         """
-        used = set()
-        for k in ('metadata_play', 'metadata_play_used'):
-            if k in settings:
-                setattr(self, k, VideoMetadata(*settings[k]))
-                used.add(k)
-        return used
+        if name == 'metadata_play':
+            self.metadata_play = VideoMetadata(*value)
+        elif name == 'metadata_play_used':
+            self.metadata_play_used = VideoMetadata(*value)
+        else:
+            setattr(self, name, value)
 
     @error_guard
     def play(self):

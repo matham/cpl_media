@@ -37,7 +37,7 @@ class FFmpegPlayer(BasePlayer):
     """Wrapper for :mod:`ffpyplayer` ffmpeg based player.
     """
 
-    __config_props__ = (
+    _config_props_ = (
         'play_filename', 'file_fmt', 'icodec',
         'dshow_true_filename', 'dshow_opt', 'use_dshow', 'dshow_rate',
         'dshow_filename')
@@ -86,7 +86,9 @@ class FFmpegPlayer(BasePlayer):
     """
 
     dshow_opt_pat = re.compile(
-        '([0-9]+)X([0-9]+) (.+), ([0-9\\.]+)(?: - ([0-9\\.]+))? fps')
+        '([0-9]+)X([0-9]+) (.+), ([0-9.]+)(?: - ([0-9.]+))? fps')
+
+    _config_dshow_filename = ''
 
     def __init__(self, **kw):
         super(FFmpegPlayer, self).__init__(**kw)
@@ -104,14 +106,18 @@ class FFmpegPlayer(BasePlayer):
         name = self.dshow_filename if self.use_dshow else self.play_filename
         self.player_summery = 'FFmpeg "{}"'.format(name)
 
-    def apply_config_properties(self, settings: dict):
+    def apply_config_property(self, name, value):
+        if name == 'dshow_filename':
+            self._config_dshow_filename = value
+        else:
+            super(FFmpegPlayer, self).apply_config_property(name, value)
+
+    def post_config_applied(self):
         """Handles settings as applied by the app config system so the
         properties are set to correct values.
         """
         # this must be set after everything so we can loop up its opts in dict
-        dshow_filename = settings.get('dshow_filename', self.dshow_filename)
-        used = super(FFmpegPlayer, self).apply_config_properties(settings)
-        used.add('dshow_filename')
+        dshow_filename = self._config_dshow_filename
 
         try:
             if self.dshow_opt:
@@ -136,7 +142,7 @@ class FFmpegPlayer(BasePlayer):
                 self._parse_dshow_opt(self.dshow_opt)
 
         self.dshow_filename = dshow_filename
-        return used
+        super().post_config_applied()
 
     @error_guard
     def refresh_dshow(self):

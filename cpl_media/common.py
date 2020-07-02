@@ -8,6 +8,7 @@ Provides common base classes and tools.
 from queue import Queue, Empty
 import sys
 import traceback
+from base_kivy_app.config import Configurable
 
 from kivy.clock import Clock
 
@@ -17,7 +18,7 @@ import cpl_media
 __all__ = ('KivyMediaBase', )
 
 
-class KivyMediaBase(object):
+class KivyMediaBase(Configurable):
     """A base classes for all the players and recorders.
 
     It provides methods for the kivy and internal threads to interact safely.

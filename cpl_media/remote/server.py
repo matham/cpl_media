@@ -169,7 +169,7 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
     message or after a stopped_playing message (i.e. no duplicates).
     """
 
-    __config_props__ = ('server', 'port', 'timeout', 'max_images_buffered')
+    _config_props_ = ('server', 'port', 'timeout', 'max_images_buffered')
 
     server = StringProperty('localhost')
     """The server address on which to broadcast the data.
