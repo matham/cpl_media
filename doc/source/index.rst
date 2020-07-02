@@ -1,6 +1,6 @@
-.. BaseKivyApp documentation master file.
+.. CPL Media documentation master file.
 
-Welcome to BaseKivyApp's documentation!
+Welcome to CPL Media's documentation!
 =======================================
 
 Contents:
