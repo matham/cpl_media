@@ -24,7 +24,7 @@ from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 
-from base_kivy_app.utils import yaml_dumps, yaml_loads
+from more_kivy_app.utils import yaml_dumps, yaml_loads
 
 from cpl_media import error_guard
 from cpl_media.recorder import BaseRecorder

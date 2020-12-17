@@ -8,7 +8,7 @@ Provides common base classes and tools.
 from queue import Queue, Empty
 import sys
 import traceback
-from base_kivy_app.config import Configurable
+from more_kivy_app.config import Configurable
 
 from kivy.clock import Clock
 
