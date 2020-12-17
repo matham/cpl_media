@@ -46,7 +46,7 @@ jobs:
     - name: Make wheel
       run: python3 setup.py bdist_wheel --universal
     - name: Upload wheels as artifact
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@v2
       with:
         name: wheels
         path: dist
@@ -60,11 +60,11 @@ jobs:
     - name: Publish to PyPI
       if: startsWith(github.ref, 'refs/tags/')
       env:
-       TWINE_USERNAME: "__token__"
-       TWINE_PASSWORD: ${{ secrets.pypi_password }}
+        TWINE_USERNAME: "__token__"
+        TWINE_PASSWORD: ${{ secrets.pypi_password }}
       run: |
-       python -m pip install twine
-       twine upload dist/*
+        python -m pip install twine
+        twine upload dist/*
     - name: Test with pytest
       run: |
         python3 -m pytest --cov=cpl_media --cov-report term --cov-branch cpl_media/tests
