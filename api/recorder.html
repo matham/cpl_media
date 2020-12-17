@@ -1,0 +1,688 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Recorder &mdash; CPL_Media  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Remote server recorder" href="remote_server.html" />
+    <link rel="prev" title="Recorders" href="recorders.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> CPL_Media
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">Demo App</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">The CPL_Media API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html">cpl_media</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">Base classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="players.html">Players</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="recorders.html">Recorders</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Recorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_server.html">Remote server recorder</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CPL_Media</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="api.html">The CPL_Media API</a> &raquo;</li>
+        
+          <li><a href="recorders.html">Recorders</a> &raquo;</li>
+        
+      <li>Recorder</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/recorder.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-cpl_media.recorder"></span><div class="section" id="recorder">
+<h1>Recorder<a class="headerlink" href="#recorder" title="Permalink to this headline">¶</a></h1>
+<p>Provides the base class for video recorders.</p>
+<dl class="py class">
+<dt id="cpl_media.recorder.BaseRecorder">
+<em class="property">class </em><code class="sig-prename descclassname">cpl_media.recorder.</code><code class="sig-name descname">BaseRecorder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.BaseRecorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kivy._event.EventDispatcher</span></code>, <a class="reference internal" href="common.html#cpl_media.common.KivyMediaBase" title="cpl_media.common.KivyMediaBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">cpl_media.common.KivyMediaBase</span></code></a></p>
+<p>Records images from :class:cpl_media.player.BasePlayer` to a recorder.</p>
+<dl class="py method">
+<dt id="cpl_media.recorder.BaseRecorder.apply_config_property">
+<code class="sig-name descname">apply_config_property</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.apply_config_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>(internal) used by the config system to set the special config data
+of the recorder.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.can_record">
+<code class="sig-name descname">can_record</code><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.can_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the recorder source can record now.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.BaseRecorder.complete_start">
+<code class="sig-name descname">complete_start</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">largs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.complete_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>After <a class="reference internal" href="#cpl_media.recorder.BaseRecorder.record" title="cpl_media.recorder.BaseRecorder.record"><code class="xref py py-meth docutils literal notranslate"><span class="pre">record()</span></code></a>, this is called to set the recorder into
+<cite>recording</cite> <a class="reference internal" href="#cpl_media.recorder.BaseRecorder.record_state" title="cpl_media.recorder.BaseRecorder.record_state"><code class="xref py py-attr docutils literal notranslate"><span class="pre">record_state</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.BaseRecorder.complete_stop">
+<code class="sig-name descname">complete_stop</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">largs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.complete_stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>After <a class="reference internal" href="#cpl_media.recorder.BaseRecorder.stop" title="cpl_media.recorder.BaseRecorder.stop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">stop()</span></code></a>, this is called to set the recorder into <cite>none</cite>
+<a class="reference internal" href="#cpl_media.recorder.BaseRecorder.record_state" title="cpl_media.recorder.BaseRecorder.record_state"><code class="xref py py-attr docutils literal notranslate"><span class="pre">record_state</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.data_rate">
+<code class="sig-name descname">data_rate</code><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.data_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>The estimated rate in B/s at which we’re recording.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.elapsed_record_time">
+<code class="sig-name descname">elapsed_record_time</code><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.elapsed_record_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of seconds we have been recording since <a class="reference internal" href="#cpl_media.recorder.BaseRecorder.record" title="cpl_media.recorder.BaseRecorder.record"><code class="xref py py-meth docutils literal notranslate"><span class="pre">record()</span></code></a>.</p>
+<p>Automatically computed and updated a few times a second.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.frames_recorded">
+<code class="sig-name descname">frames_recorded</code><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.frames_recorded" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of frames recorded so far since <a class="reference internal" href="#cpl_media.recorder.BaseRecorder.record" title="cpl_media.recorder.BaseRecorder.record"><code class="xref py py-meth docutils literal notranslate"><span class="pre">record()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.frames_skipped">
+<code class="sig-name descname">frames_skipped</code><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.frames_skipped" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of frames skipped and not recorded so far since
+<a class="reference internal" href="#cpl_media.recorder.BaseRecorder.record" title="cpl_media.recorder.BaseRecorder.record"><code class="xref py py-meth docutils literal notranslate"><span class="pre">record()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.BaseRecorder.get_config_property">
+<code class="sig-name descname">get_config_property</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.get_config_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>(internal) used by the config system to get the special config data
+of the recorder.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.image_queue">
+<code class="sig-name descname">image_queue</code><em class="property"> = None</em><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.image_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>The queue used to communicate with the internal recording thread.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.metadata_player">
+<code class="sig-name descname">metadata_player</code><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.metadata_player" title="Permalink to this definition">¶</a></dt>
+<dd><p>Describes the video metadata of the video player when we started
+recording.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.metadata_record">
+<code class="sig-name descname">metadata_record</code><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.metadata_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>(internal) Describes the video metadata of the recorder. This is
+the requested format, or best guess of the metadata.</p>
+<p>Read only.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.metadata_record_used">
+<code class="sig-name descname">metadata_record_used</code><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.metadata_record_used" title="Permalink to this definition">¶</a></dt>
+<dd><p>(internal) Describes the video metadata of the recorder that is
+actually used by the recorder.</p>
+<p>Read only.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.player">
+<code class="sig-name descname">player</code><em class="property">: <a class="reference internal" href="player.html#cpl_media.player.BasePlayer" title="cpl_media.player.BasePlayer">cpl_media.player.BasePlayer</a></em><em class="property"> = None</em><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.player" title="Permalink to this definition">¶</a></dt>
+<dd><p>The :class:cpl_media.player.BasePlayer` this is being recorded from.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.BaseRecorder.record">
+<code class="sig-name descname">record</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">player</span><span class="p">:</span> <span class="n"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer" title="cpl_media.player.BasePlayer">cpl_media.player.BasePlayer</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts recording from the provided player and sets the
+<a class="reference internal" href="#cpl_media.recorder.BaseRecorder.record_state" title="cpl_media.recorder.BaseRecorder.record_state"><code class="xref py py-attr docutils literal notranslate"><span class="pre">record_state</span></code></a> to <cite>starting</cite>.</p>
+<p>May be called from main kivy thread only.</p>
+<p>May only be called when <a class="reference internal" href="#cpl_media.recorder.BaseRecorder.record_state" title="cpl_media.recorder.BaseRecorder.record_state"><code class="xref py py-attr docutils literal notranslate"><span class="pre">record_state</span></code></a> is <cite>none</cite>, otherwise an
+exception is raised. Similarly, only when the player’s play state is
+<cite>playing</cite>. The players <cite>metadata_play_used</cite>, must also have been set to
+the value it’s using.</p>
+<p>Recorders need to eventually call <a class="reference internal" href="#cpl_media.recorder.BaseRecorder.complete_start" title="cpl_media.recorder.BaseRecorder.complete_start"><code class="xref py py-meth docutils literal notranslate"><span class="pre">complete_start()</span></code></a> to finish
+starting recording.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.record_state">
+<code class="sig-name descname">record_state</code><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.record_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current state of the state machine of the recorder.</p>
+<p>Can be one of none, starting, recording, stopping.</p>
+<p>State management:</p>
+<p>All state changes happen in the kivy main thread. It starts in none state.
+Requesting to record takes us out of none - we cannot get back to none
+until the internal thread requests it and we then get back to none.</p>
+<p>I.e. once out of none, the only way we could be back to none state is if
+all the internal thread requests has been processed. And only the internal
+thread is allowed to request we be back to none.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.record_thread">
+<code class="sig-name descname">record_thread</code><em class="property"> = None</em><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.record_thread" title="Permalink to this definition">¶</a></dt>
+<dd><p>The internal thread that records the frames from the player.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.BaseRecorder.record_thread_run">
+<code class="sig-name descname">record_thread_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">largs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.record_thread_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>The method that runs in the internal record thread.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.recorder_summery">
+<code class="sig-name descname">recorder_summery</code><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.recorder_summery" title="Permalink to this definition">¶</a></dt>
+<dd><p>Textual summary of the recorder type and config options.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.BaseRecorder.save_image">
+<em class="property">static </em><code class="sig-name descname">save_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fname</span></em>, <em class="sig-param"><span class="n">img</span></em>, <em class="sig-param"><span class="n">codec</span><span class="o">=</span><span class="default_value">'bmp'</span></em>, <em class="sig-param"><span class="n">pix_fmt</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">lib_opts</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.save_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the given image to disk in the format requested.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> – The filename where to save the image.</p></li>
+<li><p><strong>img</strong> – The <a class="reference external" href="https://matham.github.io/ffpyplayer/pic.html#ffpyplayer.pic.Image" title="(in FFPyPlayer)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ffpyplayer.pic.Image</span></code></a> to save.</p></li>
+<li><p><strong>codec</strong> – The codec to pass to
+<a class="reference external" href="https://matham.github.io/ffpyplayer/writer.html#ffpyplayer.writer.MediaWriter" title="(in FFPyPlayer)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ffpyplayer.writer.MediaWriter</span></code></a> that determines the image
+type. Defaults to ‘bmp’.</p></li>
+<li><p><strong>pix_fmt</strong> – The pixel format into which to convert the image before
+saving. If empty, the original pixel format is used. If the
+codec doesn’t support the image format, we first convert it to the
+closest supported format.</p></li>
+<li><p><strong>lib_opts</strong> – Any additional <cite>lib_opts</cite> options to pass to
+<a class="reference external" href="https://matham.github.io/ffpyplayer/writer.html#ffpyplayer.writer.MediaWriter" title="(in FFPyPlayer)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ffpyplayer.writer.MediaWriter</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The estimated size of the image on disk.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.size_recorded">
+<code class="sig-name descname">size_recorded</code><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.size_recorded" title="Permalink to this definition">¶</a></dt>
+<dd><p>The estimated size of the data recorded so far since <a class="reference internal" href="#cpl_media.recorder.BaseRecorder.record" title="cpl_media.recorder.BaseRecorder.record"><code class="xref py py-meth docutils literal notranslate"><span class="pre">record()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.BaseRecorder.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">largs</span></em>, <em class="sig-param"><span class="n">join</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops recording from the player, if it is recording and sets the
+<a class="reference internal" href="#cpl_media.recorder.BaseRecorder.record_state" title="cpl_media.recorder.BaseRecorder.record_state"><code class="xref py py-attr docutils literal notranslate"><span class="pre">record_state</span></code></a> to <cite>stopping</cite>.</p>
+<p>Recorders need to eventually call <a class="reference internal" href="#cpl_media.recorder.BaseRecorder.complete_stop" title="cpl_media.recorder.BaseRecorder.complete_stop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">complete_stop()</span></code></a> to finish
+stopping recording.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>join</strong> – whether to block the thread until the internal record
+thread has exited.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether we stopped recording (True) or were already
+stop(ping/ed) recording.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.BaseRecorder.stop_all">
+<code class="sig-name descname">stop_all</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">join</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.stop_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Causes all internal threads to stop and exit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>join</strong> – Whether to wait and block the calling thread until the
+internal threads exit.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.BaseRecorder.ts_record">
+<code class="sig-name descname">ts_record</code><a class="headerlink" href="#cpl_media.recorder.BaseRecorder.ts_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time when the camera started recording.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="cpl_media.recorder.ImageFileRecordSettingsWidget">
+<em class="property">class </em><code class="sig-prename descclassname">cpl_media.recorder.</code><code class="sig-name descname">ImageFileRecordSettingsWidget</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">recorder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.ImageFileRecordSettingsWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kivy.uix.boxlayout.BoxLayout</span></code></p>
+<p>Settings widget for <a class="reference internal" href="#cpl_media.recorder.ImageFileRecorder" title="cpl_media.recorder.ImageFileRecorder"><code class="xref py py-class docutils literal notranslate"><span class="pre">ImageFileRecorder</span></code></a>.</p>
+<dl class="py attribute">
+<dt id="cpl_media.recorder.ImageFileRecordSettingsWidget.recorder">
+<code class="sig-name descname">recorder</code><em class="property">: <a class="reference internal" href="#cpl_media.recorder.ImageFileRecorder" title="cpl_media.recorder.ImageFileRecorder">cpl_media.recorder.ImageFileRecorder</a></em><em class="property"> = None</em><a class="headerlink" href="#cpl_media.recorder.ImageFileRecordSettingsWidget.recorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>The recorder.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.ImageFileRecordSettingsWidget.set_filename">
+<code class="sig-name descname">set_filename</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text_wid</span></em>, <em class="sig-param"><span class="n">paths</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.ImageFileRecordSettingsWidget.set_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by the GUI to set the directory.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="cpl_media.recorder.ImageFileRecorder">
+<em class="property">class </em><code class="sig-prename descclassname">cpl_media.recorder.</code><code class="sig-name descname">ImageFileRecorder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.ImageFileRecorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cpl_media.recorder.BaseRecorder" title="cpl_media.recorder.BaseRecorder"><code class="xref py py-class docutils literal notranslate"><span class="pre">cpl_media.recorder.BaseRecorder</span></code></a></p>
+<p>Records images as files to disk.</p>
+<dl class="py method">
+<dt id="cpl_media.recorder.ImageFileRecorder.complete_stop">
+<code class="sig-name descname">complete_stop</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">largs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.ImageFileRecorder.complete_stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>After <a class="reference internal" href="#cpl_media.recorder.ImageFileRecorder.stop" title="cpl_media.recorder.ImageFileRecorder.stop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">stop()</span></code></a>, this is called to set the recorder into <cite>none</cite>
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">record_state</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.ImageFileRecorder.compression">
+<code class="sig-name descname">compression</code><a class="headerlink" href="#cpl_media.recorder.ImageFileRecorder.compression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to compress when <a class="reference internal" href="#cpl_media.recorder.ImageFileRecorder.extension" title="cpl_media.recorder.ImageFileRecorder.extension"><code class="xref py py-attr docutils literal notranslate"><span class="pre">extension</span></code></a> is <cite>tiff</cite>. Can be one of
+<code class="docutils literal notranslate"><span class="pre">'raw',</span> <span class="pre">'lzw',</span> <span class="pre">'zip'</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.ImageFileRecorder.extension">
+<code class="sig-name descname">extension</code><a class="headerlink" href="#cpl_media.recorder.ImageFileRecorder.extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>The extension of the images being saved.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.ImageFileRecorder.record">
+<code class="sig-name descname">record</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">player</span><span class="p">:</span> <span class="n"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer" title="cpl_media.player.BasePlayer">cpl_media.player.BasePlayer</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.ImageFileRecorder.record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts recording from the provided player and sets the
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">record_state</span></code> to <cite>starting</cite>.</p>
+<p>May be called from main kivy thread only.</p>
+<p>May only be called when <code class="xref py py-attr docutils literal notranslate"><span class="pre">record_state</span></code> is <cite>none</cite>, otherwise an
+exception is raised. Similarly, only when the player’s play state is
+<cite>playing</cite>. The players <cite>metadata_play_used</cite>, must also have been set to
+the value it’s using.</p>
+<p>Recorders need to eventually call <code class="xref py py-meth docutils literal notranslate"><span class="pre">complete_start()</span></code> to finish
+starting recording.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.ImageFileRecorder.record_directory">
+<code class="sig-name descname">record_directory</code><a class="headerlink" href="#cpl_media.recorder.ImageFileRecorder.record_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>The directory into which videos should be saved.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.ImageFileRecorder.record_prefix">
+<code class="sig-name descname">record_prefix</code><a class="headerlink" href="#cpl_media.recorder.ImageFileRecorder.record_prefix" title="Permalink to this definition">¶</a></dt>
+<dd><p>The prefix to the filename of the images being saved.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.ImageFileRecorder.record_thread_run">
+<code class="sig-name descname">record_thread_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record_directory</span></em>, <em class="sig-param"><span class="n">record_prefix</span></em>, <em class="sig-param"><span class="n">compression</span></em>, <em class="sig-param"><span class="n">extension</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.ImageFileRecorder.record_thread_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>The method that runs in the internal record thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.ImageFileRecorder.send_image_to_recorder">
+<code class="sig-name descname">send_image_to_recorder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.ImageFileRecorder.send_image_to_recorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends the image to the recorder queue to save the image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> – A tuple of the image and metadata as provided to
+<a class="reference internal" href="player.html#cpl_media.player.BasePlayer.frame_callbacks" title="cpl_media.player.BasePlayer.frame_callbacks"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cpl_media.player.BasePlayer.frame_callbacks</span></code></a>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.ImageFileRecorder.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">largs</span></em>, <em class="sig-param"><span class="n">join</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.ImageFileRecorder.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops recording from the player, if it is recording and sets the
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">record_state</span></code> to <cite>stopping</cite>.</p>
+<p>Recorders need to eventually call <a class="reference internal" href="#cpl_media.recorder.ImageFileRecorder.complete_stop" title="cpl_media.recorder.ImageFileRecorder.complete_stop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">complete_stop()</span></code></a> to finish
+stopping recording.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>join</strong> – whether to block the thread until the internal record
+thread has exited.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether we stopped recording (True) or were already
+stop(ping/ed) recording.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="cpl_media.recorder.VideoRecordSettingsWidget">
+<em class="property">class </em><code class="sig-prename descclassname">cpl_media.recorder.</code><code class="sig-name descname">VideoRecordSettingsWidget</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">recorder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.VideoRecordSettingsWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kivy.uix.boxlayout.BoxLayout</span></code></p>
+<p>Settings widget for <a class="reference internal" href="#cpl_media.recorder.VideoRecorder" title="cpl_media.recorder.VideoRecorder"><code class="xref py py-class docutils literal notranslate"><span class="pre">VideoRecorder</span></code></a>.</p>
+<dl class="py attribute">
+<dt id="cpl_media.recorder.VideoRecordSettingsWidget.recorder">
+<code class="sig-name descname">recorder</code><em class="property">: <a class="reference internal" href="#cpl_media.recorder.VideoRecorder" title="cpl_media.recorder.VideoRecorder">cpl_media.recorder.VideoRecorder</a></em><em class="property"> = None</em><a class="headerlink" href="#cpl_media.recorder.VideoRecordSettingsWidget.recorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>The recorder.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.VideoRecordSettingsWidget.set_filename">
+<code class="sig-name descname">set_filename</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text_wid</span></em>, <em class="sig-param"><span class="n">paths</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.VideoRecordSettingsWidget.set_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by the GUI to set the directory.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="cpl_media.recorder.VideoRecorder">
+<em class="property">class </em><code class="sig-prename descclassname">cpl_media.recorder.</code><code class="sig-name descname">VideoRecorder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.VideoRecorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cpl_media.recorder.BaseRecorder" title="cpl_media.recorder.BaseRecorder"><code class="xref py py-class docutils literal notranslate"><span class="pre">cpl_media.recorder.BaseRecorder</span></code></a></p>
+<p>Records images to a video file on disk.</p>
+<p>Cannot start recording until the player fps is known. Otherwise, an error
+is raised.</p>
+<dl class="py method">
+<dt id="cpl_media.recorder.VideoRecorder.complete_stop">
+<code class="sig-name descname">complete_stop</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">largs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.VideoRecorder.complete_stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>After <a class="reference internal" href="#cpl_media.recorder.VideoRecorder.stop" title="cpl_media.recorder.VideoRecorder.stop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">stop()</span></code></a>, this is called to set the recorder into <cite>none</cite>
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">record_state</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.VideoRecorder.compute_recording_opts">
+<code class="sig-name descname">compute_recording_opts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ifmt</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">iw</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ih</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.VideoRecorder.compute_recording_opts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the recording metadata to use, from the provided options
+and from the player’s metadata.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.VideoRecorder.estimate_record_rate">
+<code class="sig-name descname">estimate_record_rate</code><a class="headerlink" href="#cpl_media.recorder.VideoRecorder.estimate_record_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether to use <a class="reference internal" href="player.html#cpl_media.player.BasePlayer.real_rate" title="cpl_media.player.BasePlayer.real_rate"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cpl_media.player.BasePlayer.real_rate</span></code></a> for the
+recorder frame rate, as opposed to the one initially provided by the
+player.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.VideoRecorder.record">
+<code class="sig-name descname">record</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">player</span><span class="p">:</span> <span class="n"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer" title="cpl_media.player.BasePlayer">cpl_media.player.BasePlayer</a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.VideoRecorder.record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts recording from the provided player and sets the
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">record_state</span></code> to <cite>starting</cite>.</p>
+<p>May be called from main kivy thread only.</p>
+<p>May only be called when <code class="xref py py-attr docutils literal notranslate"><span class="pre">record_state</span></code> is <cite>none</cite>, otherwise an
+exception is raised. Similarly, only when the player’s play state is
+<cite>playing</cite>. The players <cite>metadata_play_used</cite>, must also have been set to
+the value it’s using.</p>
+<p>Recorders need to eventually call <code class="xref py py-meth docutils literal notranslate"><span class="pre">complete_start()</span></code> to finish
+starting recording.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.VideoRecorder.record_directory">
+<code class="sig-name descname">record_directory</code><a class="headerlink" href="#cpl_media.recorder.VideoRecorder.record_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>The directory into which videos should be saved.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.VideoRecorder.record_filename">
+<code class="sig-name descname">record_filename</code><a class="headerlink" href="#cpl_media.recorder.VideoRecorder.record_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>The full filename of the video that will be saved as computed by the
+configuration options of the instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.VideoRecorder.record_fname">
+<code class="sig-name descname">record_fname</code><a class="headerlink" href="#cpl_media.recorder.VideoRecorder.record_fname" title="Permalink to this definition">¶</a></dt>
+<dd><p>The filename to be used to record the next video.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">{}</span></code> is present in the filename, it’ll be replaced with the value of
+<a class="reference internal" href="#cpl_media.recorder.VideoRecorder.record_fname_count" title="cpl_media.recorder.VideoRecorder.record_fname_count"><code class="xref py py-attr docutils literal notranslate"><span class="pre">record_fname_count</span></code></a> which auto increments after every video, when
+used. We use Python’s <code class="docutils literal notranslate"><span class="pre">format</span></code> machinery for this.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.recorder.VideoRecorder.record_fname_count">
+<code class="sig-name descname">record_fname_count</code><a class="headerlink" href="#cpl_media.recorder.VideoRecorder.record_fname_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A counter that auto increments by one after every recorded video.</p>
+<p>Used to give unique filenames for each video file. See
+<a class="reference internal" href="#cpl_media.recorder.VideoRecorder.record_fname" title="cpl_media.recorder.VideoRecorder.record_fname"><code class="xref py py-attr docutils literal notranslate"><span class="pre">record_fname</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.VideoRecorder.record_thread_run">
+<code class="sig-name descname">record_thread_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.VideoRecorder.record_thread_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>The method that runs in the internal record thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.VideoRecorder.send_image_to_recorder">
+<code class="sig-name descname">send_image_to_recorder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.VideoRecorder.send_image_to_recorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends the image to the recorder queue to save the image in the
+video.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> – A tuple of the image and metadata as provided to
+<a class="reference internal" href="player.html#cpl_media.player.BasePlayer.frame_callbacks" title="cpl_media.player.BasePlayer.frame_callbacks"><code class="xref py py-attr docutils literal notranslate"><span class="pre">cpl_media.player.BasePlayer.frame_callbacks</span></code></a>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.recorder.VideoRecorder.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">largs</span></em>, <em class="sig-param"><span class="n">join</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.recorder.VideoRecorder.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops recording from the player, if it is recording and sets the
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">record_state</span></code> to <cite>stopping</cite>.</p>
+<p>Recorders need to eventually call <a class="reference internal" href="#cpl_media.recorder.VideoRecorder.complete_stop" title="cpl_media.recorder.VideoRecorder.complete_stop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">complete_stop()</span></code></a> to finish
+stopping recording.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>join</strong> – whether to block the thread until the internal record
+thread has exited.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether we stopped recording (True) or were already
+stop(ping/ed) recording.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="remote_server.html" class="btn btn-neutral float-right" title="Remote server recorder" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="recorders.html" class="btn btn-neutral float-left" title="Recorders" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2019, Matthew Einhorn
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

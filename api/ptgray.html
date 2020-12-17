@@ -1,0 +1,587 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>PTGray based player &mdash; CPL_Media  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Remote player" href="remote_client.html" />
+    <link rel="prev" title="FFmpeg based player" href="ffmpeg.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> CPL_Media
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">Demo App</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">The CPL_Media API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html">cpl_media</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">Base classes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="players.html">Players</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="player.html">Player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html">FFmpeg based player</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">PTGray based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_client.html">Remote player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rtv.html">RTV24 based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thorcam.html">Thor based player</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recorders.html">Recorders</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CPL_Media</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="api.html">The CPL_Media API</a> &raquo;</li>
+        
+          <li><a href="players.html">Players</a> &raquo;</li>
+        
+      <li>PTGray based player</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/ptgray.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-cpl_media.ptgray"><span id="cpl-media-ptgray-api"></span></span><div class="section" id="ptgray-based-player">
+<h1>PTGray based player<a class="headerlink" href="#ptgray-based-player" title="Permalink to this headline">¶</a></h1>
+<p>This player can play Point Gray ethernet cameras using <a class="reference external" href="https://matham.github.io/pyflycap2/pyflycap2.html#module-pyflycap2" title="(in PyFlyCap2)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyflycap2</span></code></a>.</p>
+<dl class="py class">
+<dt id="cpl_media.ptgray.PTGrayPlayer">
+<em class="property">class </em><code class="sig-prename descclassname">cpl_media.ptgray.</code><code class="sig-name descname">PTGrayPlayer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">open_thread</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="player.html#cpl_media.player.BasePlayer" title="cpl_media.player.BasePlayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">cpl_media.player.BasePlayer</span></code></a></p>
+<p>Wrapper for Point Gray based player.</p>
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.active_settings">
+<code class="sig-name descname">active_settings</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.active_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of settings that the camera can control.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_config" title="cpl_media.ptgray.PTGrayPlayer.ask_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_config()</span></code></a>, not set directly.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config">
+<code class="sig-name descname">ask_cam_option_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">setting</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asks to set the setting of the camera to a specific value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>setting</strong> – The setting, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;brightness&quot;</span></code>.</p></li>
+<li><p><strong>name</strong> – How to set it, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;value&quot;</span></code> to set the value or
+<code class="docutils literal notranslate"><span class="pre">'one</span> <span class="pre">push'</span></code> to auto configure it.</p></li>
+<li><p><strong>value</strong> – The value to use to set it to.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.ask_config">
+<code class="sig-name descname">ask_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em>, <em class="sig-param"><span class="n">ignore_play</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.ask_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asks to read the config values of the item. E.g. <code class="docutils literal notranslate"><span class="pre">'serials'</span></code>
+for the list of serials or <code class="docutils literal notranslate"><span class="pre">'gui'</span></code> to show the PTGray GUI to the
+user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>item</strong> – The request to send.</p></li>
+<li><p><strong>ignore_play</strong> – Whether to send it event if the camera is playing.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.brightness">
+<code class="sig-name descname">brightness</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.brightness" title="Permalink to this definition">¶</a></dt>
+<dd><p>The camera options for the brightness setting.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config" title="cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_cam_option_config()</span></code></a>, not
+set directly.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.cam_config_opts">
+<code class="sig-name descname">cam_config_opts</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.cam_config_opts" title="Permalink to this definition">¶</a></dt>
+<dd><p>The configuration options used to configure the camera after opening.
+This are internal and can only be set by the internal thread once
+initially set by config.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.config_active">
+<code class="sig-name descname">config_active</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.config_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the configuration is currently active.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.config_active_queue">
+<code class="sig-name descname">config_active_queue</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.config_active_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>The items currently being configured in the configuration thread.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.config_queue">
+<code class="sig-name descname">config_queue</code><em class="property"> = None</em><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.config_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>The configuration queue.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.config_thread">
+<code class="sig-name descname">config_thread</code><em class="property"> = None</em><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.config_thread" title="Permalink to this definition">¶</a></dt>
+<dd><p>The configuration thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.config_thread_run">
+<code class="sig-name descname">config_thread_run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.config_thread_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>The function run by the configuration thread.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.exposure">
+<code class="sig-name descname">exposure</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.exposure" title="Permalink to this definition">¶</a></dt>
+<dd><p>The camera options for the exposure setting.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config" title="cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_cam_option_config()</span></code></a>, not
+set directly.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.ffmpeg_pix_map">
+<code class="sig-name descname">ffmpeg_pix_map</code><em class="property"> = {'bgr': 'bgr24', 'bgr16': 'bgr565le', 'bgru': 'bgra', 'mono16': 'gray16le', 'mono8': 'gray', 'rgb': 'rgb24', 'rgb16': 'rgb565le', 'rgb8': 'rgb8', 'rgbu': 'rgba', 's_mono16': 'gray16le', 's_rgb16': 'rgb565le', 'yuv411': 'uyyvyy411', 'yuv422': 'uyvy422', 'yuv422_jpeg': 'yuvj422p', 'yuv444': 'yuv444p'}</em><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.ffmpeg_pix_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pixel formats supported by the camera and their <code class="xref py py-mod docutils literal notranslate"><span class="pre">ffpyplayer</span></code>
+equivalent.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.finish_ask_config">
+<code class="sig-name descname">finish_ask_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">largs</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.finish_ask_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called in the kivy thread automatically after the camera
+has been re-configured.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.frame_rate">
+<code class="sig-name descname">frame_rate</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.frame_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>The camera options for the frame_rate setting.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config" title="cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_cam_option_config()</span></code></a>, not
+set directly.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.gain">
+<code class="sig-name descname">gain</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.gain" title="Permalink to this definition">¶</a></dt>
+<dd><p>The camera options for the gain setting.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config" title="cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_cam_option_config()</span></code></a>, not
+set directly.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.gamma">
+<code class="sig-name descname">gamma</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.gamma" title="Permalink to this definition">¶</a></dt>
+<dd><p>The camera options for the gamma setting.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config" title="cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_cam_option_config()</span></code></a>, not
+set directly.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.get_active_settings">
+<code class="sig-name descname">get_active_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.get_active_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of settings supported by the camera.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.get_setting_names">
+<code class="sig-name descname">get_setting_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.get_setting_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all settings potentially supported by a camera.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.hue">
+<code class="sig-name descname">hue</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.hue" title="Permalink to this definition">¶</a></dt>
+<dd><p>The camera options for the hue setting.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config" title="cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_cam_option_config()</span></code></a>, not
+set directly.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.ip">
+<code class="sig-name descname">ip</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.ip" title="Permalink to this definition">¶</a></dt>
+<dd><p>The IP address of the camera to open. Either <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ip" title="cpl_media.ptgray.PTGrayPlayer.ip"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ip</span></code></a> or
+<a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.serial" title="cpl_media.ptgray.PTGrayPlayer.serial"><code class="xref py py-attr docutils literal notranslate"><span class="pre">serial</span></code></a> must be provided.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.ips">
+<code class="sig-name descname">ips</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.ips" title="Permalink to this definition">¶</a></dt>
+<dd><p>The IPs of all the cams available.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_config" title="cpl_media.ptgray.PTGrayPlayer.ask_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_config()</span></code></a>, not set directly.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.iris">
+<code class="sig-name descname">iris</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.iris" title="Permalink to this definition">¶</a></dt>
+<dd><p>The camera options for the iris setting.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config" title="cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_cam_option_config()</span></code></a>, not
+set directly.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.is_available">
+<code class="sig-name descname">is_available</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.is_available" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether ptgray is available to play.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.mirror">
+<code class="sig-name descname">mirror</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.mirror" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the camera is mirrored. Read only.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.pan">
+<code class="sig-name descname">pan</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.pan" title="Permalink to this definition">¶</a></dt>
+<dd><p>The camera options for the pan setting.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config" title="cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_cam_option_config()</span></code></a>, not
+set directly.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.play_thread_run">
+<code class="sig-name descname">play_thread_run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.play_thread_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>The method that runs in the internal play thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.read_cam_option_config">
+<code class="sig-name descname">read_cam_option_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">setting</span></em>, <em class="sig-param"><span class="n">cam</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.read_cam_option_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the setting from the camera.</p>
+<p>Called from the internal configuration thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.read_cam_options_config">
+<code class="sig-name descname">read_cam_options_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cam</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.read_cam_options_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads all the settings of this instance
+to the camera.</p>
+<p>Called from the internal configuration thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.read_gige_opts">
+<code class="sig-name descname">read_gige_opts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">c</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.read_gige_opts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the GIGE setting from the camera.</p>
+<p>Called from the internal configuration thread.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.saturation">
+<code class="sig-name descname">saturation</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.saturation" title="Permalink to this definition">¶</a></dt>
+<dd><p>The camera options for the saturation setting.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config" title="cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_cam_option_config()</span></code></a>, not
+set directly.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.serial">
+<code class="sig-name descname">serial</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.serial" title="Permalink to this definition">¶</a></dt>
+<dd><p>The serial number of the camera to open. Either <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ip" title="cpl_media.ptgray.PTGrayPlayer.ip"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ip</span></code></a> or
+<a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.serial" title="cpl_media.ptgray.PTGrayPlayer.serial"><code class="xref py py-attr docutils literal notranslate"><span class="pre">serial</span></code></a> must be provided.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.serials">
+<code class="sig-name descname">serials</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.serials" title="Permalink to this definition">¶</a></dt>
+<dd><p>The serials of all the cams available.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_config" title="cpl_media.ptgray.PTGrayPlayer.ask_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_config()</span></code></a>, not set directly.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.sharpness">
+<code class="sig-name descname">sharpness</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.sharpness" title="Permalink to this definition">¶</a></dt>
+<dd><p>The camera options for the sharpness setting.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config" title="cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_cam_option_config()</span></code></a>, not
+set directly.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.shutter">
+<code class="sig-name descname">shutter</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.shutter" title="Permalink to this definition">¶</a></dt>
+<dd><p>The camera options for the shutter setting.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config" title="cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_cam_option_config()</span></code></a>, not
+set directly.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.start_config">
+<code class="sig-name descname">start_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">largs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.start_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called by <cite>__init__</cite> to start the configuration thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.stop_all">
+<code class="sig-name descname">stop_all</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">join</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.stop_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Causes all internal threads to stop and exit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>join</strong> – Whether to wait and block the calling thread until the
+internal threads exit.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.stop_config">
+<code class="sig-name descname">stop_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">largs</span></em>, <em class="sig-param"><span class="n">join</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.stop_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops the configuration thread.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGrayPlayer.tilt">
+<code class="sig-name descname">tilt</code><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.tilt" title="Permalink to this definition">¶</a></dt>
+<dd><p>The camera options for the tilt setting.</p>
+<p>This may only be set by calling <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config" title="cpl_media.ptgray.PTGrayPlayer.ask_cam_option_config"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ask_cam_option_config()</span></code></a>, not
+set directly.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.write_cam_option_config">
+<code class="sig-name descname">write_cam_option_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">setting</span></em>, <em class="sig-param"><span class="n">cam</span></em>, <em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.write_cam_option_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the setting to the camera.</p>
+<p>Called from the internal configuration thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.write_cam_options_config">
+<code class="sig-name descname">write_cam_options_config</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cam</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.write_cam_options_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes all the settings as provided as properties of this instance
+to the camera.</p>
+<p>Called from the internal configuration thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGrayPlayer.write_gige_opts">
+<code class="sig-name descname">write_gige_opts</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">c</span></em>, <em class="sig-param"><span class="n">opts</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGrayPlayer.write_gige_opts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the GIGE setting to the camera.</p>
+<p>Called from the internal configuration thread.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="cpl_media.ptgray.PTGraySettingsWidget">
+<em class="property">class </em><code class="sig-prename descclassname">cpl_media.ptgray.</code><code class="sig-name descname">PTGraySettingsWidget</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">player</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGraySettingsWidget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">kivy.uix.boxlayout.BoxLayout</span></code></p>
+<p>Settings widget for <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer" title="cpl_media.ptgray.PTGrayPlayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">PTGrayPlayer</span></code></a>.</p>
+<dl class="py method">
+<dt id="cpl_media.ptgray.PTGraySettingsWidget.bind_pt_setting">
+<code class="sig-name descname">bind_pt_setting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">setting</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.ptgray.PTGraySettingsWidget.bind_pt_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tracks the setting currently selected in the GUI and auto-updates
+when it changes.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGraySettingsWidget.opt_settings">
+<code class="sig-name descname">opt_settings</code><a class="headerlink" href="#cpl_media.ptgray.PTGraySettingsWidget.opt_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>The values for the settings currently being controlled in the GUI.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGraySettingsWidget.player">
+<code class="sig-name descname">player</code><em class="property">: <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer" title="cpl_media.ptgray.PTGrayPlayer">cpl_media.ptgray.PTGrayPlayer</a></em><em class="property"> = None</em><a class="headerlink" href="#cpl_media.ptgray.PTGraySettingsWidget.player" title="Permalink to this definition">¶</a></dt>
+<dd><p>The player.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cpl_media.ptgray.PTGraySettingsWidget.settings_last">
+<code class="sig-name descname">settings_last</code><em class="property"> = ''</em><a class="headerlink" href="#cpl_media.ptgray.PTGraySettingsWidget.settings_last" title="Permalink to this definition">¶</a></dt>
+<dd><p>The last name of the setting the GUI currently controls (i.e. one
+of <a class="reference internal" href="#cpl_media.ptgray.PTGrayPlayer.get_active_settings" title="cpl_media.ptgray.PTGrayPlayer.get_active_settings"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PTGrayPlayer.get_active_settings()</span></code></a>).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="remote_client.html" class="btn btn-neutral float-right" title="Remote player" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ffmpeg.html" class="btn btn-neutral float-left" title="FFmpeg based player" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2019, Matthew Einhorn
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
