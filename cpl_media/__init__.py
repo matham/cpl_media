@@ -12,7 +12,7 @@ import os
 
 __all__ = ('error_guard', 'error_callback', 'get_pyinstaller_datas')
 
-__version__ = '0.1.3'
+__version__ = '0.1.4.dev0'
 
 
 def _error_callback(e, exc_info=None, threaded=False):
