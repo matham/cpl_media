@@ -8,7 +8,7 @@ for items in Config.items('input'):
     Config.remove_option('input', items[0])
 
 
-from .app.demo_app import DemoApp
+from cpl_media.tests.app.demo_app import DemoApp
 from kivy.tests.async_common import UnitKivyApp
 
 

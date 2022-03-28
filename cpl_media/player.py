@@ -8,25 +8,17 @@ import logging
 from threading import Thread
 from collections import namedtuple
 
-import ffpyplayer
 from ffpyplayer.pic import get_image_size
-from ffpyplayer.tools import set_log_callback
 
 from kivy.clock import Clock
 from kivy.properties import (
-    NumericProperty, ReferenceListProperty,
-    ObjectProperty, ListProperty, StringProperty, BooleanProperty,
-    DictProperty, AliasProperty, OptionProperty, ConfigParserProperty)
+    NumericProperty, ObjectProperty, StringProperty, BooleanProperty)
 from kivy.event import EventDispatcher
-from kivy.logger import Logger
 
 from cpl_media import error_guard
 from .common import KivyMediaBase
 
 __all__ = ('BasePlayer', 'VideoMetadata')
-
-set_log_callback(logger=Logger, default_only=True)
-logging.info('cpl_media: Using ffpyplayer {}'.format(ffpyplayer.__version__))
 
 VideoMetadata = namedtuple('VideoMetadata', ['fmt', 'w', 'h', 'rate'])
 """Namedtuple type describing a video stream.

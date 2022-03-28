@@ -14,7 +14,7 @@ from os.path import splitext, join, exists, isdir, abspath, dirname
 
 from ffpyplayer.player import MediaPlayer
 from ffpyplayer.pic import get_image_size
-from ffpyplayer.tools import list_dshow_devices
+from ffpyplayer.tools import list_dshow_devices, set_log_callback
 
 from kivy.clock import Clock
 from kivy.logger import Logger
@@ -26,7 +26,9 @@ from kivy.lang import Builder
 from cpl_media.player import BasePlayer, VideoMetadata
 from cpl_media import error_guard
 
-__all__ = ('FFmpegPlayer', 'FFmpegSettingsWidget')
+__all__ = ('FFmpegPlayer', 'FFmpegSettingsWidget', 'LogFilter')
+
+set_log_callback(logger=Logger, default_only=True)
 
 
 def eat_first(f, val, *largs, **kwargs):
@@ -399,6 +401,43 @@ class FFmpegSettingsWidget(BoxLayout):
 
         self.player.play_filename = paths[0]
         text_wid.text = paths[0]
+
+
+class LogFilter:
+    """FFmpeg log filter that removes specific messages that are repeated.
+    """
+
+    _last_msg: str = ''
+
+    _logger_func: dict = {}
+
+    filtered_end: str = '[rtbufsize parameter])! frame dropped!'
+    """Remove repeated messages that end with this string.
+    """
+
+    def __init__(self):
+        self._logger_func = {
+            'quiet': Logger.critical, 'panic': Logger.critical,
+            'fatal': Logger.critical, 'error': Logger.error,
+            'warning': Logger.warning, 'info': Logger.info,
+            'verbose': Logger.debug, 'debug': Logger.debug,
+            'trace': Logger.debug
+        }
+
+    def start_filter(self):
+        """Start the filter.
+        """
+        set_log_callback(self._callback)
+
+    def _callback(self, message: str, level: str):
+        message = message.strip()
+        end = self.filtered_end
+        if not message or end and message.endswith(end) and \
+                self._last_msg.endswith(end):
+            return
+
+        self._last_msg = message
+        self._logger_func[level](f'ffpyplayer: {message}')
 
 
 Builder.load_file(join(dirname(__file__), 'ffmpeg_player.kv'))
