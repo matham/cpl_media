@@ -5,6 +5,17 @@
 #:import codecs_dec ffpyplayer.tools.codecs_dec
 #:import codecs_enc ffpyplayer.tools.codecs_enc
 
+
+<SizedThemedLabel@ThemedLabel>:
+    size: self.texture_size
+    size_hint: None, None
+
+
+<FlatAccentImageButton@FlatImageButton>:
+    scale_down_color: True
+    flat_color: app.theme.accent
+
+
 <FFmpegSettingsWidget>:
     orientation: 'vertical'
     spacing: '5dp'
@@ -53,177 +64,149 @@
                 screen_manager.current = 'dshow' if root.player.use_dshow else 'other'
             center_texture: True
         Widget
+    FlatLabel:
+        text: 'Device settings:'
+        height: self.texture_size[1]
+        size_hint_y: None
+        flat_color: app.theme.text_primary
+        bold: True
     ScreenManager:
         id: screen_manager
         size_hint_min_x: max(dshow.minimum_width, other.minimum_width)
         size_hint_y: None
-        height: max(dshow.minimum_height, other.minimum_height)
+        height: dshow.minimum_height if self.current == 'dshow' else other.minimum_height
         on_kv_post: self.current = 'dshow' if root.player.use_dshow else 'other'
         Screen:
             name: 'dshow'
-            BoxLayout:
+            GridLayout:
                 id: dshow
-                orientation: 'vertical'
-                size_hint: None, None
-                size: self.minimum_size
+                size_hint_y: None
+                height: self.minimum_height
+                size_hint_min_x: self.minimum_width
                 padding: '5dp'
-                spacing: '5dp'
-                pos_hint: {'top': 1}
+                spacing: '10dp'
+                cols: 2
+                SizedThemedLabel:
+                    text: 'Camera:'
                 BoxLayout:
-                    size_hint: None, None
-                    size: self.minimum_size
+                    size_hint_min_x: self.minimum_width
                     spacing: '5dp'
-                    FlatLabel:
-                        text: 'Cameras:'
-                        size: self.texture_size
-                        size_hint: None, None
-                        flat_color: app.theme.text_primary
-                    FlatImageButton:
-                        scale_down_color: True
+                    FlatAccentImageButton:
                         source: 'flat_refresh.png'
-                        flat_color: app.theme.accent
                         on_release: root.player.refresh_dshow()
                     ThemedSpinner:
                         id: dshow_name
                         values: list(root.player.dshow_names)
                         text: root.player.dshow_filename
-                        size_hint_x: None
-                        width: max(self.minimum_width, 50)
+                        size_hint_min_x: max(self.minimum_width, dp(50))
                         on_text:
                             root.player.dshow_filename = self.text
                             root.player.update_dshow_file()
-                BoxLayout:
-                    size_hint: None, None
-                    size: self.minimum_size
-                    spacing: '5dp'
-                    FlatLabel:
-                        text: 'Cam options:'
-                        size: self.texture_size
-                        size_hint: None, None
-                        flat_color: app.theme.text_primary
-                    ThemedSpinner:
-                        id: dshow_opts
-                        values: list(root.player.dshow_opts[dshow_name.text]) if dshow_name.text else []
-                        text: root.player.dshow_opt
-                        size_hint_x: None
-                        width: max(self.minimum_width, 50)
-                        on_text: root.player.dshow_opt = self.text
-                    FlatLabel:
-                        text: 'Rate:'
-                        size: self.texture_size
-                        size_hint: None, None
-                        flat_color: app.theme.text_primary
-                    FlatSizedTextInput:
-                        text: str(root.player.dshow_rate) if root.player.dshow_rate else ''
-                        input_filter: 'float'
-                        hint_text: 'fps'
-                        size_hint_x: None
-                        width: '60dp'
-                        background_color: app.theme.primary_light
-                        on_text_validate: root.player.dshow_rate = float(self.text) if self.text else 0
+                SizedThemedLabel:
+                    text: 'Options:'
+                ThemedSpinner:
+                    id: dshow_opts
+                    values: list(root.player.dshow_opts[dshow_name.text]) if dshow_name.text else []
+                    text: root.player.dshow_opt
+                    size_hint_min_x: max(self.minimum_width, dp(50))
+                    on_text: root.player.dshow_opt = self.text
+                SizedThemedLabel:
+                    text: 'Frame rate:'
+                FlatSizedTextInput:
+                    text: str(root.player.dshow_rate) if root.player.dshow_rate else ''
+                    input_filter: 'float'
+                    hint_text: 'fps'
+                    size_hint_min_x: '60dp'
+                    background_color: app.theme.primary_light
+                    on_focus: if not self.focus: root.player.dshow_rate = float(self.text) if self.text else 0
+                    padding: 0
         Screen:
             name: 'other'
             GridLayout:
                 id: other
-                cols: 1
-                size_hint_min_x: self.minimum_width
                 size_hint_y: None
                 height: self.minimum_height
-                pos_hint: {'top': 1}
+                size_hint_min_x: self.minimum_width
+                padding: '5dp'
+                spacing: '10dp'
+                cols: 2
+                SizedThemedLabel:
+                    text: 'Filename:'
                 BoxLayout:
-                    spacing: '5dp'
-                    size_hint_min_x: self.minimum_width
                     size_hint_y: None
-                    height: lower_bar.height
-                    FlatLabel:
-                        text: 'Filename:'
-                        size: self.texture_size
-                        size_hint: None, None
-                        flat_color: app.theme.text_primary
+                    height: self.minimum_height
+                    size_hint_min_x: self.minimum_width
+                    spacing: '5dp'
+                    FlatImageButton:
+                        scale_down_color: True
+                        source: 'flat_folder.png'
+                        flat_color: app.theme.accent
+                        on_release: app.open_filechooser(callback=partial(root.set_filename, filename), target=root.player.play_filename, title='Select file')
                     FlatSizedTextInput:
                         id: filename
                         text: root.player.play_filename
                         background_color: app.theme.primary_light
                         hint_text: 'filename'
                         on_text: root.player.play_filename = self.text
-                    FlatImageButton:
-                        scale_down_color: True
-                        source: 'flat_folder.png'
-                        flat_color: app.theme.accent
-                        on_release: app.open_filechooser(callback=partial(root.set_filename, filename), target=root.player.play_filename, title='Select file')
-                BoxLayout:
-                    spacing: '5dp'
-                    size_hint: None, None
-                    width: self.minimum_width
-                    height: lower_bar.height
-                    FlatLabel:
-                        text: 'Media Format:'
-                        size: self.texture_size
-                        size_hint: None, None
-                        flat_color: app.theme.text_primary
-                    ThemedSpinner:
-                        values: ['']
-                        text:  root.player.file_fmt
-                        size_hint_x: None
-                        width: max(self.minimum_width, dp(100))
-                        on_text: root.player.file_fmt = self.text
-                        on_touch_down: if self.collide_point(*args[1].pos) and len(self.values) == 1: self.values = [''] + formats_in
-                    FlatLabel:
-                        text: 'Video Codec:'
-                        size: self.texture_size
-                        size_hint: None, None
-                        flat_color: app.theme.text_primary
-                    ThemedSpinner:
-                        values: ['']
-                        text:  root.player.icodec
-                        size_hint_x: None
-                        width: max(self.minimum_width, dp(100))
-                        on_text: root.player.icodec = self.text
-                        on_touch_down: if self.collide_point(*args[1].pos) and len(self.values) == 1: self.values = [''] + codecs_dec
-    BoxLayout:
-        id: lower_bar
-        spacing: '5dp'
-        padding: '5dp', 0
-        size_hint_min_x: self.minimum_width
+                        size_hint_min_x: '100dp'
+                        padding: 0
+                SizedThemedLabel:
+                    text: 'Media Format:'
+                ThemedSpinner:
+                    values: ['']
+                    text:  root.player.file_fmt
+                    size_hint_min_x: max(self.minimum_width, dp(100))
+                    on_text: root.player.file_fmt = self.text
+                    on_touch_down: if self.collide_point(*args[1].pos) and len(self.values) == 1: self.values = [''] + formats_in
+                SizedThemedLabel:
+                    text: 'Video Codec:'
+                ThemedSpinner:
+                    values: ['']
+                    text:  root.player.icodec
+                    size_hint_min_x: max(self.minimum_width, dp(100))
+                    on_text: root.player.icodec = self.text
+                    on_touch_down: if self.collide_point(*args[1].pos) and len(self.values) == 1: self.values = [''] + codecs_dec
+    FlatLabel:
+        text: 'Customize output:'
+        height: self.texture_size[1]
+        size_hint_y: None
+        flat_color: app.theme.text_primary
+        bold: True
+    GridLayout:
+        id: dshow
         size_hint_y: None
         height: self.minimum_height
-        FlatLabel:
-            text: 'Customize: Pixel type:'
-            size: self.texture_size
-            size_hint: None, None
-            flat_color: app.theme.text_primary
+        size_hint_min_x: self.minimum_width
+        padding: '5dp'
+        spacing: '10dp'
+        cols: 2
+        SizedThemedLabel:
+            text: 'Pixel format:'
         ThemedSpinner:
             id: pix_fmt
             values: ['---']
             text: (root.player.metadata_play.fmt or '---') if root.player.metadata_play else '---'
-            size_hint_x: None
-            width: max(self.minimum_width, dp(50))
+            size_hint_min_x: max(self.minimum_width, dp(50))
             on_text: root.player._set_metadata_play(pix_fmt.text if pix_fmt.text != '---' else '', int(input_w.text or 0), int(input_h.text or 0))
             on_touch_down: if self.collide_point(*args[1].pos) and len(self.values) == 1: self.values = (['---'] + pix_fmts)
-        FlatLabel:
+        SizedThemedLabel:
             text: 'Width:'
-            size: self.texture_size
-            size_hint: None, None
-            flat_color: app.theme.text_primary
         FlatSizedTextInput:
             id: input_w
             text: str(root.player.metadata_play.w) if root.player.metadata_play and root.player.metadata_play.w else ''
             background_color: app.theme.primary_light
             hint_text: 'width'
             on_text: root.player._set_metadata_play(pix_fmt.text if pix_fmt.text != '---' else '', int(input_w.text or 0), int(input_h.text or 0))
-            size_hint_x: None
-            width: '60dp'
-        FlatLabel:
+            size_hint_min_x: '60dp'
+            padding: 0
+        SizedThemedLabel:
             text: 'Height:'
-            size: self.texture_size
-            size_hint: None, None
-            flat_color: app.theme.text_primary
         FlatSizedTextInput:
             id: input_h
             text: str(root.player.metadata_play.h) if root.player.metadata_play and root.player.metadata_play.h else ''
             background_color: app.theme.primary_light
             hint_text: 'height'
             on_text: root.player._set_metadata_play(pix_fmt.text if pix_fmt.text != '---' else '', int(input_w.text or 0), int(input_h.text or 0))
-            size_hint_x: None
-            width: '60dp'
+            size_hint_min_x: '60dp'
+            padding: 0
 
