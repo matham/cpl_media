@@ -90,8 +90,7 @@ def video_file(tmp_path_factory):
         'codec': 'rawvideo', 'frame_rate': (2997, 100)}
 
     buf = bytearray([int(x * 255 / size) for x in range(size)])
-    buf2 = bytearray([0] * size)
-    img = Image(plane_buffers=[buf, buf2], pix_fmt='gray', size=(w, h))
+    img = Image(plane_buffers=[buf], pix_fmt='gray', size=(w, h))
 
     writer = MediaWriter(fname, [out_opts])
     for i in range(20):
