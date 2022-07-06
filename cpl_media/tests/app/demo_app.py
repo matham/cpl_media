@@ -14,7 +14,7 @@ from kivy.lang import Builder
 from base_kivy_app.app import BaseKivyApp, run_app as run_base_app,\
     report_exception_in_app
 from base_kivy_app.graphics import BufferImage
-from cpl_media.ptgray import PTGrayPlayer, PTGraySettingsWidget
+from cpl_media.rotpy import FlirPlayer, FlirSettingsWidget
 from cpl_media.ffmpeg import FFmpegPlayer, FFmpegSettingsWidget
 from cpl_media.thorcam import ThorCamPlayer, ThorCamSettingsWidget
 from cpl_media.remote.client import RemoteVideoPlayer, \
@@ -49,7 +49,7 @@ class DemoApp(BaseKivyApp):
     _config_props_ = ('player_name', 'display_rotation')
 
     _config_children_ = {
-        'ffmpeg': 'ffmpeg_player', 'ptgray': 'ptgray_player',
+        'ffmpeg': 'ffmpeg_player', 'flir': 'flir_player',
         'thor': 'thor_player', 'network_client': 'client_player',
         'rtv': 'rtv_player', 'image_file_recorder': 'image_file_recorder',
         'video_recorder': 'video_recorder',
@@ -60,9 +60,9 @@ class DemoApp(BaseKivyApp):
 
     ffmpeg_settings = None
 
-    ptgray_player: PTGrayPlayer = None
+    flir_player: FlirPlayer = None
 
-    ptgray_settings = None
+    flir_settings = None
 
     thor_player: ThorCamPlayer = None
 
@@ -99,8 +99,8 @@ class DemoApp(BaseKivyApp):
     def build(self):
         self.ffmpeg_settings = FFmpegSettingsWidget()
         self.ffmpeg_player = self.ffmpeg_settings.player
-        self.ptgray_settings = PTGraySettingsWidget()
-        self.ptgray_player = self.ptgray_settings.player
+        self.flir_settings = FlirSettingsWidget()
+        self.flir_player = self.flir_settings.player
         self.thor_settings = ThorCamSettingsWidget()
         self.thor_player = self.thor_settings.player
         self.client_player_settings = ClientPlayerSettingsWidget()
@@ -121,7 +121,7 @@ class DemoApp(BaseKivyApp):
         self.player = getattr(self, '{}_player'.format(self.player_name))
 
         self.ffmpeg_player.display_frame = self._display_frame
-        self.ptgray_player.display_frame = self._display_frame
+        self.flir_player.display_frame = self._display_frame
         self.thor_player.display_frame = self._display_frame
         self.client_player.display_frame = self._display_frame
 
@@ -141,7 +141,7 @@ class DemoApp(BaseKivyApp):
         for player in (
                 self.ffmpeg_player, self.thor_player, self.client_player,
                 self.image_file_recorder, self.video_recorder,
-                self.server_recorder, self.rtv_player, self.ptgray_player):
+                self.server_recorder, self.rtv_player, self.flir_player):
             if player is not None:
                 player.stop_all(join=True)
         self.dump_app_settings_to_file()

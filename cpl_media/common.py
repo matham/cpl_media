@@ -55,9 +55,15 @@ class KivyMediaBase(Configurable):
                 if msg == 'setattr':
                     prop, val = value
                     setattr(self, prop, val)
+                elif msg == 'setattrs':
+                    for prop, val in value.items():
+                        setattr(self, prop, val)
                 elif msg == 'increment':
                     prop, val = value
                     setattr(self, prop, getattr(self, prop) + val)
+                elif msg == 'call':
+                    f, args, kwargs = value
+                    f(*args, **kwargs)
                 else:
                     print('Got unknown KivyMediaBase message', msg, value)
             except Empty:
@@ -73,6 +79,15 @@ class KivyMediaBase(Configurable):
         self.kivy_thread_queue.put(('setattr', (prop, value)))
         self.trigger_run_in_kivy()
 
+    def setattrs_in_kivy_thread(self, **kwargs):
+        """Schedules kivy to set the properties to the specified values in the
+        kivy thread.
+
+        :param kwargs: The dict of values.
+        """
+        self.kivy_thread_queue.put(('setattrs', kwargs))
+        self.trigger_run_in_kivy()
+
     def increment_in_kivy_thread(self, prop, value=1):
         """Schedules kivy to increment the property by the specified value in
         the kivy thread.
@@ -81,6 +96,16 @@ class KivyMediaBase(Configurable):
         :param value: The value by which it will be incremented.
         """
         self.kivy_thread_queue.put(('increment', (prop, value)))
+        self.trigger_run_in_kivy()
+
+    def call_in_kivy_thread(self, f, *args, **kwargs):
+        """Schedules Kivy to call the function in the Kivy thread.
+
+        :param f: The function to call.
+        :param args: The positional args to pass to the function.
+        :param kwargs: The keyword args to pass to the function.
+        """
+        self.kivy_thread_queue.put(('call', (f, args, kwargs)))
         self.trigger_run_in_kivy()
 
     def stop_all(self, join=False):

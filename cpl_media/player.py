@@ -206,6 +206,10 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
         self.play_state = 'starting'
         self.ts_play = self.real_rate = 0.
         self.frames_played = 0
+        self._start_play_thread()
+        return True
+
+    def _start_play_thread(self):
         thread = self.play_thread = Thread(
             target=self.play_thread_run, name='Play thread')
         thread.start()
@@ -271,6 +275,9 @@ class BasePlayer(EventDispatcher, KivyMediaBase):
     def complete_stop(self, *largs):
         """After :meth:`stop`, this is called to set the player into `none`
         :attr:`play_state`.
+
+        If the thread is ending before :meth:`stop` was called, this may be
+        called without :meth:`stop` being called.
         """
         assert self.play_state != 'none'
 

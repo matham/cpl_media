@@ -1,5 +1,28 @@
 #:import pix_fmts ffpyplayer.tools.pix_fmts
 
+<SizedThemedLabel@ThemedLabel>:
+    size: self.texture_size
+    size_hint: None, None
+
+
+<FlatAccentImageButton@FlatImageButton>:
+    scale_down_color: True
+    flat_color: app.theme.accent
+
+
+
+<SizedLightToggleButton@LightThemedToggleButton>:
+    padding: '2dp', '2dp'
+    size_hint: None, None
+    size: self.texture_size
+
+
+<SizedLightButton@LightThemedButton>:
+    padding: '2dp', '2dp'
+    size_hint: None, None
+    size: self.texture_size
+
+
 <ImageFileRecordSettingsWidget>:
     orientation: 'vertical'
     spacing: '5dp'

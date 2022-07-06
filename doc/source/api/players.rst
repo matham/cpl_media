@@ -9,7 +9,7 @@
 
    player.rst
    ffmpeg.rst
-   ptgray.rst
+   rotpy.rst
    remote_client.rst
    rtv.rst
    thorcam.rst

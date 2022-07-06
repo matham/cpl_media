@@ -1,0 +1,229 @@
+
+<FlirSettingsWidget>:
+    orientation: 'vertical'
+    size_hint_min_x: self.minimum_width
+    size_hint_y: None
+    height: self.minimum_height
+    disabled: not self.player.is_available
+    setting_parent: setting_parent.__self__
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: None
+        height: self.minimum_height
+        size_hint_min_x: self.minimum_width
+        padding: '5dp'
+        spacing: '5dp'
+        GridLayout:
+            cols: 2
+            size_hint_y: None
+            height: self.minimum_height
+            size_hint_min_x: self.minimum_width
+            padding: '5dp'
+            spacing: '10dp'
+            SizedThemedLabel:
+                text: 'Camera serial:'
+            BoxLayout:
+                disabled: root.player.config_active or root.player.play_state != 'none'
+                size_hint_min_x: self.minimum_width
+                spacing: '5dp'
+                FlatAccentImageButton:
+                    source: 'flat_refresh.png'
+                    on_release: root.player.update_serials()
+                ThemedSpinner:
+                    size_hint_min_x: max(self.minimum_width, dp(50))
+                    values: ['<none>'] + root.player.serials
+                    text: root.player.serial if root.player.serial else '<none>'
+                    on_text: root.player.serial = '' if self.text == '<none>' else self.text
+                    text_autoupdate: True
+            SizedThemedLabel:
+                text: 'Configurability:'
+            LightThemedToggleButton:
+                disabled: root.player.camera_inited or root.player.config_active or not root.player.serial or root.player.play_state != 'none'
+                bold: True
+                height: self.texture_size[1]
+                size_hint_y: None
+                size_hint_min_x: self.texture_size[0]
+                text: 'Configurable' if root.player.camera_inited else 'Make configurable'
+                state: 'down' if root.player.camera_inited else 'normal'
+                on_release: root.player.init_camera()
+            SizedThemedLabel:
+                text: 'Camera IP:'
+            SizedThemedLabel:
+                text: '<NA>' if not root.player.supports_ip else ('Bad IP' if root.player.bad_subnet else 'Valid IP')
+            SizedThemedLabel:
+                text: 'Fix IP:'
+            LightThemedButton:
+                disabled: not root.player.supports_ip or root.player.config_active or not root.player.serial or root.player.play_state != 'none'
+                bold: True
+                height: self.texture_size[1]
+                size_hint_y: None
+                size_hint_min_x: self.texture_size[0]
+                text: 'Auto set IP'
+                on_release: root.player.force_ip()
+            SizedThemedLabel:
+                text: 'Selected config:'
+            ThemedSpinner:
+                disabled: root.player.config_active
+                size_hint_min_x: max(self.minimum_width, dp(50))
+                values: ['<none>'] + root.player.available_camera_settings
+                text: root.selected_name if root.selected_name else '<none>'
+                on_text: root.update_setting('' if self.text == '<none>' else self.text)
+    FlatLabel:
+        text: 'Selection'
+        padding: '5dp', '5dp'
+        height: self.texture_size[1]
+        size_hint_y: None
+        flat_color: app.theme.text_primary
+        bold: True
+    BoxLayout:
+        id: setting_parent
+        size_hint_y: None
+        height: self.minimum_height
+        size_hint_min_x: self.minimum_width
+
+
+<FlirSettingWidget>:
+    orientation: 'vertical'
+    spacing: '5dp'
+    padding: '5dp'
+    size_hint_min_x: self.minimum_width
+    size_hint_y: None
+    height: self.minimum_height
+    populated: root.setting is not None and root.player is not None
+    ThemedLabel:
+        markup: True
+        height: self.texture_size[1]
+        size_hint_y: None
+        text_size: self.width, None
+        padding: '5dp', '5dp'
+        text: ('[b]{}[/b]: {}'.format(root.setting.display_name, root.setting.description)) if root.populated else ''
+
+
+<FlirTextSettingWidget>:
+    BoxLayout:
+        size_hint_y: None
+        height: self.minimum_height
+        size_hint_min_x: self.minimum_width
+        spacing: '5dp'
+        FlatAccentImageButton:
+            disabled: not root.populated or root.player.config_active
+            source: 'flat_refresh.png'
+            on_release: root.setting.refresh_value()
+        FlatSizedTextInput:
+            disabled: not root.populated or not root.setting.writable or root.player.config_active
+            background_color: app.theme.primary_light
+            on_focus: if not self.focus: root.set_value(self.text)
+            text: (root.get_value(root.setting.value) or '') if root.populated else ''
+            size_hint_min_x: '60dp'
+
+
+<FlirNumericSettingWidget>:
+    BoxLayout:
+        size_hint_y: None
+        height: self.minimum_height
+        size_hint_min_x: self.minimum_width
+        spacing: '5dp'
+        FlatAccentImageButton:
+            disabled: not root.populated or root.player.config_active
+            source: 'flat_refresh.png'
+            on_release: root.setting.refresh_value()
+        FlatSizedTextInput:
+            disabled: not root.populated or not root.setting.writable or root.player.config_active
+            background_color: app.theme.primary_light
+            on_focus: if not self.focus: root.set_value(self.text)
+            text: str(root.setting.value) if root.populated else ''
+            size_hint_min_x: '60dp'
+            input_filter: root.get_input_filter(root.setting) if root.populated else None
+        ThemedLabel:
+            size: self.texture_size
+            size_hint: None, None
+            padding: '5dp', '5dp'
+            text: 'Unit: {}. Inc: {}'.format(root.setting.unit, '{:0.2f}'.format(root.setting.increment) if root.setting.has_increment else 'NA') if root.populated else ''
+    BoxLayout:
+        size_hint_y: None
+        height: self.minimum_height
+        size_hint_min_x: self.minimum_width
+        spacing: '5dp'
+        FlatLabel:
+            padding: '5dp', '5dp'
+            flat_color: app.theme.text_primary
+            center_texture: True
+            size_hint: None, None
+            size: self.texture_size
+            text: 'Min: {:0.2f}'.format(root.setting.min_val) if root.populated else ''
+        FlatSlider:
+            disabled: not root.populated or not root.setting.writable or root.player.config_active
+            size_hint_y: None
+            height: '25dp'
+            on_release: root.setting.set_value(self.value)
+            min: root.setting.min_val if root.populated else 0
+            max: root.setting.max_val if root.populated else 1
+            value: root.setting.value if root.populated else .5
+        FlatLabel:
+            padding: '5dp', '5dp'
+            flat_color: app.theme.text_primary
+            center_texture: True
+            size_hint: None, None
+            size: self.texture_size
+            text: 'Max: {:0.2f}'.format(root.setting.max_val) if root.populated else ''
+
+
+<FlirBoolSettingWidget>:
+    BoxLayout:
+        size_hint_y: None
+        height: self.minimum_height
+        size_hint_min_x: self.minimum_width
+        spacing: '5dp'
+        FlatAccentImageButton:
+            disabled: not root.populated or root.player.config_active
+            source: 'flat_refresh.png'
+            on_release: root.setting.refresh_value()
+        LightThemedToggleButton:
+            disabled: not root.populated or not root.setting.writable or root.player.config_active
+            bold: True
+            padding: '2dp', '2dp'
+            text: 'true' if root.populated and root.setting.value else 'false'
+            state: 'down' if root.populated and root.setting.value else 'normal'
+            height: self.texture_size[1]
+            size_hint_y: None
+            size_hint_min_x: self.texture_size[0]
+            on_release: root.setting.set_value(self.state == 'down')
+
+
+<FlirEnumSettingWidget>:
+    BoxLayout:
+        size_hint_y: None
+        height: self.minimum_height
+        size_hint_min_x: self.minimum_width
+        spacing: '5dp'
+        FlatAccentImageButton:
+            disabled: not root.populated or root.player.config_active
+            source: 'flat_refresh.png'
+            on_release: root.setting.refresh_value()
+        ThemedSpinner:
+            size_hint_y: None
+            height: '34dp'
+            disabled: not root.populated or not root.setting.writable or root.player.config_active
+            size_hint_min_x: max(self.minimum_width, dp(50))
+            text: root.setting.value if root.populated else ''
+            values: root.player.get_valid_enum_values(root.setting, root.setting.values) if root.populated else []
+            on_text: if root.populated: root.setting.set_value(self.text)
+    ThemedLabel:
+        markup: True
+        height: self.texture_size[1]
+        size_hint_y: None
+        text_size: self.width, None
+        padding: '5dp', '5dp'
+        text: ('[b]{}[/b]: {}'.format(root.setting.display_names[root.setting.value], root.setting.descriptions[root.setting.value])) if root.populated and root.setting.value else ''
+
+
+<FlirCommandSettingWidget>:
+    LightThemedButton:
+        disabled: not root.populated or not root.setting.writable or root.player.config_active
+        bold: True
+        padding: '2dp', '2dp'
+        text: 'Execute'
+        height: self.texture_size[1]
+        size_hint_y: None
+        size_hint_min_x: self.texture_size[0]
+        on_release: root.setting.execute()
