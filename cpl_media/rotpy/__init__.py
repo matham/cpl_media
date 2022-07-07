@@ -39,6 +39,9 @@ try:
         SpinCommandNode, SpinBoolNode, SpinEnumDefNode, SpinValueNode
 except ImportError as e:
     Logger.debug('cpl_media: Could not import RotPy: {}'.format(e))
+    Camera = CameraList = SpinSystem = SystemNodes = CameraNodes = \
+        RotPyImage = SpinIntNode = SpinStrNode = SpinFloatNode = \
+        SpinCommandNode = SpinBoolNode = SpinEnumDefNode = SpinValueNode = None
 
 __all__ = ('FlirPlayer', 'FlirSettingsWidget')
 
