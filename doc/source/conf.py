@@ -40,7 +40,7 @@ extensions = [
 intersphinx_mapping = {
     'kivy': ('https://kivy.org/doc/stable/', None),
     'ffpyplayer': ('https://matham.github.io/ffpyplayer/', None),
-    'pyflycap2': ('https://matham.github.io/pyflycap2/', None),
+    'rotpy': ('https://matham.github.io/rotpy/', None),
     'thorcam': ('https://matham.github.io/thorcam/', None),
     'pybarst': ('https://matham.github.io/pybarst/', None),
     'base_kivy_app': ('https://matham.github.io/base_kivy_app/', None),

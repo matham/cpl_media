@@ -1,7 +1,7 @@
 """Flir based player
 ======================
 
-This player can play Point Gray ethernet cameras using :mod:`pyflycap2`.
+This player can play Flir cameras using :mod:`rotpy`.
 """
 
 from typing import List, Union, Dict, Optional, Tuple

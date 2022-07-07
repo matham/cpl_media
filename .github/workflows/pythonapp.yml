@@ -80,7 +80,7 @@ jobs:
       env:
         KIVY_GL_BACKEND: angle_sdl2
       run: |
-        python -m pip install thorcam pyflycap2
+        python -m pip install thorcam rotpy
         python -m pip install -e .[dev]
     - name: Test with pytest
       env:

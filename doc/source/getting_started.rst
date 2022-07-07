@@ -10,7 +10,7 @@ cpl_media provides a abstract :class:`cpl_media.player.BasePlayer` and
 The player provides an API that can
 be implemented by cameras or other media sources to play video images into
 :attr:`cpl_media.player.BasePlayer.frame_callbacks`. Examples cameras are USB webcams,
-video files, Thor and Point Gray cameras. Also, playing video from network
+video files, Thor and Flir cameras. Also, playing video from network
 streaming.
 
 Recorders provides an API that accepts images from a player through

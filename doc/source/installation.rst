@@ -13,7 +13,7 @@ Dependencies
 * Optional dependencies that should be installed depending on the cameras to be used:
   * Thor camera: :mod:`thorcam`.
   * RTV analog camera board: :mod:`pybarst`.
-  * Point Gray camera: :mod:`pyflycap2`.
+  * Flir camera: :mod:`rotpy`.
 
 Installing CPL_Media
 ---------------------
