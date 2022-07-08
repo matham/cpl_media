@@ -677,16 +677,17 @@ ImageFormatControl.html
         finally:
             self.call_in_kivy_thread(
                 self._post_update_serial, settings, available_settings, success,
-                supports_ip, bad_subnet)
+                supports_ip, bad_subnet, serial)
         return camera
 
     @error_guard
     def _post_update_serial(
             self, settings, available_settings, success, supports_ip,
-            bad_subnet):
+            bad_subnet, serial):
         self.camera_settings = settings
         self.available_camera_settings = available_settings
-        self.can_play = success and (not supports_ip or not bad_subnet)
+        self.can_play = success and (not supports_ip or not bad_subnet) \
+            and serial
         self.supports_ip = supports_ip
         self.bad_subnet = bad_subnet
 
@@ -734,6 +735,8 @@ ImageFormatControl.html
     def _do_init_play(self, camera: Camera):
         available_settings = []
         inited = False
+        failed = True
+        metadata = None
         try:
             camera.init_cam()
             inited = True
@@ -741,27 +744,58 @@ ImageFormatControl.html
             for name, setting in self.camera_settings.items():
                 if setting.node.is_available():
                     available_settings.append(name)
+
+            values = []
+            for name in (
+                    'Height', 'Width', 'AcquisitionResultingFrameRate',
+                    'AcquisitionFrameRate'):
+                node = getattr(camera.camera_nodes, name)
+                if node.is_readable():
+                    values.append(node.get_node_value(verify=True))
+                else:
+                    values.append(None)
+
+            h, w, rate, rate2 = values
+            rate = rate or rate2
+            fmt = None
+            node = camera.camera_nodes.PixelFormat
+            if node.is_readable():
+                fmt = node.get_node_value(verify=True).get_enum_name()
+            if not h or not w or not fmt or not rate:
+                raise ValueError(
+                    f'Unable to set play metadata. Got Rate: {rate}, '
+                    f'Width: {w}, Height: {h}, Pixel format: {fmt}')
+            ff_fmt = self.ffmpeg_pix_map.get(fmt)
+            if not ff_fmt:
+                raise ValueError(f'Pixel format {fmt} is not supported')
+
+            metadata = VideoMetadata(ff_fmt, w, h, rate)
+            failed = False
         finally:
             self.call_in_kivy_thread(
                 self._post_init_play, self.camera_settings,
-                available_settings, inited, camera)
+                available_settings, inited, camera, failed, metadata)
 
     @error_guard
-    def _post_init_play(self, settings, available_settings, inited, camera):
+    def _post_init_play(
+            self, settings, available_settings, inited, camera, failed,
+            metadata):
         self.available_camera_settings = available_settings
         self.camera_inited = inited
+
+        # make sure to stop if init failed
+        if failed:
+            self.stop()
+        elif self.initial_play_queue is not None:
+            self.metadata_play = metadata
+            self.metadata_play_used = metadata
+            self.initial_play_queue.put(('camera', camera))
 
         try:
             for name in available_settings:
                 settings[name].initial_setup()
         finally:
             self.end_config_item('init_play_cam')
-
-        # make sure to stop if init failed
-        if not inited:
-            self.stop()
-        elif self.initial_play_queue is not None:
-            self.initial_play_queue.put(('camera', camera))
 
     @error_guard
     def update_serials(self, *args):
@@ -912,13 +946,6 @@ ImageFormatControl.html
             return
 
         # if we're here, we are not currently initing and we have a serial
-        if self.camera_inited:
-            if self._camera is None:
-                raise TypeError('No camera')
-            self.initial_play_queue.put(('camera', self._camera))
-            return
-
-        # must first init
         self.ask_config('init_play_cam')
 
     @error_guard

@@ -507,7 +507,7 @@ class VideoRecorder(BaseRecorder):
 
         if self.record_fname.endswith('mkv') and (
                 ifmt.startswith('rgb') or ifmt.startswith('bgr')):
-            ifmt = get_supported_pixfmts('libx264', ifmt)
+            ifmt = get_supported_pixfmts('libx264', ifmt)[0]
 
         ofmt, ow, oh, orate = self.metadata_record
         ofmt = ofmt or ifmt
@@ -606,8 +606,11 @@ class VideoRecorder(BaseRecorder):
                         'width_in': iw, 'height_in': ih, 'width_out': ow,
                         'height_out': oh, 'codec': 'rawvideo',
                         'frame_rate': orate}
+                    fmt = ''
+                    if filename.endswith('mkv'):
+                        fmt = 'matroska'
 
-                    recorder = MediaWriter(filename, [stream])
+                    recorder = MediaWriter(filename, [stream], fmt=fmt)
                 except Exception as e:
                     self.exception(e)
                     Clock.schedule_once(self.complete_stop)
