@@ -827,7 +827,7 @@ ImageFormatControl.html
                     values.append(None)
 
             h, w, rate, rate2 = values
-            rate = rate or rate2
+            rate = rate or rate2 or 30.
             fmt = None
             node = camera.camera_nodes.PixelFormat
             if node.is_readable():
