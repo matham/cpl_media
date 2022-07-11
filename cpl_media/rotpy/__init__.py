@@ -66,8 +66,11 @@ class CameraSetting(EventDispatcher):
 
     name: str = ''
 
-    def __init__(self, node=None, player=None, **kwargs):
+    node_id = ()
+
+    def __init__(self, node=None, node_id=(), player=None, **kwargs):
         self.node = node
+        self.node_id = node_id
         self.player = player
         super().__init__(**kwargs)
 
@@ -389,8 +392,7 @@ class CommandSetting(CameraSetting):
 
 class FlirPlayer(BasePlayer):
 
-    _config_props_ = (
-        'serial', )
+    _config_props_ = ('serial', 'saved_nodes')
 
     is_available = BooleanProperty(Camera is not None)
     """Whether RotPy is available to play."""
@@ -402,6 +404,41 @@ class FlirPlayer(BasePlayer):
     serials = ListProperty([])
     """The serials of all the cams available.
     """
+
+    saved_nodes = {}
+
+    _saved_nodes = [
+        'PixelFormat', 'Height', 'Width',
+        'OffsetX', 'OffsetY', 'ReverseX', 'ReverseY',
+        'AcquisitionFrameRateEnable', 'AcquisitionFrameRate',
+        'BinningSelector',
+        'BinningHorizontalMode', 'BinningHorizontal', 'BinningVerticalMode',
+        'BinningVertical', 'DecimationSelector', 'DecimationHorizontalMode',
+        'DecimationHorizontal', 'DecimationVerticalMode',
+        'DecimationVertical', 'ExposureActiveMode', 'ExposureAuto',
+        'ExposureMode', 'ExposureTimeMode', 'ExposureTimeSelector',
+        'ExposureTime', 'Gain', 'GainAuto', 'GainAutoBalance',
+        'GainSelector', 'RgbTransformLightSource', 'Saturation',
+        'SaturationEnable', 'Gamma', 'GammaEnable', 'Sharpening',
+        'SharpeningAuto', 'SharpeningEnable', 'SharpeningThreshold',
+        'WhiteClip', 'WhiteClipSelector', 'AutoExposureLightingMode',
+        'AutoExposureMeteringMode', 'AutoExposureTargetGreyValue',
+        'AutoExposureTargetGreyValueAuto', 'BalanceRatioSelector',
+        'BalanceRatio', 'BalanceWhiteAuto', 'BalanceWhiteAutoDamping',
+        'BalanceWhiteAutoLowerLimit', 'BalanceWhiteAutoProfile',
+        'BlackLevel', 'BlackLevelAuto', 'BlackLevelAutoBalance',
+        'ImageCompressionBitrate', 'ImageCompressionJPEGFormatOption',
+        'ImageCompressionMode', 'ImageCompressionQuality',
+        'ImageCompressionRateOption', 'PacketResendRequestCount',
+        'PixelColorFilter', 'PixelDynamicRangeMax', 'PixelDynamicRangeMin',
+        'AdcBitDepth', 'AutoExposureControlPriority',
+        'AutoExposureExposureTimeLowerLimit',
+        'AutoExposureExposureTimeUpperLimit', 'AutoExposureGainLowerLimit',
+        'AutoExposureGainUpperLimit', 'CompressionRatio',
+        'CompressionSaturationPriority',
+    ]
+
+    _saved_nodes_set = set(_saved_nodes)
 
     config_active: bool = BooleanProperty(False)
 
@@ -543,10 +580,15 @@ ImageFormatControl.html
         self.fbind('serial', self._update_summary)
         self._update_summary()
         self.can_play = False
+        self.saved_nodes = {}
 
     def _update_summary(self, *largs):
         name = str(self.serial)
         self.player_summery = 'FLIR "{}"'.format(name)
+
+    def _update_setting_callback(
+            self, nodes_name, name, setting: SimpleValueSetting, *args):
+        self.saved_nodes[(nodes_name, name)] = setting.value
 
     @error_guard
     def start_config_item(self, item):
@@ -618,6 +660,7 @@ ImageFormatControl.html
         supports_ip = False
         bad_subnet = False
         camera: Camera = self._camera
+        saved_nodes = self._saved_nodes_set
 
         nodes_cls_map = {
             SpinIntNode: IntSetting,
@@ -666,12 +709,19 @@ ImageFormatControl.html
                 for name in names:
                     node = getattr(nodes_map[nodes_name], name)
                     setting = nodes_cls_map[node.__class__](
-                        node=node, player=self)
+                        node=node, node_id=(nodes_name, name), player=self)
                     display_name = f'{nodes_name}.{name}'
                     settings[display_name] = setting
 
                     if node.is_available():
                         available_settings.append(display_name)
+
+                    if nodes_name == 'Camera' and name in saved_nodes:
+                        setting.fbind(
+                            'on_setting_update',
+                            self._update_setting_callback, nodes_name, name,
+                            setting
+                        )
 
             success = True
         finally:
@@ -704,16 +754,38 @@ ImageFormatControl.html
         self.can_play = False
         self.ask_config('init_cam')
 
+    def _create_available_settings(self):
+        available_settings = []
+        saved_nodes = {}
+        saved_values = self.saved_nodes
+        saved_keys = {('Camera', v) for v in self._saved_nodes_set}
+
+        for name, setting in self.camera_settings.items():
+            node = setting.node
+            if node.is_available():
+                available_settings.append(name)
+
+            key = (*name.split('.'), )
+            if key not in saved_keys or not node.is_readable():
+                continue
+
+            try:
+                if node.is_writable() and key in saved_values:
+                    setting._set_node_value(saved_values[key])
+            except SpinnakerAPIException:
+                continue
+            saved_nodes[key] = setting._get_node_value()
+
+        self.saved_nodes = saved_nodes
+        return available_settings
+
     def _do_init_camera(self, camera: Camera):
         available_settings = []
         inited = False
         try:
             camera.init_cam()
             inited = True
-
-            for name, setting in self.camera_settings.items():
-                if setting.node.is_available():
-                    available_settings.append(name)
+            available_settings = self._create_available_settings()
         finally:
             self.call_in_kivy_thread(
                 self._post_init_camera, self.camera_settings,
@@ -740,10 +812,7 @@ ImageFormatControl.html
         try:
             camera.init_cam()
             inited = True
-
-            for name, setting in self.camera_settings.items():
-                if setting.node.is_available():
-                    available_settings.append(name)
+            available_settings = self._create_available_settings()
 
             values = []
             for name in (

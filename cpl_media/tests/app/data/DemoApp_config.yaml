@@ -1,4 +1,4 @@
-app: {display_rotation: 0.0, inspect: false, player_name: ffmpeg}
+display_rotation: 0
 ffmpeg:
   dshow_filename: ''
   dshow_opt: ''
@@ -6,50 +6,80 @@ ffmpeg:
   dshow_true_filename: ''
   file_fmt: ''
   icodec: ''
-  metadata_play: ['', 0, 0, 0]
-  metadata_play_used: ['', 0, 0, 0]
+  metadata_play:
+  - ''
+  - 0
+  - 0
+  - 0
+  metadata_play_used:
+  - ''
+  - 0
+  - 0
+  - 0
   play_filename: ''
   use_dshow: true
+flir:
+  metadata_play:
+  - ''
+  - 0
+  - 0
+  - 0
+  metadata_play_used:
+  - ''
+  - 0
+  - 0
+  - 0
+  saved_nodes: {}
+  serial: ''
 image_file_recorder:
   compression: raw
   extension: tiff
-  metadata_record: ['', 0, 0, 0]
+  metadata_record:
+  - ''
+  - 0
+  - 0
+  - 0
   record_directory: '~'
   record_prefix: image_
+  requested_record_duration: 0
+inspect: false
 network_client:
-  metadata_play: ['', 0, 0, 0]
-  metadata_play_used: ['', 0, 0, 0]
+  metadata_play:
+  - ''
+  - 0
+  - 0
+  - 0
+  metadata_play_used:
+  - ''
+  - 0
+  - 0
+  - 0
   port: 0
   server: ''
   timeout: 0.01
 network_server:
   max_images_buffered: 5
-  metadata_record: ['', 0, 0, 0]
+  metadata_record:
+  - ''
+  - 0
+  - 0
+  - 0
   port: 10000
+  requested_record_duration: 0
   server: localhost
   timeout: 0.01
-ptgray:
-  brightness: {}
-  cam_config_opts: {}
-  exposure: {}
-  frame_rate: {}
-  gain: {}
-  gamma: {}
-  hue: {}
-  ip: ''
-  iris: {}
-  metadata_play: ['', 0, 0, 0]
-  metadata_play_used: ['', 0, 0, 0]
-  mirror: false
-  pan: {}
-  saturation: {}
-  serial: 0
-  sharpness: {}
-  shutter: {}
-  tilt: {}
+player_name: client
 rtv:
-  metadata_play: [gray, 640, 480, 29.97]
-  metadata_play_used: [gray, 640, 480, 29.97]
+  metadata_play:
+  - gray
+  - 640
+  - 480
+  - 29.97
+  metadata_play_used:
+  - gray
+  - 640
+  - 480
+  - 29.97
   pipe_name: RTVPlayer
   pixel_fmt: gray
   port: 0
@@ -57,38 +87,70 @@ rtv:
   video_fmt: full_NTSC
 thor:
   binning_x: 0
-  binning_x_range: [0, 0]
+  binning_x_range:
+  - 0
+  - 0
   binning_y: 0
-  binning_y_range: [0, 0]
+  binning_y_range:
+  - 0
+  - 0
   black_level: 0
-  black_level_range: [0, 100]
-  color_gain: [1, 1, 1]
+  black_level_range:
+  - 0
+  - 100
+  color_gain:
+  - 1
+  - 1
+  - 1
   exposure_ms: 0
-  exposure_range: [0, 100]
+  exposure_range:
+  - 0
+  - 100
   frame_queue_size: 1
   freq: 20 MHz
   gain: 0
-  gain_range: [0, 100]
-  metadata_play: ['', 0, 0, 0]
-  metadata_play_used: ['', 0, 0, 0]
+  gain_range:
+  - 0
+  - 100
+  metadata_play:
+  - ''
+  - 0
+  - 0
+  - 0
+  metadata_play_used:
+  - ''
+  - 0
+  - 0
+  - 0
   num_queued_frames: 0
   roi_height: 0
   roi_width: 0
   roi_x: 0
   roi_y: 0
-  sensor_size: [0, 0]
+  sensor_size:
+  - 0
+  - 0
   serial: ''
   serials: []
-  supported_freqs: [20 MHz]
-  supported_taps: ['1']
-  supported_triggers: [SW Trigger, HW Trigger]
+  supported_freqs:
+  - 20 MHz
+  supported_taps:
+  - '1'
+  supported_triggers:
+  - SW Trigger
+  - HW Trigger
   supports_color: false
   taps: '1'
   trigger_count: 0
   trigger_type: SW Trigger
 video_recorder:
   estimate_record_rate: false
-  metadata_record: ['', 0, 0, 0]
+  metadata_record:
+  - ''
+  - 0
+  - 0
+  - 0
   record_directory: '~'
   record_fname: video{}.mkv
   record_fname_count: 0
+  requested_record_duration: 0
