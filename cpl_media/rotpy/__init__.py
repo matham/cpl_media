@@ -612,36 +612,6 @@ ImageFormatControl.html
         if not self.total_active_count:
             self.config_active = False
 
-        if isinstance(item, CameraSetting):
-            if item.name in (
-                    'Camera.Height', 'Camera.Width',
-                    'Camera.AcquisitionResultingFrameRate',
-                    'Camera.PixelFormat'):
-                fmt = rate = w = h = None
-
-                setting = self.camera_settings.get('Camera.Height')
-                if setting is not None and setting.available:
-                    h = setting.value
-                setting = self.camera_settings.get('Camera.Width')
-                if setting is not None and setting.available:
-                    w = setting.value
-                setting = self.camera_settings.get(
-                    'Camera.AcquisitionResultingFrameRate')
-                if setting is not None and setting.available:
-                    rate = setting.value
-                setting = self.camera_settings.get('Camera.PixelFormat')
-                if setting is not None and setting.available:
-                    fmt = self.ffmpeg_pix_map.get(setting.value)
-
-                if not fmt or not rate or not w or not h:
-                    raise ValueError(
-                        f'Unable to set play metadata. Got Rate: {rate}, '
-                        f'Width: {w}, Height: {h}, Pixel format: {fmt}')
-
-                metadata = VideoMetadata(fmt, w, h, rate)
-                self.metadata_play = metadata
-                self.metadata_play_used = metadata
-
     @error_guard
     def ask_setting_config(self, setting, f, *args, **kwargs):
         self.start_config_item(setting)
