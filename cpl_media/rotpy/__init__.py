@@ -108,7 +108,7 @@ class CameraSetting(EventDispatcher):
     def _initial_setup(self):
         try:
             values = self._get_initial_setup_data()
-        except:
+        except BaseException:
             self.player.call_in_kivy_thread(
                 self._post_initial_setup, failed=True)
             raise
@@ -151,7 +151,7 @@ class SimpleValueSetting(CameraSetting):
             value = None
             if readable:
                 value = self._get_node_value()
-        except:
+        except BaseException:
             self.player.call_in_kivy_thread(
                 self._post_refresh_value, failed=True)
             raise
@@ -175,7 +175,7 @@ class SimpleValueSetting(CameraSetting):
         finally:
             try:
                 value = self._get_node_value()
-            except:
+            except BaseException:
                 self.player.call_in_kivy_thread(
                     self._post_set_value, failed=True)
                 raise
@@ -374,7 +374,7 @@ class CommandSetting(CameraSetting):
 
             if not node.is_done():
                 raise TimeoutError('Timed out waiting for command to finish')
-        except:
+        except BaseException:
             self.player.call_in_kivy_thread(self._post_execute, failed=True)
             raise
         self.player.call_in_kivy_thread(self._post_execute)
@@ -568,7 +568,7 @@ class FlirPlayer(BasePlayer):
     
     https://www.emva.org/wp-content/uploads/GenICamPixelFormatValues.pdf
     http://softwareservices.flir.com/BFS-U3-89S6/latest/Model/public/\
-ImageFormatControl.html
+    ImageFormatControl.html
     """
 
     def __init__(self, open_thread=True, **kwargs):
@@ -1212,7 +1212,7 @@ class FlirTextSettingWidget(FlirSettingWidget):
                 assert False
 
             self.setting.set_value(value)
-        except:
+        except BaseException:
             self.setting.property('value').dispatch(self.setting)
             raise
 
@@ -1230,7 +1230,7 @@ class FlirTextSettingWidget(FlirSettingWidget):
                 return str(ipaddress.ip_address(value))
             else:
                 assert False
-        except:
+        except BaseException:
             self.setting.property('value').dispatch(self.setting)
             raise
 
@@ -1253,7 +1253,7 @@ class FlirNumericSettingWidget(FlirSettingWidget):
             else:
                 assert False
             self.setting.set_value(value)
-        except:
+        except BaseException:
             self.setting.property('value').dispatch(self.setting)
             raise
 
