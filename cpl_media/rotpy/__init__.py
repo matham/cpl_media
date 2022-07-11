@@ -128,7 +128,7 @@ class SimpleValueSetting(CameraSetting):
     value = None
 
     def _get_node_value(self):
-        return self.node.get_node_value(verify=True)
+        return self.node.get_node_value()
 
     def _set_node_value(self, value):
         self.node.set_node_value(value, verify=True)
@@ -308,7 +308,7 @@ class EnumSetting(SimpleValueSetting):
     display_names = {}
 
     def _get_node_value(self):
-        return self.node.get_node_value(verify=True).get_enum_name()
+        return self.node.get_node_value().get_enum_name()
 
     def _set_node_value(self, value):
         self.node.set_node_value_from_str(value, verify=True)
@@ -369,10 +369,10 @@ class CommandSetting(CameraSetting):
             ts = time.monotonic()
             timeout = self.timeout
             while time.monotonic() - ts < timeout and \
-                    not node.is_done(verify=True):
+                    not node.is_done():
                 time.sleep(.2)
 
-            if not node.is_done(verify=True):
+            if not node.is_done():
                 raise TimeoutError('Timed out waiting for command to finish')
         except:
             self.player.call_in_kivy_thread(self._post_execute, failed=True)
@@ -820,7 +820,7 @@ ImageFormatControl.html
                     'AcquisitionFrameRate'):
                 node = getattr(camera.camera_nodes, name)
                 if node.is_readable():
-                    values.append(node.get_node_value(verify=True))
+                    values.append(node.get_node_value())
                 else:
                     values.append(None)
 
@@ -829,7 +829,7 @@ ImageFormatControl.html
             fmt = None
             node = camera.camera_nodes.PixelFormat
             if node.is_readable():
-                fmt = node.get_node_value(verify=True).get_enum_name()
+                fmt = node.get_node_value().get_enum_name()
             if not h or not w or not fmt or not rate:
                 raise ValueError(
                     f'Unable to set play metadata. Got Rate: {rate}, '
