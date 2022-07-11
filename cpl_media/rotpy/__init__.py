@@ -907,7 +907,14 @@ ImageFormatControl.html
         success = False
         bad_subnet = True
         try:
-            camera.force_ip()
+            node = camera.tl_dev_nodes.GevDeviceAutoForceIP
+            node.execute_node(verify=True)
+            ts = time.monotonic()
+            while time.monotonic() - ts < 30 and not node.is_done():
+                time.sleep(.2)
+            if not node.is_done():
+                raise TimeoutError('Timed out waiting for command to finish')
+
             if camera.tl_dev_nodes.GevDeviceIsWrongSubnet.is_readable():
                 bad_subnet = \
                     camera.tl_dev_nodes.GevDeviceIsWrongSubnet.get_node_value()
