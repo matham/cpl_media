@@ -556,7 +556,9 @@ class FlirPlayer(BasePlayer):
         'YUV422Packed': 'uyvy422',
         'YUV444Packed': 'yuv444p', 'YCbCr8_CbYCr': 'yuv444p', 'RGB8': 'rgb24',
         'RGB565p': 'rgb565le', 'RGBa8': 'rgba', 'BGR8': 'bgr24',
+        'RGB8Packed': 'bgr24', 'BGR8Packed': 'bgr24',
         'BGR565p': 'bgr565le', 'BGRa8': 'bgra',
+        # not supported by ffmpeg swscale
         # 'YCbCr411_8_CbYYCrYY': 'uyyvyy411', 'YUV411_8_UYYVYY': 'uyyvyy411',
         # 'YUV411Packed': 'uyyvyy411',
         'YCbCr422_8_CbYCrY': 'uyvy422', 'YUV422_8_UYVY': 'uyvy422'
