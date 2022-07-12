@@ -32,7 +32,7 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
     """Records images from :class:cpl_media.player.BasePlayer` to a recorder.
     """
 
-    _config_props_ = ('metadata_record', )
+    _config_props_ = ('metadata_record', 'requested_record_duration')
 
     player: BasePlayer = None
     """The :class:cpl_media.player.BasePlayer` this is being recorded from.
@@ -111,9 +111,25 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
     """
 
     elapsed_record_time = NumericProperty(0)
-    """Number of seconds we have been recording since :meth:`record`.
+    """Number of seconds we have been recording since :meth:`record` if
+    :attr:`requested_record_duration` is zero, otherwise it's
+    :attr:`requested_record_duration` minus the elapsed time.
 
     Automatically computed and updated a few times a second.
+    """
+
+    requested_record_duration = NumericProperty(0)
+    """The total duration that we should record.
+
+    If zero, duration was not set.
+    """
+
+    frame_ts_record = 0
+    """The frame time of the device of the first recorded frame.
+    """
+
+    frame_last_t_record = 0
+    """The frame time of the device of the last recorded frame.
     """
 
     _elapsed_record_trigger = None
@@ -135,8 +151,13 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
         self._update_data_rate()
 
     def _update_elapsed_record(self, *largs):
-        if self.ts_record:
-            self.elapsed_record_time = clock() - self.ts_record
+        d = self.requested_record_duration
+        ts = self.ts_record
+        if ts:
+            if d:
+                self.elapsed_record_time = max(d - (clock() - ts), 0)
+            else:
+                self.elapsed_record_time = clock() - ts
 
     def _update_data_rate(self, *largs):
         fmt = self.metadata_record_used.fmt
@@ -236,6 +257,7 @@ class BaseRecorder(EventDispatcher, KivyMediaBase):
         self.player = player
         self.size_recorded = self.ts_record = 0
         self.frames_recorded = self.frames_skipped = 0
+        self.frame_ts_record = 0
         self.metadata_player = player.metadata_play_used
         self.image_queue = Queue()
         self._start_recording()
@@ -377,7 +399,7 @@ class ImageFileRecorder(BaseRecorder):
         thread = self.record_thread = Thread(
             target=self.record_thread_run, name='Record image thread',
             args=(self.record_directory, self.record_prefix, self.compression,
-                  self.extension))
+                  self.extension, self.requested_record_duration))
         thread.start()
 
     def complete_stop(self, *largs):
@@ -386,9 +408,12 @@ class ImageFileRecorder(BaseRecorder):
             self.player.frame_callbacks.remove(self.send_image_to_recorder)
 
     def record_thread_run(
-            self, record_directory, record_prefix, compression, extension):
+            self, record_directory, record_prefix, compression, extension,
+            requested_record_duration):
         queue = self.image_queue
         last_img = None
+        t0 = None
+        finished = False
 
         while self.record_state != 'stopping':
             item = queue.get()
@@ -398,13 +423,23 @@ class ImageFileRecorder(BaseRecorder):
 
             try:
                 if last_img is None:
-                    self.setattr_in_kivy_thread('ts_record', clock())
-                    self.setattr_in_kivy_thread(
-                        'metadata_record_used', self.player.metadata_play_used)
-                    Clock.schedule_once(self.complete_start)
+                    t0 = metadata['t']
                     last_img = image
+                    self.setattrs_in_kivy_thread(
+                        ts_record=clock(), frame_ts_record=t0,
+                        metadata_record_used=self.player.metadata_play_used)
+                    Clock.schedule_once(self.complete_start)
 
-                suffix = 't={}'.format(metadata['t'])
+                if finished:
+                    continue
+
+                elapsed = metadata['t'] - t0
+                if requested_record_duration and \
+                        elapsed >= requested_record_duration:
+                    finished = True
+                    Clock.schedule_once(self.stop)
+
+                suffix = 't={}'.format(elapsed)
                 if 'count' in metadata:
                     suffix += '_count={}'.format(metadata['count'])
                 ext = '.' + extension
@@ -426,6 +461,7 @@ class ImageFileRecorder(BaseRecorder):
                 size = self.save_image(
                     filename, image, codec=extension,
                     pix_fmt=image.get_pixel_format(), lib_opts=lib_opts)
+                self.setattrs_in_kivy_thread(frame_last_t_record=metadata['t'])
                 self.increment_in_kivy_thread('size_recorded', size)
                 self.increment_in_kivy_thread('frames_recorded')
             except Exception as e:
@@ -557,7 +593,7 @@ class VideoRecorder(BaseRecorder):
         self.record_directory = expanduser(self.record_directory)
         thread = self.record_thread = Thread(
             target=self.record_thread_run, name='Record thread',
-            args=(self.record_filename, ))
+            args=(self.record_filename, self.requested_record_duration))
         thread.start()
 
     def complete_stop(self, *largs):
@@ -566,11 +602,11 @@ class VideoRecorder(BaseRecorder):
         if self.send_image_to_recorder in self.player.frame_callbacks:
             self.player.frame_callbacks.remove(self.send_image_to_recorder)
 
-    def record_thread_run(self, filename):
+    def record_thread_run(self, filename, requested_record_duration):
         queue = self.image_queue
         recorder = None
         t0 = None
-        last_t = None
+        finished = False
 
         while self.record_state != 'stopping':
             item = queue.get()
@@ -580,8 +616,9 @@ class VideoRecorder(BaseRecorder):
 
             if recorder is None:
                 try:
-                    self.setattr_in_kivy_thread('ts_record', clock())
                     t0 = metadata['t']
+                    self.setattrs_in_kivy_thread(
+                        ts_record=clock(), frame_ts_record=t0)
                     iw, ih = img.get_size()
                     ipix_fmt = img.get_pixel_format()
 
@@ -619,9 +656,19 @@ class VideoRecorder(BaseRecorder):
                 Clock.schedule_once(self.complete_start)
 
             try:
-                self.setattr_in_kivy_thread(
-                    'size_recorded',
-                    recorder.write_frame(img, metadata['t'] - t0))
+                if finished:
+                    continue
+
+                elapsed = metadata['t'] - t0
+                if requested_record_duration and \
+                        elapsed >= requested_record_duration:
+                    finished = True
+                    Clock.schedule_once(self.stop)
+
+                size = recorder.write_frame(img, elapsed)
+                self.setattrs_in_kivy_thread(
+                    size_recorded=size, frame_last_t_record=metadata['t']
+                )
                 self.increment_in_kivy_thread('frames_recorded')
             except Exception as e:
                 self.exception(e)

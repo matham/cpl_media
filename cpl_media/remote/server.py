@@ -237,6 +237,10 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
     May only be set from the server thread.
     """
 
+    _record_time_done = False
+
+    _record_time_start = 0
+
     def __init__(self, **kwargs):
         super(RemoteVideoRecorder, self).__init__(**kwargs)
         self._kivy_trigger = Clock.create_trigger(self.process_in_kivy_thread)
@@ -363,11 +367,23 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
 
         if msg == 'image':
             if self._first_image_while_playing:
-                self.setattr_in_kivy_thread('ts_record', clock())
+                t0 = clock()
+                self._record_time_start = t0
+                self.setattrs_in_kivy_thread(ts_record=t0, frame_ts_record=t0)
                 self._first_image_while_playing = False
+
+            if self._record_time_done:
+                return
+
+            d = self.requested_record_duration
+            t = clock()
+            if d and t - self._record_time_start >= d:
+                self._record_time_done = True
+                Clock.schedule_once(self.stop)
 
             if self._server_client_playing:
                 assert connection is not None
+                self.setattrs_in_kivy_thread(frame_last_t_record=t)
                 self.increment_in_kivy_thread(
                     'size_recorded', sum(value[0].get_buffer_size()))
                 self.increment_in_kivy_thread('frames_recorded')
@@ -477,6 +493,7 @@ class RemoteVideoRecorder(BaseRecorder, RemoteData):
 
     @error_guard
     def record(self, *largs, **kwargs):
+        self._record_time_done = False
         self.start_server()
         super(RemoteVideoRecorder, self).record(*largs, **kwargs)
 
