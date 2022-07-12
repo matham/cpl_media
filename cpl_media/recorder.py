@@ -702,8 +702,12 @@ class ImageFileRecordSettingsWidget(BoxLayout):
         if not paths:
             return
 
-        self.recorder.record_directory = paths[0]
-        text_wid.text = paths[0]
+        p = paths[0]
+        if not isdir(p):
+            p = expanduser('~')
+
+        self.recorder.record_directory = p
+        text_wid.text = p
 
 
 class VideoRecordSettingsWidget(BoxLayout):
@@ -726,8 +730,12 @@ class VideoRecordSettingsWidget(BoxLayout):
         if not paths:
             return
 
-        self.recorder.record_directory = paths[0]
-        text_wid.text = paths[0]
+        p = paths[0]
+        if not isdir(p):
+            p = expanduser('~')
+
+        self.recorder.record_directory = p
+        text_wid.text = p
 
 
 Builder.load_file(join(dirname(__file__), 'recorder.kv'))

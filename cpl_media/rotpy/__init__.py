@@ -567,7 +567,7 @@ class FlirPlayer(BasePlayer):
     equivalent.
     
     https://www.emva.org/wp-content/uploads/GenICamPixelFormatValues.pdf
-    http://softwareservices.flir.com/BFS-U3-89S6/latest/Model/public/\
+    http://softwareservices.flir.com/BFS-U3-89S6/latest/Model/public/
     ImageFormatControl.html
     """
 
