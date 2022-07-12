@@ -565,10 +565,10 @@ class FlirPlayer(BasePlayer):
     }
     """Pixel formats supported by the camera and their :mod:`ffpyplayer`
     equivalent.
-    
+
     https://www.emva.org/wp-content/uploads/GenICamPixelFormatValues.pdf
-    http://softwareservices.flir.com/BFS-U3-89S6/latest/Model/public/
-    ImageFormatControl.html
+    http://softwareservices.flir.com/BFS-U3-89S6/latest/Model/public/\
+ImageFormatControl.html
     """
 
     def __init__(self, open_thread=True, **kwargs):
