@@ -1,0 +1,498 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thor based player &mdash; CPL_Media  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Recorders" href="recorders.html" />
+    <link rel="prev" title="RTV24 based player" href="rtv.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CPL_Media
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">Demo App</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">The CPL_Media API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html">cpl_media</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.error_callback"><code class="docutils literal notranslate"><span class="pre">error_callback()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.error_guard"><code class="docutils literal notranslate"><span class="pre">error_guard()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.get_pyinstaller_datas"><code class="docutils literal notranslate"><span class="pre">get_pyinstaller_datas()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">Base classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html#cpl_media.common.KivyMediaBase"><code class="docutils literal notranslate"><span class="pre">KivyMediaBase</span></code></a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="players.html">Players</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="player.html">Player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer"><code class="docutils literal notranslate"><span class="pre">BasePlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="player.html#cpl_media.player.VideoMetadata"><code class="docutils literal notranslate"><span class="pre">VideoMetadata</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html">FFmpeg based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegSettingsWidget"><code class="docutils literal notranslate"><span class="pre">FFmpegSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.LogFilter"><code class="docutils literal notranslate"><span class="pre">LogFilter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotpy.html">Flir based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer"><code class="docutils literal notranslate"><span class="pre">FlirPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirSettingsWidget"><code class="docutils literal notranslate"><span class="pre">FlirSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_client.html">Remote player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.ClientPlayerSettingsWidget"><code class="docutils literal notranslate"><span class="pre">ClientPlayerSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rtv.html">RTV24 based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer"><code class="docutils literal notranslate"><span class="pre">RTVPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVSettingsWidget"><code class="docutils literal notranslate"><span class="pre">RTVSettingsWidget</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Thor based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer._config_props_"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer._config_props_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.binning_x"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.binning_x</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.binning_x_range"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.binning_x_range</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.binning_y"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.binning_y</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.binning_y_range"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.binning_y_range</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.black_level"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.black_level</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.black_level_range"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.black_level_range</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.cam_state"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.cam_state</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.close_camera"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.close_camera()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.color_gain"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.color_gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.exposure_ms"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.exposure_ms</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.exposure_range"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.exposure_range</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.frame_queue_size"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.frame_queue_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.freq"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.freq</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.gain"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.gain</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.gain_range"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.gain_range</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.is_available"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.is_available</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.num_queued_frames"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.num_queued_frames</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.open_camera"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.open_camera()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.play"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.play()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.play_thread_run"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.play_thread_run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.process_in_kivy_thread"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.process_in_kivy_thread()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.refresh_cameras"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.refresh_cameras()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.roi_height"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.roi_height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.roi_width"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.roi_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.roi_x"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.roi_x</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.roi_y"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.roi_y</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.sensor_size"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.sensor_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.serial"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.serial</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.serials"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.serials</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.set_setting"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.set_setting()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.stop"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.stop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.stop_all"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.stop_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.supported_freqs"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.supported_freqs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.supported_taps"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.supported_taps</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.supported_triggers"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.supported_triggers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.supports_color"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.supports_color</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.taps"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.taps</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.to_kivy_queue"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.to_kivy_queue</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.trigger_count"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.trigger_count</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.trigger_type"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.trigger_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#cpl_media.thorcam.ThorCamSettingsWidget"><code class="docutils literal notranslate"><span class="pre">ThorCamSettingsWidget</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.thorcam.ThorCamSettingsWidget.player"><code class="docutils literal notranslate"><span class="pre">ThorCamSettingsWidget.player</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recorders.html">Recorders</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CPL_Media</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">The CPL_Media API</a></li>
+          <li class="breadcrumb-item"><a href="players.html">Players</a></li>
+      <li class="breadcrumb-item active">Thor based player</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/thorcam.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="thor-based-player">
+<span id="module-cpl_media.thorcam"></span><h1>Thor based player<a class="headerlink" href="#thor-based-player" title="Link to this heading"></a></h1>
+<p>This player can play Thor cameras using <a class="reference external" href="https://matham.github.io/thorcam/api/thorcam.html#module-thorcam" title="(in ThorCam)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">thorcam</span></code></a>.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cpl_media.thorcam.</span></span><span class="sig-name descname"><span class="pre">ThorCamPlayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">open_thread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="player.html#cpl_media.player.BasePlayer" title="cpl_media.player.BasePlayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePlayer</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper for Thor .Net camera based player.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer._config_props_">
+<span class="sig-name descname"><span class="pre">_config_props_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('supported_freqs',</span> <span class="pre">'freq',</span> <span class="pre">'supported_taps',</span> <span class="pre">'taps',</span> <span class="pre">'supports_color',</span> <span class="pre">'exposure_range',</span> <span class="pre">'exposure_ms',</span> <span class="pre">'binning_x_range',</span> <span class="pre">'binning_x',</span> <span class="pre">'binning_y_range',</span> <span class="pre">'binning_y',</span> <span class="pre">'sensor_size',</span> <span class="pre">'roi_x',</span> <span class="pre">'roi_y',</span> <span class="pre">'roi_width',</span> <span class="pre">'roi_height',</span> <span class="pre">'gain_range',</span> <span class="pre">'gain',</span> <span class="pre">'black_level_range',</span> <span class="pre">'black_level',</span> <span class="pre">'frame_queue_size',</span> <span class="pre">'supported_triggers',</span> <span class="pre">'trigger_type',</span> <span class="pre">'trigger_count',</span> <span class="pre">'num_queued_frames',</span> <span class="pre">'color_gain',</span> <span class="pre">'serial',</span> <span class="pre">'serials')</span></em><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer._config_props_" title="Link to this definition"></a></dt>
+<dd><p>A list of configurable property names of the class that is set/read
+by the configuration API.</p>
+<p>Each sub/super-class can define this and the properties are accumulated
+across all the sub/super-classes.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.binning_x">
+<span class="sig-name descname"><span class="pre">binning_x</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.binning_x" title="Link to this definition"></a></dt>
+<dd><p>The x binning value to use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.binning_x_range">
+<span class="sig-name descname"><span class="pre">binning_x_range</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.binning_x_range" title="Link to this definition"></a></dt>
+<dd><p>The supported exposure range.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.binning_y">
+<span class="sig-name descname"><span class="pre">binning_y</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.binning_y" title="Link to this definition"></a></dt>
+<dd><p>The y binning value to use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.binning_y_range">
+<span class="sig-name descname"><span class="pre">binning_y_range</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.binning_y_range" title="Link to this definition"></a></dt>
+<dd><p>The supported exposure range.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.black_level">
+<span class="sig-name descname"><span class="pre">black_level</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.black_level" title="Link to this definition"></a></dt>
+<dd><p>The black level value to use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.black_level_range">
+<span class="sig-name descname"><span class="pre">black_level_range</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.black_level_range" title="Link to this definition"></a></dt>
+<dd><p>The supported exposure range.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.cam_state">
+<span class="sig-name descname"><span class="pre">cam_state</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.cam_state" title="Link to this definition"></a></dt>
+<dd><p>The current state of the state machine of the camera.</p>
+<p>Can be one of none, opening, open, closing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.close_camera">
+<span class="sig-name descname"><span class="pre">close_camera</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.close_camera" title="Link to this definition"></a></dt>
+<dd><p>closes the camera and also stops playing if we were playing.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.color_gain">
+<span class="sig-name descname"><span class="pre">color_gain</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.color_gain" title="Link to this definition"></a></dt>
+<dd><p>The color gain for each red, green, and blue channel.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.exposure_ms">
+<span class="sig-name descname"><span class="pre">exposure_ms</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.exposure_ms" title="Link to this definition"></a></dt>
+<dd><p>The exposure value in ms to use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.exposure_range">
+<span class="sig-name descname"><span class="pre">exposure_range</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.exposure_range" title="Link to this definition"></a></dt>
+<dd><p>The supported exposure range in ms.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.frame_queue_size">
+<span class="sig-name descname"><span class="pre">frame_queue_size</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.frame_queue_size" title="Link to this definition"></a></dt>
+<dd><p>The max number of image frames to be allowed on the camera’s hardware
+queue. Once exceeded, the frames are dropped.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.freq">
+<span class="sig-name descname"><span class="pre">freq</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.freq" title="Link to this definition"></a></dt>
+<dd><p>The frequency to use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.gain">
+<span class="sig-name descname"><span class="pre">gain</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.gain" title="Link to this definition"></a></dt>
+<dd><p>The gain value to use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.gain_range">
+<span class="sig-name descname"><span class="pre">gain_range</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.gain_range" title="Link to this definition"></a></dt>
+<dd><p>The supported exposure range.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.is_available">
+<span class="sig-name descname"><span class="pre">is_available</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.is_available" title="Link to this definition"></a></dt>
+<dd><p>Whether <a class="reference external" href="https://matham.github.io/thorcam/api/thorcam.html#module-thorcam" title="(in ThorCam)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">thorcam</span></code></a> is available to play.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.num_queued_frames">
+<span class="sig-name descname"><span class="pre">num_queued_frames</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.num_queued_frames" title="Link to this definition"></a></dt>
+<dd><p>The number of image frames currently on the camera’s hardware queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.open_camera">
+<span class="sig-name descname"><span class="pre">open_camera</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">serial</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.open_camera" title="Link to this definition"></a></dt>
+<dd><p>Opens the camera so that we can <a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.play" title="cpl_media.thorcam.ThorCamPlayer.play"><code class="xref py py-meth docutils literal notranslate"><span class="pre">play()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.play">
+<span class="sig-name descname"><span class="pre">play</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.play" title="Link to this definition"></a></dt>
+<dd><p>Starts playing the video source and sets the <code class="xref py py-attr docutils literal notranslate"><span class="pre">play_state</span></code> to
+<cite>starting</cite>.</p>
+<p>May be called from main kivy thread only.</p>
+<p>May only be called when <code class="xref py py-attr docutils literal notranslate"><span class="pre">play_state</span></code> is <cite>none</cite>, otherwise an
+exception is raised.</p>
+<p>Players need to eventually call <code class="xref py py-meth docutils literal notranslate"><span class="pre">complete_start()</span></code> to finish
+starting playing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.play_thread_run">
+<span class="sig-name descname"><span class="pre">play_thread_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.play_thread_run" title="Link to this definition"></a></dt>
+<dd><p>The method that runs in the internal play thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.process_in_kivy_thread">
+<span class="sig-name descname"><span class="pre">process_in_kivy_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">largs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.process_in_kivy_thread" title="Link to this definition"></a></dt>
+<dd><p>Processes messages from the camera in the kivy thread.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.refresh_cameras">
+<span class="sig-name descname"><span class="pre">refresh_cameras</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.refresh_cameras" title="Link to this definition"></a></dt>
+<dd><p>Refreshes the list of Thor cameras plugged in.</p>
+<p>It updates <a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer.serials" title="cpl_media.thorcam.ThorCamPlayer.serials"><code class="xref py py-attr docutils literal notranslate"><span class="pre">serials</span></code></a> when we have the new list.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.roi_height">
+<span class="sig-name descname"><span class="pre">roi_height</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.roi_height" title="Link to this definition"></a></dt>
+<dd><p>The height after the y start position of the ROI in pixels, to use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.roi_width">
+<span class="sig-name descname"><span class="pre">roi_width</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.roi_width" title="Link to this definition"></a></dt>
+<dd><p>The width after the x start position of the ROI in pixels, to use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.roi_x">
+<span class="sig-name descname"><span class="pre">roi_x</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.roi_x" title="Link to this definition"></a></dt>
+<dd><p>The x start position of the ROI in pixels.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.roi_y">
+<span class="sig-name descname"><span class="pre">roi_y</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.roi_y" title="Link to this definition"></a></dt>
+<dd><p>The y start position of the ROI in pixels.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.sensor_size">
+<span class="sig-name descname"><span class="pre">sensor_size</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.sensor_size" title="Link to this definition"></a></dt>
+<dd><p>The size of the sensor in pixels.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.serial">
+<span class="sig-name descname"><span class="pre">serial</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.serial" title="Link to this definition"></a></dt>
+<dd><p>The serial number of the camera that will be opened.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.serials">
+<span class="sig-name descname"><span class="pre">serials</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.serials" title="Link to this definition"></a></dt>
+<dd><p>The list of serial numbers representing the cameras available.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.set_setting">
+<span class="sig-name descname"><span class="pre">set_setting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.set_setting" title="Link to this definition"></a></dt>
+<dd><p>Requests that the setting should be changed for the camera.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The setting name to be changed. E.g. <code class="docutils literal notranslate"><span class="pre">&quot;exposure_ms&quot;</span></code>.</p></li>
+<li><p><strong>value</strong> – The new setting value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">largs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.stop" title="Link to this definition"></a></dt>
+<dd><p>Stops playing the video source, if it is playing and sets the
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">play_state</span></code> to <cite>stopping</cite>.</p>
+<p>Players need to eventually call <code class="xref py py-meth docutils literal notranslate"><span class="pre">complete_stop()</span></code> to finish
+stopping playing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>join</strong> – whether to block the thread until the internal play thread
+has exited.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Whether we stopped playing (True) or were already
+stop(ping/ed) playing.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.stop_all">
+<span class="sig-name descname"><span class="pre">stop_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.stop_all" title="Link to this definition"></a></dt>
+<dd><p>Causes all internal threads to stop and exit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>join</strong> – Whether to wait and block the calling thread until the
+internal threads exit.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.supported_freqs">
+<span class="sig-name descname"><span class="pre">supported_freqs</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.supported_freqs" title="Link to this definition"></a></dt>
+<dd><p>The supported frequencies.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.supported_taps">
+<span class="sig-name descname"><span class="pre">supported_taps</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.supported_taps" title="Link to this definition"></a></dt>
+<dd><p>The supported taps.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.supported_triggers">
+<span class="sig-name descname"><span class="pre">supported_triggers</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.supported_triggers" title="Link to this definition"></a></dt>
+<dd><p>The trigger types supported by the camera.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.supports_color">
+<span class="sig-name descname"><span class="pre">supports_color</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.supports_color" title="Link to this definition"></a></dt>
+<dd><p>Whether the camera supports color.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.taps">
+<span class="sig-name descname"><span class="pre">taps</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.taps" title="Link to this definition"></a></dt>
+<dd><p>The tap to use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.to_kivy_queue">
+<span class="sig-name descname"><span class="pre">to_kivy_queue</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.to_kivy_queue" title="Link to this definition"></a></dt>
+<dd><p>The queue that sends messages to be executed in the Kivy thread.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.trigger_count">
+<span class="sig-name descname"><span class="pre">trigger_count</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.trigger_count" title="Link to this definition"></a></dt>
+<dd><p>The number of frames to capture in response to the trigger.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamPlayer.trigger_type">
+<span class="sig-name descname"><span class="pre">trigger_type</span></span><a class="headerlink" href="#cpl_media.thorcam.ThorCamPlayer.trigger_type" title="Link to this definition"></a></dt>
+<dd><p>The trigger type of the camera to use.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamSettingsWidget">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cpl_media.thorcam.</span></span><span class="sig-name descname"><span class="pre">ThorCamSettingsWidget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.thorcam.ThorCamSettingsWidget" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://kivy.org/doc/stable/api-kivy.uix.boxlayout.html#kivy.uix.boxlayout.BoxLayout" title="(in Kivy v2.3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">BoxLayout</span></code></a></p>
+<p>Settings widget for <a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer" title="cpl_media.thorcam.ThorCamPlayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ThorCamPlayer</span></code></a>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.thorcam.ThorCamSettingsWidget.player">
+<span class="sig-name descname"><span class="pre">player</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#cpl_media.thorcam.ThorCamPlayer" title="cpl_media.thorcam.ThorCamPlayer"><span class="pre">ThorCamPlayer</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#cpl_media.thorcam.ThorCamSettingsWidget.player" title="Link to this definition"></a></dt>
+<dd><p>The player.</p>
+</dd></dl>
+
+</dd></dl>
+
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="rtv.html" class="btn btn-neutral float-left" title="RTV24 based player" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="recorders.html" class="btn btn-neutral float-right" title="Recorders" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Matthew Einhorn.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

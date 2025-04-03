@@ -1,0 +1,448 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Player &mdash; CPL_Media  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="FFmpeg based player" href="ffmpeg.html" />
+    <link rel="prev" title="Players" href="players.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CPL_Media
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">Demo App</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">The CPL_Media API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html">cpl_media</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.error_callback"><code class="docutils literal notranslate"><span class="pre">error_callback()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.error_guard"><code class="docutils literal notranslate"><span class="pre">error_guard()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.get_pyinstaller_datas"><code class="docutils literal notranslate"><span class="pre">get_pyinstaller_datas()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">Base classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html#cpl_media.common.KivyMediaBase"><code class="docutils literal notranslate"><span class="pre">KivyMediaBase</span></code></a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="players.html">Players</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpl_media.player.BasePlayer"><code class="docutils literal notranslate"><span class="pre">BasePlayer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer._config_props_"><code class="docutils literal notranslate"><span class="pre">BasePlayer._config_props_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.apply_config_property"><code class="docutils literal notranslate"><span class="pre">BasePlayer.apply_config_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.can_play"><code class="docutils literal notranslate"><span class="pre">BasePlayer.can_play</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.complete_start"><code class="docutils literal notranslate"><span class="pre">BasePlayer.complete_start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.complete_stop"><code class="docutils literal notranslate"><span class="pre">BasePlayer.complete_stop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.data_rate"><code class="docutils literal notranslate"><span class="pre">BasePlayer.data_rate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.display_frame"><code class="docutils literal notranslate"><span class="pre">BasePlayer.display_frame</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.display_trigger"><code class="docutils literal notranslate"><span class="pre">BasePlayer.display_trigger</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.frame_callbacks"><code class="docutils literal notranslate"><span class="pre">BasePlayer.frame_callbacks</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.frames_played"><code class="docutils literal notranslate"><span class="pre">BasePlayer.frames_played</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.get_config_property"><code class="docutils literal notranslate"><span class="pre">BasePlayer.get_config_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.last_image"><code class="docutils literal notranslate"><span class="pre">BasePlayer.last_image</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.last_image_metadata"><code class="docutils literal notranslate"><span class="pre">BasePlayer.last_image_metadata</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.metadata_play"><code class="docutils literal notranslate"><span class="pre">BasePlayer.metadata_play</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.metadata_play_used"><code class="docutils literal notranslate"><span class="pre">BasePlayer.metadata_play_used</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.play"><code class="docutils literal notranslate"><span class="pre">BasePlayer.play()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.play_state"><code class="docutils literal notranslate"><span class="pre">BasePlayer.play_state</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.play_thread"><code class="docutils literal notranslate"><span class="pre">BasePlayer.play_thread</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.play_thread_run"><code class="docutils literal notranslate"><span class="pre">BasePlayer.play_thread_run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.player_summery"><code class="docutils literal notranslate"><span class="pre">BasePlayer.player_summery</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.process_frame"><code class="docutils literal notranslate"><span class="pre">BasePlayer.process_frame()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.real_rate"><code class="docutils literal notranslate"><span class="pre">BasePlayer.real_rate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.stop"><code class="docutils literal notranslate"><span class="pre">BasePlayer.stop()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.stop_all"><code class="docutils literal notranslate"><span class="pre">BasePlayer.stop_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.ts_play"><code class="docutils literal notranslate"><span class="pre">BasePlayer.ts_play</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.update_metadata"><code class="docutils literal notranslate"><span class="pre">BasePlayer.update_metadata()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.BasePlayer.use_real_time"><code class="docutils literal notranslate"><span class="pre">BasePlayer.use_real_time</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#cpl_media.player.VideoMetadata"><code class="docutils literal notranslate"><span class="pre">VideoMetadata</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.VideoMetadata.fmt"><code class="docutils literal notranslate"><span class="pre">VideoMetadata.fmt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.VideoMetadata.h"><code class="docutils literal notranslate"><span class="pre">VideoMetadata.h</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.VideoMetadata.rate"><code class="docutils literal notranslate"><span class="pre">VideoMetadata.rate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.player.VideoMetadata.w"><code class="docutils literal notranslate"><span class="pre">VideoMetadata.w</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html">FFmpeg based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegSettingsWidget"><code class="docutils literal notranslate"><span class="pre">FFmpegSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.LogFilter"><code class="docutils literal notranslate"><span class="pre">LogFilter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotpy.html">Flir based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer"><code class="docutils literal notranslate"><span class="pre">FlirPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirSettingsWidget"><code class="docutils literal notranslate"><span class="pre">FlirSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_client.html">Remote player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.ClientPlayerSettingsWidget"><code class="docutils literal notranslate"><span class="pre">ClientPlayerSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rtv.html">RTV24 based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer"><code class="docutils literal notranslate"><span class="pre">RTVPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVSettingsWidget"><code class="docutils literal notranslate"><span class="pre">RTVSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="thorcam.html">Thor based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamSettingsWidget"><code class="docutils literal notranslate"><span class="pre">ThorCamSettingsWidget</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recorders.html">Recorders</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CPL_Media</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">The CPL_Media API</a></li>
+          <li class="breadcrumb-item"><a href="players.html">Players</a></li>
+      <li class="breadcrumb-item active">Player</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/player.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="player">
+<span id="module-cpl_media.player"></span><span id="cpl-media-player-api"></span><h1>Player<a class="headerlink" href="#player" title="Link to this heading"></a></h1>
+<p>Provides the base class for video players.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cpl_media.player.</span></span><span class="sig-name descname"><span class="pre">BasePlayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.player.BasePlayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">EventDispatcher</span></code>, <a class="reference internal" href="common.html#cpl_media.common.KivyMediaBase" title="cpl_media.common.KivyMediaBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">KivyMediaBase</span></code></a></p>
+<p>Base class for every player.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer._config_props_">
+<span class="sig-name descname"><span class="pre">_config_props_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('metadata_play',</span> <span class="pre">'metadata_play_used')</span></em><a class="headerlink" href="#cpl_media.player.BasePlayer._config_props_" title="Link to this definition"></a></dt>
+<dd><p>A list of configurable property names of the class that is set/read
+by the configuration API.</p>
+<p>Each sub/super-class can define this and the properties are accumulated
+across all the sub/super-classes.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.apply_config_property">
+<span class="sig-name descname"><span class="pre">apply_config_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.player.BasePlayer.apply_config_property" title="Link to this definition"></a></dt>
+<dd><p>(internal) used by the config system to set the special config data
+of the player.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.can_play">
+<span class="sig-name descname"><span class="pre">can_play</span></span><a class="headerlink" href="#cpl_media.player.BasePlayer.can_play" title="Link to this definition"></a></dt>
+<dd><p>Whether the video source can play now.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.complete_start">
+<span class="sig-name descname"><span class="pre">complete_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">largs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.player.BasePlayer.complete_start" title="Link to this definition"></a></dt>
+<dd><p>After <a class="reference internal" href="#cpl_media.player.BasePlayer.play" title="cpl_media.player.BasePlayer.play"><code class="xref py py-meth docutils literal notranslate"><span class="pre">play()</span></code></a>, this is called to set the player into <cite>playing</cite>
+<a class="reference internal" href="#cpl_media.player.BasePlayer.play_state" title="cpl_media.player.BasePlayer.play_state"><code class="xref py py-attr docutils literal notranslate"><span class="pre">play_state</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.complete_stop">
+<span class="sig-name descname"><span class="pre">complete_stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">largs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.player.BasePlayer.complete_stop" title="Link to this definition"></a></dt>
+<dd><p>After <a class="reference internal" href="#cpl_media.player.BasePlayer.stop" title="cpl_media.player.BasePlayer.stop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">stop()</span></code></a>, this is called to set the player into <cite>none</cite>
+<a class="reference internal" href="#cpl_media.player.BasePlayer.play_state" title="cpl_media.player.BasePlayer.play_state"><code class="xref py py-attr docutils literal notranslate"><span class="pre">play_state</span></code></a>.</p>
+<p>If the thread is ending before <a class="reference internal" href="#cpl_media.player.BasePlayer.stop" title="cpl_media.player.BasePlayer.stop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">stop()</span></code></a> was called, this may be
+called without <a class="reference internal" href="#cpl_media.player.BasePlayer.stop" title="cpl_media.player.BasePlayer.stop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">stop()</span></code></a> being called.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.data_rate">
+<span class="sig-name descname"><span class="pre">data_rate</span></span><a class="headerlink" href="#cpl_media.player.BasePlayer.data_rate" title="Link to this definition"></a></dt>
+<dd><p>The estimated rate in B/s at which the camera is playing.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.display_frame">
+<span class="sig-name descname"><span class="pre">display_frame</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#cpl_media.player.BasePlayer.display_frame" title="Link to this definition"></a></dt>
+<dd><p>Called from kivy thread to display the frame whenever a new image
+arrives. This is called once per kivy frame, so if multiple images arrive
+during a kivy frame, it is called only for the last one.</p>
+<p>This callback takes two arguments: <code class="docutils literal notranslate"><span class="pre">(image,</span> <span class="pre">metadata)</span></code>, where <code class="docutils literal notranslate"><span class="pre">image</span></code>
+is the <a class="reference external" href="https://matham.github.io/ffpyplayer/pic.html#ffpyplayer.pic.Image" title="(in FFPyPlayer)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ffpyplayer.pic.Image</span></code></a>, and <code class="docutils literal notranslate"><span class="pre">metadata</span></code> is a dict with
+metadata.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.display_trigger">
+<span class="sig-name descname"><span class="pre">display_trigger</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#cpl_media.player.BasePlayer.display_trigger" title="Link to this definition"></a></dt>
+<dd><p>Clock trigger to call <a class="reference internal" href="#cpl_media.player.BasePlayer.display_frame" title="cpl_media.player.BasePlayer.display_frame"><code class="xref py py-meth docutils literal notranslate"><span class="pre">display_frame()</span></code></a> in the kivy thread.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.frame_callbacks">
+<span class="sig-name descname"><span class="pre">frame_callbacks</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#cpl_media.player.BasePlayer.frame_callbacks" title="Link to this definition"></a></dt>
+<dd><p>A list of callbacks that are called from the internal thread whenever
+a new image is available.</p>
+<p>All the callbacks are called with a single tuple argument
+<code class="docutils literal notranslate"><span class="pre">(image,</span> <span class="pre">metadata)</span></code>, where <code class="docutils literal notranslate"><span class="pre">image</span></code> is the
+<a class="reference external" href="https://matham.github.io/ffpyplayer/pic.html#ffpyplayer.pic.Image" title="(in FFPyPlayer)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ffpyplayer.pic.Image</span></code></a>, and <code class="docutils literal notranslate"><span class="pre">metadata</span></code> is a dict with metadata.</p>
+<p>It always contains at least the key <code class="docutils literal notranslate"><span class="pre">'t'</span></code> indicating the timestamp of the
+image, but it may also contains other metadata keys specific to the player
+such as <code class="docutils literal notranslate"><span class="pre">'count'</span></code> for the frame number, when sent by the camera.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.frames_played">
+<span class="sig-name descname"><span class="pre">frames_played</span></span><a class="headerlink" href="#cpl_media.player.BasePlayer.frames_played" title="Link to this definition"></a></dt>
+<dd><p>The number of frames that have been played since <a class="reference internal" href="#cpl_media.player.BasePlayer.play" title="cpl_media.player.BasePlayer.play"><code class="xref py py-meth docutils literal notranslate"><span class="pre">play()</span></code></a>
+was called.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.get_config_property">
+<span class="sig-name descname"><span class="pre">get_config_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.player.BasePlayer.get_config_property" title="Link to this definition"></a></dt>
+<dd><p>(internal) used by the config system to get the special config data
+of the player.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.last_image">
+<span class="sig-name descname"><span class="pre">last_image</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#cpl_media.player.BasePlayer.last_image" title="Link to this definition"></a></dt>
+<dd><p>The last <a class="reference external" href="https://matham.github.io/ffpyplayer/pic.html#ffpyplayer.pic.Image" title="(in FFPyPlayer)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ffpyplayer.pic.Image</span></code></a> received by the camera.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.last_image_metadata">
+<span class="sig-name descname"><span class="pre">last_image_metadata</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'t':</span> <span class="pre">0}</span></em><a class="headerlink" href="#cpl_media.player.BasePlayer.last_image_metadata" title="Link to this definition"></a></dt>
+<dd><p>The metadata of the last image received by the camera.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.metadata_play">
+<span class="sig-name descname"><span class="pre">metadata_play</span></span><a class="headerlink" href="#cpl_media.player.BasePlayer.metadata_play" title="Link to this definition"></a></dt>
+<dd><p>(internal) Describes the video metadata of the video player. This is
+the requested format, or best guess of the metadata.</p>
+<p>Read only.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.metadata_play_used">
+<span class="sig-name descname"><span class="pre">metadata_play_used</span></span><a class="headerlink" href="#cpl_media.player.BasePlayer.metadata_play_used" title="Link to this definition"></a></dt>
+<dd><p>(internal) Describes the video metadata of the video player that is
+actually used by the player. This must be set before recorders may allow
+recording the player.</p>
+<p>Depending on the metadata needed by the recorder, it may refuse to
+record until the needed metadata is given.</p>
+<p>Read only.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.play">
+<span class="sig-name descname"><span class="pre">play</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.player.BasePlayer.play" title="Link to this definition"></a></dt>
+<dd><p>Starts playing the video source and sets the <a class="reference internal" href="#cpl_media.player.BasePlayer.play_state" title="cpl_media.player.BasePlayer.play_state"><code class="xref py py-attr docutils literal notranslate"><span class="pre">play_state</span></code></a> to
+<cite>starting</cite>.</p>
+<p>May be called from main kivy thread only.</p>
+<p>May only be called when <a class="reference internal" href="#cpl_media.player.BasePlayer.play_state" title="cpl_media.player.BasePlayer.play_state"><code class="xref py py-attr docutils literal notranslate"><span class="pre">play_state</span></code></a> is <cite>none</cite>, otherwise an
+exception is raised.</p>
+<p>Players need to eventually call <a class="reference internal" href="#cpl_media.player.BasePlayer.complete_start" title="cpl_media.player.BasePlayer.complete_start"><code class="xref py py-meth docutils literal notranslate"><span class="pre">complete_start()</span></code></a> to finish
+starting playing.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.play_state">
+<span class="sig-name descname"><span class="pre">play_state</span></span><a class="headerlink" href="#cpl_media.player.BasePlayer.play_state" title="Link to this definition"></a></dt>
+<dd><p>The current state of the state machine of the player.</p>
+<p>Can be one of none, starting, playing, stopping.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.play_thread">
+<span class="sig-name descname"><span class="pre">play_thread</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#cpl_media.player.BasePlayer.play_thread" title="Link to this definition"></a></dt>
+<dd><p>The thread that plays the camera.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.play_thread_run">
+<span class="sig-name descname"><span class="pre">play_thread_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.player.BasePlayer.play_thread_run" title="Link to this definition"></a></dt>
+<dd><p>The method that runs in the internal play thread.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.player_summery">
+<span class="sig-name descname"><span class="pre">player_summery</span></span><a class="headerlink" href="#cpl_media.player.BasePlayer.player_summery" title="Link to this definition"></a></dt>
+<dd><p>Textual summary of the camera type and config options.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.process_frame">
+<span class="sig-name descname"><span class="pre">process_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.player.BasePlayer.process_frame" title="Link to this definition"></a></dt>
+<dd><p>Called from internal thread to process a new image frame received.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frame</strong> – The <a class="reference external" href="https://matham.github.io/ffpyplayer/pic.html#ffpyplayer.pic.Image" title="(in FFPyPlayer)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ffpyplayer.pic.Image</span></code></a>.</p></li>
+<li><p><strong>metadata</strong> – The metadata of the image. See
+<a class="reference internal" href="#cpl_media.player.BasePlayer.frame_callbacks" title="cpl_media.player.BasePlayer.frame_callbacks"><code class="xref py py-attr docutils literal notranslate"><span class="pre">frame_callbacks</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.real_rate">
+<span class="sig-name descname"><span class="pre">real_rate</span></span><a class="headerlink" href="#cpl_media.player.BasePlayer.real_rate" title="Link to this definition"></a></dt>
+<dd><p>The estimated real fps of the video source being played.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">largs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.player.BasePlayer.stop" title="Link to this definition"></a></dt>
+<dd><p>Stops playing the video source, if it is playing and sets the
+<a class="reference internal" href="#cpl_media.player.BasePlayer.play_state" title="cpl_media.player.BasePlayer.play_state"><code class="xref py py-attr docutils literal notranslate"><span class="pre">play_state</span></code></a> to <cite>stopping</cite>.</p>
+<p>Players need to eventually call <a class="reference internal" href="#cpl_media.player.BasePlayer.complete_stop" title="cpl_media.player.BasePlayer.complete_stop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">complete_stop()</span></code></a> to finish
+stopping playing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>join</strong> – whether to block the thread until the internal play thread
+has exited.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Whether we stopped playing (True) or were already
+stop(ping/ed) playing.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.stop_all">
+<span class="sig-name descname"><span class="pre">stop_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.player.BasePlayer.stop_all" title="Link to this definition"></a></dt>
+<dd><p>Causes all internal threads to stop and exit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>join</strong> – Whether to wait and block the calling thread until the
+internal threads exit.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.ts_play">
+<span class="sig-name descname"><span class="pre">ts_play</span></span><a class="headerlink" href="#cpl_media.player.BasePlayer.ts_play" title="Link to this definition"></a></dt>
+<dd><p>The time when the camera started playing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.update_metadata">
+<span class="sig-name descname"><span class="pre">update_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.player.BasePlayer.update_metadata" title="Link to this definition"></a></dt>
+<dd><p>Sets <a class="reference internal" href="#cpl_media.player.BasePlayer.metadata_play_used" title="cpl_media.player.BasePlayer.metadata_play_used"><code class="xref py py-attr docutils literal notranslate"><span class="pre">metadata_play_used</span></code></a> based on <a class="reference internal" href="#cpl_media.player.BasePlayer.metadata_play" title="cpl_media.player.BasePlayer.metadata_play"><code class="xref py py-attr docutils literal notranslate"><span class="pre">metadata_play</span></code></a> and
+any values provided to the function, if not None.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.BasePlayer.use_real_time">
+<span class="sig-name descname"><span class="pre">use_real_time</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#cpl_media.player.BasePlayer.use_real_time" title="Link to this definition"></a></dt>
+<dd><p>Whether the video should use the current real time when we got the
+image, e.g. when the camera provided timestamp is not reliable.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cpl_media.player.VideoMetadata">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cpl_media.player.</span></span><span class="sig-name descname"><span class="pre">VideoMetadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fmt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.player.VideoMetadata" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<p>Namedtuple type describing a video stream.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.VideoMetadata.fmt">
+<span class="sig-name descname"><span class="pre">fmt</span></span><a class="headerlink" href="#cpl_media.player.VideoMetadata.fmt" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.VideoMetadata.h">
+<span class="sig-name descname"><span class="pre">h</span></span><a class="headerlink" href="#cpl_media.player.VideoMetadata.h" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.VideoMetadata.rate">
+<span class="sig-name descname"><span class="pre">rate</span></span><a class="headerlink" href="#cpl_media.player.VideoMetadata.rate" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.player.VideoMetadata.w">
+<span class="sig-name descname"><span class="pre">w</span></span><a class="headerlink" href="#cpl_media.player.VideoMetadata.w" title="Link to this definition"></a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="players.html" class="btn btn-neutral float-left" title="Players" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ffmpeg.html" class="btn btn-neutral float-right" title="FFmpeg based player" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Matthew Einhorn.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

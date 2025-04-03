@@ -1,0 +1,243 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recorders &mdash; CPL_Media  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Recorder" href="recorder.html" />
+    <link rel="prev" title="Thor based player" href="thorcam.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CPL_Media
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">Demo App</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">The CPL_Media API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html">cpl_media</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.error_callback"><code class="docutils literal notranslate"><span class="pre">error_callback()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.error_guard"><code class="docutils literal notranslate"><span class="pre">error_guard()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.get_pyinstaller_datas"><code class="docutils literal notranslate"><span class="pre">get_pyinstaller_datas()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">Base classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html#cpl_media.common.KivyMediaBase"><code class="docutils literal notranslate"><span class="pre">KivyMediaBase</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="players.html">Players</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Recorders</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="recorder.html">Recorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder"><code class="docutils literal notranslate"><span class="pre">BaseRecorder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecordSettingsWidget"><code class="docutils literal notranslate"><span class="pre">ImageFileRecordSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecorder"><code class="docutils literal notranslate"><span class="pre">ImageFileRecorder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecordSettingsWidget"><code class="docutils literal notranslate"><span class="pre">VideoRecordSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder"><code class="docutils literal notranslate"><span class="pre">VideoRecorder</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_server.html">Remote server recorder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.EndConnection"><code class="docutils literal notranslate"><span class="pre">EndConnection</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteData"><code class="docutils literal notranslate"><span class="pre">RemoteData</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteRecordSettingsWidget"><code class="docutils literal notranslate"><span class="pre">RemoteRecordSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CPL_Media</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">The CPL_Media API</a></li>
+      <li class="breadcrumb-item active">Recorders</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/recorders.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="recorders">
+<span id="cpl-media-recorders-api"></span><h1>Recorders<a class="headerlink" href="#recorders" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="recorder.html">Recorder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder"><code class="docutils literal notranslate"><span class="pre">BaseRecorder</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder._config_props_"><code class="docutils literal notranslate"><span class="pre">BaseRecorder._config_props_</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.apply_config_property"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.apply_config_property()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.can_record"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.can_record</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.complete_start"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.complete_start()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.complete_stop"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.complete_stop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.data_rate"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.data_rate</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.elapsed_record_time"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.elapsed_record_time</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.frame_last_t_record"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.frame_last_t_record</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.frame_ts_record"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.frame_ts_record</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.frames_recorded"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.frames_recorded</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.frames_skipped"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.frames_skipped</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.get_config_property"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.get_config_property()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.image_queue"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.image_queue</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.metadata_player"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.metadata_player</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.metadata_record"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.metadata_record</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.metadata_record_used"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.metadata_record_used</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.player"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.player</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.record"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.record()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.record_state"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.record_state</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.record_thread"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.record_thread</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.record_thread_run"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.record_thread_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.recorder_summery"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.recorder_summery</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.requested_record_duration"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.requested_record_duration</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.save_image"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.save_image()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.size_recorded"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.size_recorded</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.stop"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.stop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.stop_all"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.stop_all()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.BaseRecorder.ts_record"><code class="docutils literal notranslate"><span class="pre">BaseRecorder.ts_record</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecordSettingsWidget"><code class="docutils literal notranslate"><span class="pre">ImageFileRecordSettingsWidget</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecordSettingsWidget.recorder"><code class="docutils literal notranslate"><span class="pre">ImageFileRecordSettingsWidget.recorder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecordSettingsWidget.set_filename"><code class="docutils literal notranslate"><span class="pre">ImageFileRecordSettingsWidget.set_filename()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecorder"><code class="docutils literal notranslate"><span class="pre">ImageFileRecorder</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecorder._config_props_"><code class="docutils literal notranslate"><span class="pre">ImageFileRecorder._config_props_</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecorder.complete_stop"><code class="docutils literal notranslate"><span class="pre">ImageFileRecorder.complete_stop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecorder.compression"><code class="docutils literal notranslate"><span class="pre">ImageFileRecorder.compression</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecorder.extension"><code class="docutils literal notranslate"><span class="pre">ImageFileRecorder.extension</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecorder.record"><code class="docutils literal notranslate"><span class="pre">ImageFileRecorder.record()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecorder.record_directory"><code class="docutils literal notranslate"><span class="pre">ImageFileRecorder.record_directory</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecorder.record_prefix"><code class="docutils literal notranslate"><span class="pre">ImageFileRecorder.record_prefix</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecorder.record_thread_run"><code class="docutils literal notranslate"><span class="pre">ImageFileRecorder.record_thread_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecorder.send_image_to_recorder"><code class="docutils literal notranslate"><span class="pre">ImageFileRecorder.send_image_to_recorder()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.ImageFileRecorder.stop"><code class="docutils literal notranslate"><span class="pre">ImageFileRecorder.stop()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecordSettingsWidget"><code class="docutils literal notranslate"><span class="pre">VideoRecordSettingsWidget</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecordSettingsWidget.recorder"><code class="docutils literal notranslate"><span class="pre">VideoRecordSettingsWidget.recorder</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecordSettingsWidget.set_filename"><code class="docutils literal notranslate"><span class="pre">VideoRecordSettingsWidget.set_filename()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder"><code class="docutils literal notranslate"><span class="pre">VideoRecorder</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder._config_props_"><code class="docutils literal notranslate"><span class="pre">VideoRecorder._config_props_</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder.complete_stop"><code class="docutils literal notranslate"><span class="pre">VideoRecorder.complete_stop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder.compute_recording_opts"><code class="docutils literal notranslate"><span class="pre">VideoRecorder.compute_recording_opts()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder.estimate_record_rate"><code class="docutils literal notranslate"><span class="pre">VideoRecorder.estimate_record_rate</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder.record"><code class="docutils literal notranslate"><span class="pre">VideoRecorder.record()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder.record_directory"><code class="docutils literal notranslate"><span class="pre">VideoRecorder.record_directory</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder.record_filename"><code class="docutils literal notranslate"><span class="pre">VideoRecorder.record_filename</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder.record_fname"><code class="docutils literal notranslate"><span class="pre">VideoRecorder.record_fname</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder.record_fname_count"><code class="docutils literal notranslate"><span class="pre">VideoRecorder.record_fname_count</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder.record_thread_run"><code class="docutils literal notranslate"><span class="pre">VideoRecorder.record_thread_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder.send_image_to_recorder"><code class="docutils literal notranslate"><span class="pre">VideoRecorder.send_image_to_recorder()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="recorder.html#cpl_media.recorder.VideoRecorder.stop"><code class="docutils literal notranslate"><span class="pre">VideoRecorder.stop()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="remote_server.html">Remote server recorder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.EndConnection"><code class="docutils literal notranslate"><span class="pre">EndConnection</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteData"><code class="docutils literal notranslate"><span class="pre">RemoteData</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteData.decode_data"><code class="docutils literal notranslate"><span class="pre">RemoteData.decode_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteData.read_msg"><code class="docutils literal notranslate"><span class="pre">RemoteData.read_msg()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteData.send_msg"><code class="docutils literal notranslate"><span class="pre">RemoteData.send_msg()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteRecordSettingsWidget"><code class="docutils literal notranslate"><span class="pre">RemoteRecordSettingsWidget</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteRecordSettingsWidget.recorder"><code class="docutils literal notranslate"><span class="pre">RemoteRecordSettingsWidget.recorder</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder._config_props_"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder._config_props_</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.from_kivy_queue"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.from_kivy_queue</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.max_images_buffered"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.max_images_buffered</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.port"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.port</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.process_in_kivy_thread"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.process_in_kivy_thread()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.record"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.record()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.record_thread_run"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.record_thread_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.send_image_to_client"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.send_image_to_client()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.send_message_to_client"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.send_message_to_client()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.server"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.server</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.server_active"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.server_active</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.server_run"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.server_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.server_thread"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.server_thread</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.start_server"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.start_server()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.stop"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.stop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.stop_all"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.stop_all()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.stop_server"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.stop_server()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.timeout"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.timeout</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_server.html#cpl_media.remote.server.RemoteVideoRecorder.to_kivy_queue"><code class="docutils literal notranslate"><span class="pre">RemoteVideoRecorder.to_kivy_queue</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="thorcam.html" class="btn btn-neutral float-left" title="Thor based player" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="recorder.html" class="btn btn-neutral float-right" title="Recorder" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Matthew Einhorn.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

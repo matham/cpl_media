@@ -1,0 +1,253 @@
+cpl_media.ffmpeg.FFmpegPlayer:
+  dshow_filename:
+  - The name of the dshow camera to open.
+  - '    '
+  - ''
+  dshow_opt:
+  - The camera options associated with :attr:`dshow_true_filename` when
+  - dshow is used.
+  - ''
+  dshow_rate:
+  - The frame rate to request from the dshow camera.
+  - '    '
+  - ''
+  dshow_true_filename:
+  - The real and complete filename of the direct show (webcam) device.
+  - '    '
+  - ''
+  file_fmt:
+  - The format used to play the video. Can be empty or a format e.g.
+  - '``mjpeg`` for webcams.'
+  - ''
+  icodec:
+  - The codec used to open the video stream with if it needs to be
+  - specified for the camera.
+  - ''
+  play_filename:
+  - The filename of the media being played. Can be e.g. a filename etc.
+  - '    '
+  - ''
+  use_dshow:
+  - Whether we use dshow - i.e. USB webcams, or normal media sources.
+  - '    '
+  - ''
+cpl_media.player.BasePlayer:
+  metadata_play:
+  - (internal) Describes the video metadata of the video player. This is
+  - the requested format, or best guess of the metadata.
+  - ''
+  - Read only.
+  - ''
+  metadata_play_used:
+  - (internal) Describes the video metadata of the video player that is
+  - actually used by the player. This must be set before recorders may allow
+  - recording the player.
+  - ''
+  - Depending on the metadata needed by the recorder, it may refuse to
+  - record until the needed metadata is given.
+  - ''
+  - Read only.
+  - ''
+cpl_media.recorder.BaseRecorder:
+  metadata_record:
+  - (internal) Describes the video metadata of the recorder. This is
+  - the requested format, or best guess of the metadata.
+  - ''
+  - Read only.
+  - ''
+  requested_record_duration:
+  - The total duration that we should record.
+  - ''
+  - If zero, duration was not set.
+  - ''
+cpl_media.recorder.ImageFileRecorder:
+  compression:
+  - Whether to compress when :attr:`extension` is `tiff`. Can be one of
+  - "``'raw', 'lzw', 'zip'``."
+  - ''
+  extension:
+  - The extension of the images being saved.
+  - '    '
+  - ''
+  record_directory:
+  - The directory into which videos should be saved.
+  - '    '
+  - ''
+  record_prefix:
+  - The prefix to the filename of the images being saved.
+  - '    '
+  - ''
+cpl_media.recorder.VideoRecorder:
+  estimate_record_rate:
+  - Whether to use :attr:`cpl_media.player.BasePlayer.real_rate` for the
+  - recorder frame rate, as opposed to the one initially provided by the
+  - player.
+  - ''
+  record_directory:
+  - The directory into which videos should be saved.
+  - '    '
+  - ''
+  record_fname:
+  - The filename to be used to record the next video.
+  - ''
+  - If ``{}`` is present in the filename, it'll be replaced with the value of
+  - :attr:`record_fname_count` which auto increments after every video, when
+  - used. We use Python's ``format`` machinery for this.
+  - ''
+  record_fname_count:
+  - A counter that auto increments by one after every recorded video.
+  - ''
+  - Used to give unique filenames for each video file. See
+  - :attr:`record_fname`.
+  - ''
+cpl_media.remote.client.RemoteVideoPlayer:
+  port:
+  - The server port that broadcasts the data.
+  - '    '
+  - ''
+  server:
+  - The server address that broadcasts the data.
+  - '    '
+  - ''
+  timeout:
+  - How long to wait before timing out when reading data before checking the
+  - queue for other requests.
+  - ''
+cpl_media.remote.server.RemoteVideoRecorder:
+  max_images_buffered:
+  - How many images the server should buffer before it starts dropping
+  - images, rather than queuing them to be sent to the client.
+  - ''
+  port:
+  - The server port on which to broadcast the data.
+  - '    '
+  - ''
+  server:
+  - The server address on which to broadcast the data.
+  - '    '
+  - ''
+  timeout:
+  - How long to wait before timing out when reading data before checking the
+  - queue for other requests.
+  - ''
+cpl_media.rotpy.FlirPlayer:
+  serial:
+  - The serial number of the camera to open.
+  - '    '
+  - ''
+cpl_media.rtv.RTVPlayer:
+  pipe_name:
+  - The internal name used to communicate with Barst. When running remotely,
+  - or if the server already is open, the name is used to discover Barst.
+  - ''
+  pixel_fmt:
+  - The pixel format of the images being played.
+  - ''
+  - It can be one of the keys in :attr:`image_fmts`.
+  - ''
+  port:
+  - The RTV port (camera number) on the card to use.
+  - '    '
+  - ''
+  remote_computer_name:
+  - The name of the computer running Barst, if it's a remote computer.
+  - Otherwise it's the empty string.
+  - ''
+  video_fmt:
+  - The video format of the video being played.
+  - ''
+  - It can be one of the keys in :attr:`video_fmts`.
+  - ''
+cpl_media.thorcam.ThorCamPlayer:
+  binning_x:
+  - The x binning value to use.
+  - ''
+  binning_x_range:
+  - The supported exposure range.
+  - ''
+  binning_y:
+  - The y binning value to use.
+  - ''
+  binning_y_range:
+  - The supported exposure range.
+  - ''
+  black_level:
+  - The black level value to use.
+  - ''
+  black_level_range:
+  - The supported exposure range.
+  - ''
+  color_gain:
+  - The color gain for each red, green, and blue channel.
+  - ''
+  exposure_ms:
+  - The exposure value in ms to use.
+  - ''
+  exposure_range:
+  - The supported exposure range in ms.
+  - ''
+  frame_queue_size:
+  - The max number of image frames to be allowed on the camera's hardware
+  - queue. Once exceeded, the frames are dropped.
+  - ''
+  freq:
+  - The frequency to use.
+  - ''
+  gain:
+  - The gain value to use.
+  - ''
+  gain_range:
+  - The supported exposure range.
+  - ''
+  num_queued_frames:
+  - The number of image frames currently on the camera's hardware queue.
+  - ''
+  roi_height:
+  - The height after the y start position of the ROI in pixels, to use.
+  - ''
+  roi_width:
+  - The width after the x start position of the ROI in pixels, to use.
+  - ''
+  roi_x:
+  - The x start position of the ROI in pixels.
+  - ''
+  roi_y:
+  - The y start position of the ROI in pixels.
+  - ''
+  sensor_size:
+  - The size of the sensor in pixels.
+  - ''
+  serial:
+  - The serial number of the camera that will be opened.
+  - '    '
+  - ''
+  serials:
+  - The list of serial numbers representing the cameras available.
+  - '    '
+  - ''
+  supported_freqs:
+  - The supported frequencies.
+  - ''
+  supported_taps:
+  - The supported taps.
+  - ''
+  supported_triggers:
+  - The trigger types supported by the camera.
+  - ''
+  supports_color:
+  - Whether the camera supports color.
+  - ''
+  taps:
+  - The tap to use.
+  - ''
+  trigger_count:
+  - The number of frames to capture in response to the trigger.
+  - ''
+  trigger_type:
+  - The trigger type of the camera to use.
+  - ''
+more_kivy_app.app.MoreKivyApp:
+  inspect:
+  - Enables GUI inspection. If True, it is activated by hitting ctrl-e in
+  - the GUI.
+  - ''

@@ -1,0 +1,335 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Players &mdash; CPL_Media  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Player" href="player.html" />
+    <link rel="prev" title="Base classes" href="common.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CPL_Media
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">Demo App</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">The CPL_Media API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html">cpl_media</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.error_callback"><code class="docutils literal notranslate"><span class="pre">error_callback()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.error_guard"><code class="docutils literal notranslate"><span class="pre">error_guard()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.get_pyinstaller_datas"><code class="docutils literal notranslate"><span class="pre">get_pyinstaller_datas()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">Base classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html#cpl_media.common.KivyMediaBase"><code class="docutils literal notranslate"><span class="pre">KivyMediaBase</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Players</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="player.html">Player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer"><code class="docutils literal notranslate"><span class="pre">BasePlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="player.html#cpl_media.player.VideoMetadata"><code class="docutils literal notranslate"><span class="pre">VideoMetadata</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html">FFmpeg based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegSettingsWidget"><code class="docutils literal notranslate"><span class="pre">FFmpegSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.LogFilter"><code class="docutils literal notranslate"><span class="pre">LogFilter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotpy.html">Flir based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer"><code class="docutils literal notranslate"><span class="pre">FlirPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirSettingsWidget"><code class="docutils literal notranslate"><span class="pre">FlirSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_client.html">Remote player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.ClientPlayerSettingsWidget"><code class="docutils literal notranslate"><span class="pre">ClientPlayerSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rtv.html">RTV24 based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer"><code class="docutils literal notranslate"><span class="pre">RTVPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVSettingsWidget"><code class="docutils literal notranslate"><span class="pre">RTVSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="thorcam.html">Thor based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamSettingsWidget"><code class="docutils literal notranslate"><span class="pre">ThorCamSettingsWidget</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recorders.html">Recorders</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CPL_Media</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">The CPL_Media API</a></li>
+      <li class="breadcrumb-item active">Players</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/players.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="players">
+<span id="cpl-media-players-api"></span><h1>Players<a class="headerlink" href="#players" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="player.html">Player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer"><code class="docutils literal notranslate"><span class="pre">BasePlayer</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer._config_props_"><code class="docutils literal notranslate"><span class="pre">BasePlayer._config_props_</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.apply_config_property"><code class="docutils literal notranslate"><span class="pre">BasePlayer.apply_config_property()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.can_play"><code class="docutils literal notranslate"><span class="pre">BasePlayer.can_play</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.complete_start"><code class="docutils literal notranslate"><span class="pre">BasePlayer.complete_start()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.complete_stop"><code class="docutils literal notranslate"><span class="pre">BasePlayer.complete_stop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.data_rate"><code class="docutils literal notranslate"><span class="pre">BasePlayer.data_rate</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.display_frame"><code class="docutils literal notranslate"><span class="pre">BasePlayer.display_frame</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.display_trigger"><code class="docutils literal notranslate"><span class="pre">BasePlayer.display_trigger</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.frame_callbacks"><code class="docutils literal notranslate"><span class="pre">BasePlayer.frame_callbacks</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.frames_played"><code class="docutils literal notranslate"><span class="pre">BasePlayer.frames_played</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.get_config_property"><code class="docutils literal notranslate"><span class="pre">BasePlayer.get_config_property()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.last_image"><code class="docutils literal notranslate"><span class="pre">BasePlayer.last_image</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.last_image_metadata"><code class="docutils literal notranslate"><span class="pre">BasePlayer.last_image_metadata</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.metadata_play"><code class="docutils literal notranslate"><span class="pre">BasePlayer.metadata_play</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.metadata_play_used"><code class="docutils literal notranslate"><span class="pre">BasePlayer.metadata_play_used</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.play"><code class="docutils literal notranslate"><span class="pre">BasePlayer.play()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.play_state"><code class="docutils literal notranslate"><span class="pre">BasePlayer.play_state</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.play_thread"><code class="docutils literal notranslate"><span class="pre">BasePlayer.play_thread</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.play_thread_run"><code class="docutils literal notranslate"><span class="pre">BasePlayer.play_thread_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.player_summery"><code class="docutils literal notranslate"><span class="pre">BasePlayer.player_summery</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.process_frame"><code class="docutils literal notranslate"><span class="pre">BasePlayer.process_frame()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.real_rate"><code class="docutils literal notranslate"><span class="pre">BasePlayer.real_rate</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.stop"><code class="docutils literal notranslate"><span class="pre">BasePlayer.stop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.stop_all"><code class="docutils literal notranslate"><span class="pre">BasePlayer.stop_all()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.ts_play"><code class="docutils literal notranslate"><span class="pre">BasePlayer.ts_play</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.update_metadata"><code class="docutils literal notranslate"><span class="pre">BasePlayer.update_metadata()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer.use_real_time"><code class="docutils literal notranslate"><span class="pre">BasePlayer.use_real_time</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="player.html#cpl_media.player.VideoMetadata"><code class="docutils literal notranslate"><span class="pre">VideoMetadata</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.VideoMetadata.fmt"><code class="docutils literal notranslate"><span class="pre">VideoMetadata.fmt</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.VideoMetadata.h"><code class="docutils literal notranslate"><span class="pre">VideoMetadata.h</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.VideoMetadata.rate"><code class="docutils literal notranslate"><span class="pre">VideoMetadata.rate</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="player.html#cpl_media.player.VideoMetadata.w"><code class="docutils literal notranslate"><span class="pre">VideoMetadata.w</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ffmpeg.html">FFmpeg based player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer._config_props_"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer._config_props_</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.apply_config_property"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.apply_config_property()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.dshow_filename"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.dshow_filename</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.dshow_names"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.dshow_names</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.dshow_opt"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.dshow_opt</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.dshow_opts"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.dshow_opts</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.dshow_rate"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.dshow_rate</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.dshow_true_filename"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.dshow_true_filename</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.file_fmt"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.file_fmt</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.icodec"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.icodec</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.parse_dshow_opt"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.parse_dshow_opt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.play_filename"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.play_filename</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.play_thread_run"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.play_thread_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.player_callback"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.player_callback()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.post_config_applied"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.post_config_applied()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.refresh_dshow"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.refresh_dshow()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.update_dshow_file"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.update_dshow_file()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer.use_dshow"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer.use_dshow</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegSettingsWidget"><code class="docutils literal notranslate"><span class="pre">FFmpegSettingsWidget</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegSettingsWidget.player"><code class="docutils literal notranslate"><span class="pre">FFmpegSettingsWidget.player</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegSettingsWidget.set_filename"><code class="docutils literal notranslate"><span class="pre">FFmpegSettingsWidget.set_filename()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.LogFilter"><code class="docutils literal notranslate"><span class="pre">LogFilter</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.LogFilter.filtered_end"><code class="docutils literal notranslate"><span class="pre">LogFilter.filtered_end</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.LogFilter.start_filter"><code class="docutils literal notranslate"><span class="pre">LogFilter.start_filter()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rotpy.html">Flir based player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer"><code class="docutils literal notranslate"><span class="pre">FlirPlayer</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer._config_props_"><code class="docutils literal notranslate"><span class="pre">FlirPlayer._config_props_</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.ask_config"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.ask_config()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.config_queue"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.config_queue</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.config_thread"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.config_thread</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.config_thread_run"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.config_thread_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.ffmpeg_pix_map"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.ffmpeg_pix_map</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.is_available"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.is_available</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.play"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.play()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.play_thread_run"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.play_thread_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.serial"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.serial</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.serials"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.serials</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.start_config"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.start_config()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.stop"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.stop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.stop_all"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.stop_all()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer.stop_config"><code class="docutils literal notranslate"><span class="pre">FlirPlayer.stop_config()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirSettingsWidget"><code class="docutils literal notranslate"><span class="pre">FlirSettingsWidget</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirSettingsWidget.player"><code class="docutils literal notranslate"><span class="pre">FlirSettingsWidget.player</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="remote_client.html">Remote player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.ClientPlayerSettingsWidget"><code class="docutils literal notranslate"><span class="pre">ClientPlayerSettingsWidget</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.ClientPlayerSettingsWidget.player"><code class="docutils literal notranslate"><span class="pre">ClientPlayerSettingsWidget.player</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer._config_props_"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer._config_props_</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.client_active"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.client_active</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.from_kivy_queue"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.from_kivy_queue</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.listener_run"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.listener_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.listener_thread"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.listener_thread</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.play"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.play()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.play_thread_run"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.play_thread_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.port"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.port</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.process_in_kivy_thread"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.process_in_kivy_thread()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.send_message_to_server"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.send_message_to_server()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.server"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.server</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.start_listener"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.start_listener()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.stop"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.stop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.stop_all"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.stop_all()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.stop_listener"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.stop_listener()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.timeout"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.timeout</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer.to_kivy_queue"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer.to_kivy_queue</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rtv.html">RTV24 based player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer"><code class="docutils literal notranslate"><span class="pre">RTVPlayer</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer._config_props_"><code class="docutils literal notranslate"><span class="pre">RTVPlayer._config_props_</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer.barst_server"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.barst_server</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer.image_fmts"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.image_fmts</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer.is_available"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.is_available</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer.pipe_name"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.pipe_name</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer.pixel_fmt"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.pixel_fmt</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer.play_thread_run"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.play_thread_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer.port"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.port</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer.remote_computer_name"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.remote_computer_name</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer.stop_all"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.stop_all()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer.video_fmt"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.video_fmt</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer.video_fmts"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.video_fmts</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVPlayer.video_fmts_inverse"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.video_fmts_inverse</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVSettingsWidget"><code class="docutils literal notranslate"><span class="pre">RTVSettingsWidget</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rtv.html#cpl_media.rtv.RTVSettingsWidget.player"><code class="docutils literal notranslate"><span class="pre">RTVSettingsWidget.player</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="thorcam.html">Thor based player</a></li>
+<li class="toctree-l1"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer._config_props_"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer._config_props_</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.binning_x"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.binning_x</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.binning_x_range"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.binning_x_range</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.binning_y"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.binning_y</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.binning_y_range"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.binning_y_range</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.black_level"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.black_level</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.black_level_range"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.black_level_range</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.cam_state"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.cam_state</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.close_camera"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.close_camera()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.color_gain"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.color_gain</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.exposure_ms"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.exposure_ms</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.exposure_range"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.exposure_range</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.frame_queue_size"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.frame_queue_size</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.freq"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.freq</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.gain"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.gain</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.gain_range"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.gain_range</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.is_available"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.is_available</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.num_queued_frames"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.num_queued_frames</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.open_camera"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.open_camera()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.play"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.play()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.play_thread_run"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.play_thread_run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.process_in_kivy_thread"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.process_in_kivy_thread()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.refresh_cameras"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.refresh_cameras()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.roi_height"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.roi_height</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.roi_width"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.roi_width</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.roi_x"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.roi_x</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.roi_y"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.roi_y</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.sensor_size"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.sensor_size</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.serial"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.serial</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.serials"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.serials</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.set_setting"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.set_setting()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.stop"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.stop()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.stop_all"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.stop_all()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.supported_freqs"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.supported_freqs</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.supported_taps"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.supported_taps</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.supported_triggers"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.supported_triggers</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.supports_color"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.supports_color</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.taps"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.taps</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.to_kivy_queue"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.to_kivy_queue</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.trigger_count"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.trigger_count</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer.trigger_type"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer.trigger_type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamSettingsWidget"><code class="docutils literal notranslate"><span class="pre">ThorCamSettingsWidget</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamSettingsWidget.player"><code class="docutils literal notranslate"><span class="pre">ThorCamSettingsWidget.player</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="common.html" class="btn btn-neutral float-left" title="Base classes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="player.html" class="btn btn-neutral float-right" title="Player" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Matthew Einhorn.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

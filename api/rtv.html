@@ -1,0 +1,276 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RTV24 based player &mdash; CPL_Media  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Thor based player" href="thorcam.html" />
+    <link rel="prev" title="Remote player" href="remote_client.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            CPL_Media
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="app.html">Demo App</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="api.html">The CPL_Media API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html">cpl_media</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.error_callback"><code class="docutils literal notranslate"><span class="pre">error_callback()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.error_guard"><code class="docutils literal notranslate"><span class="pre">error_guard()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cpl_media.html#cpl_media.get_pyinstaller_datas"><code class="docutils literal notranslate"><span class="pre">get_pyinstaller_datas()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html">Base classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="common.html#cpl_media.common.KivyMediaBase"><code class="docutils literal notranslate"><span class="pre">KivyMediaBase</span></code></a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="players.html">Players</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="player.html">Player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="player.html#cpl_media.player.BasePlayer"><code class="docutils literal notranslate"><span class="pre">BasePlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="player.html#cpl_media.player.VideoMetadata"><code class="docutils literal notranslate"><span class="pre">VideoMetadata</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html">FFmpeg based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegPlayer"><code class="docutils literal notranslate"><span class="pre">FFmpegPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.FFmpegSettingsWidget"><code class="docutils literal notranslate"><span class="pre">FFmpegSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ffmpeg.html#cpl_media.ffmpeg.LogFilter"><code class="docutils literal notranslate"><span class="pre">LogFilter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotpy.html">Flir based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirPlayer"><code class="docutils literal notranslate"><span class="pre">FlirPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rotpy.html#cpl_media.rotpy.FlirSettingsWidget"><code class="docutils literal notranslate"><span class="pre">FlirSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_client.html">Remote player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.ClientPlayerSettingsWidget"><code class="docutils literal notranslate"><span class="pre">ClientPlayerSettingsWidget</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="remote_client.html#cpl_media.remote.client.RemoteVideoPlayer"><code class="docutils literal notranslate"><span class="pre">RemoteVideoPlayer</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">RTV24 based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer"><code class="docutils literal notranslate"><span class="pre">RTVPlayer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer._config_props_"><code class="docutils literal notranslate"><span class="pre">RTVPlayer._config_props_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer.barst_server"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.barst_server</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer.image_fmts"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.image_fmts</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer.is_available"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.is_available</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer.pipe_name"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.pipe_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer.pixel_fmt"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.pixel_fmt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer.play_thread_run"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.play_thread_run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer.port"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.port</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer.remote_computer_name"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.remote_computer_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer.stop_all"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.stop_all()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer.video_fmt"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.video_fmt</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer.video_fmts"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.video_fmts</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVPlayer.video_fmts_inverse"><code class="docutils literal notranslate"><span class="pre">RTVPlayer.video_fmts_inverse</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#cpl_media.rtv.RTVSettingsWidget"><code class="docutils literal notranslate"><span class="pre">RTVSettingsWidget</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cpl_media.rtv.RTVSettingsWidget.player"><code class="docutils literal notranslate"><span class="pre">RTVSettingsWidget.player</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="thorcam.html">Thor based player</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamPlayer"><code class="docutils literal notranslate"><span class="pre">ThorCamPlayer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="thorcam.html#cpl_media.thorcam.ThorCamSettingsWidget"><code class="docutils literal notranslate"><span class="pre">ThorCamSettingsWidget</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recorders.html">Recorders</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CPL_Media</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="api.html">The CPL_Media API</a></li>
+          <li class="breadcrumb-item"><a href="players.html">Players</a></li>
+      <li class="breadcrumb-item active">RTV24 based player</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/rtv.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="rtv24-based-player">
+<span id="module-cpl_media.rtv"></span><span id="cpl-media-rtv-api"></span><h1>RTV24 based player<a class="headerlink" href="#rtv24-based-player" title="Link to this heading"></a></h1>
+<p>This player can play RTV24 camera feeds using <a class="reference external" href="https://matham.github.io/pybarst/pybarst.html#module-pybarst" title="(in PyBarst v2.2.dev0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pybarst</span></code></a>.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cpl_media.rtv.</span></span><span class="sig-name descname"><span class="pre">RTVPlayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.rtv.RTVPlayer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="player.html#cpl_media.player.BasePlayer" title="cpl_media.player.BasePlayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePlayer</span></code></a></p>
+<p>Wrapper for RTV based player.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer._config_props_">
+<span class="sig-name descname"><span class="pre">_config_props_</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('remote_computer_name',</span> <span class="pre">'pipe_name',</span> <span class="pre">'port',</span> <span class="pre">'video_fmt',</span> <span class="pre">'pixel_fmt')</span></em><a class="headerlink" href="#cpl_media.rtv.RTVPlayer._config_props_" title="Link to this definition"></a></dt>
+<dd><p>A list of configurable property names of the class that is set/read
+by the configuration API.</p>
+<p>Each sub/super-class can define this and the properties are accumulated
+across all the sub/super-classes.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer.barst_server">
+<span class="sig-name descname"><span class="pre">barst_server</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#cpl_media.rtv.RTVPlayer.barst_server" title="Link to this definition"></a></dt>
+<dd><p>The <a class="reference external" href="https://matham.github.io/pybarst/server.html#pybarst.core.server.BarstServer" title="(in PyBarst v2.2.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pybarst.core.server.BarstServer</span></code></a> instance.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer.image_fmts">
+<span class="sig-name descname"><span class="pre">image_fmts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'gray':</span> <span class="pre">'gray',</span> <span class="pre">'rgb15':</span> <span class="pre">'rgb555le',</span> <span class="pre">'rgb16':</span> <span class="pre">'rgb565le',</span> <span class="pre">'rgb24':</span> <span class="pre">'rgb24',</span> <span class="pre">'rgb32':</span> <span class="pre">'rgba'}</span></em><a class="headerlink" href="#cpl_media.rtv.RTVPlayer.image_fmts" title="Link to this definition"></a></dt>
+<dd><p>The pixel formats from RTV -&gt; ffmpeg, supported by the cameras.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer.is_available">
+<span class="sig-name descname"><span class="pre">is_available</span></span><a class="headerlink" href="#cpl_media.rtv.RTVPlayer.is_available" title="Link to this definition"></a></dt>
+<dd><p>Whether pybarst is available to play.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer.pipe_name">
+<span class="sig-name descname"><span class="pre">pipe_name</span></span><a class="headerlink" href="#cpl_media.rtv.RTVPlayer.pipe_name" title="Link to this definition"></a></dt>
+<dd><p>The internal name used to communicate with Barst. When running remotely,
+or if the server already is open, the name is used to discover Barst.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer.pixel_fmt">
+<span class="sig-name descname"><span class="pre">pixel_fmt</span></span><a class="headerlink" href="#cpl_media.rtv.RTVPlayer.pixel_fmt" title="Link to this definition"></a></dt>
+<dd><p>The pixel format of the images being played.</p>
+<p>It can be one of the keys in <a class="reference internal" href="#cpl_media.rtv.RTVPlayer.image_fmts" title="cpl_media.rtv.RTVPlayer.image_fmts"><code class="xref py py-attr docutils literal notranslate"><span class="pre">image_fmts</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer.play_thread_run">
+<span class="sig-name descname"><span class="pre">play_thread_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.rtv.RTVPlayer.play_thread_run" title="Link to this definition"></a></dt>
+<dd><p>The method that runs in the internal play thread.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer.port">
+<span class="sig-name descname"><span class="pre">port</span></span><a class="headerlink" href="#cpl_media.rtv.RTVPlayer.port" title="Link to this definition"></a></dt>
+<dd><p>The RTV port (camera number) on the card to use.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer.remote_computer_name">
+<span class="sig-name descname"><span class="pre">remote_computer_name</span></span><a class="headerlink" href="#cpl_media.rtv.RTVPlayer.remote_computer_name" title="Link to this definition"></a></dt>
+<dd><p>The name of the computer running Barst, if it’s a remote computer.
+Otherwise it’s the empty string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer.stop_all">
+<span class="sig-name descname"><span class="pre">stop_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">join</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.rtv.RTVPlayer.stop_all" title="Link to this definition"></a></dt>
+<dd><p>Causes all internal threads to stop and exit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>join</strong> – Whether to wait and block the calling thread until the
+internal threads exit.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer.video_fmt">
+<span class="sig-name descname"><span class="pre">video_fmt</span></span><a class="headerlink" href="#cpl_media.rtv.RTVPlayer.video_fmt" title="Link to this definition"></a></dt>
+<dd><p>The video format of the video being played.</p>
+<p>It can be one of the keys in <a class="reference internal" href="#cpl_media.rtv.RTVPlayer.video_fmts" title="cpl_media.rtv.RTVPlayer.video_fmts"><code class="xref py py-attr docutils literal notranslate"><span class="pre">video_fmts</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer.video_fmts">
+<span class="sig-name descname"><span class="pre">video_fmts</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'CIF_NTSC':</span> <span class="pre">(320,</span> <span class="pre">240),</span> <span class="pre">'CIF_PAL':</span> <span class="pre">(384,</span> <span class="pre">288),</span> <span class="pre">'QCIF_NTSC':</span> <span class="pre">(160,</span> <span class="pre">120),</span> <span class="pre">'QCIF_PAL':</span> <span class="pre">(192,</span> <span class="pre">144),</span> <span class="pre">'full_NTSC':</span> <span class="pre">(640,</span> <span class="pre">480),</span> <span class="pre">'full_PAL':</span> <span class="pre">(768,</span> <span class="pre">576)}</span></em><a class="headerlink" href="#cpl_media.rtv.RTVPlayer.video_fmts" title="Link to this definition"></a></dt>
+<dd><p>The video size formats supported by the player.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVPlayer.video_fmts_inverse">
+<span class="sig-name descname"><span class="pre">video_fmts_inverse</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{(160,</span> <span class="pre">120):</span> <span class="pre">'QCIF_NTSC',</span> <span class="pre">(192,</span> <span class="pre">144):</span> <span class="pre">'QCIF_PAL',</span> <span class="pre">(320,</span> <span class="pre">240):</span> <span class="pre">'CIF_NTSC',</span> <span class="pre">(384,</span> <span class="pre">288):</span> <span class="pre">'CIF_PAL',</span> <span class="pre">(640,</span> <span class="pre">480):</span> <span class="pre">'full_NTSC',</span> <span class="pre">(768,</span> <span class="pre">576):</span> <span class="pre">'full_PAL'}</span></em><a class="headerlink" href="#cpl_media.rtv.RTVPlayer.video_fmts_inverse" title="Link to this definition"></a></dt>
+<dd><p>Inverse of <a class="reference internal" href="#cpl_media.rtv.RTVPlayer.video_fmts" title="cpl_media.rtv.RTVPlayer.video_fmts"><code class="xref py py-attr docutils literal notranslate"><span class="pre">video_fmts</span></code></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVSettingsWidget">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cpl_media.rtv.</span></span><span class="sig-name descname"><span class="pre">RTVSettingsWidget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cpl_media.rtv.RTVSettingsWidget" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://kivy.org/doc/stable/api-kivy.uix.boxlayout.html#kivy.uix.boxlayout.BoxLayout" title="(in Kivy v2.3.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">BoxLayout</span></code></a></p>
+<p>Settings widget for <a class="reference internal" href="#cpl_media.rtv.RTVPlayer" title="cpl_media.rtv.RTVPlayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">RTVPlayer</span></code></a>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cpl_media.rtv.RTVSettingsWidget.player">
+<span class="sig-name descname"><span class="pre">player</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#cpl_media.rtv.RTVPlayer" title="cpl_media.rtv.RTVPlayer"><span class="pre">RTVPlayer</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#cpl_media.rtv.RTVSettingsWidget.player" title="Link to this definition"></a></dt>
+<dd><p>The player.</p>
+</dd></dl>
+
+</dd></dl>
+
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="remote_client.html" class="btn btn-neutral float-left" title="Remote player" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="thorcam.html" class="btn btn-neutral float-right" title="Thor based player" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2019, Matthew Einhorn.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
